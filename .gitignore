@@ -1,0 +1,16 @@
+.buildpath
+.settings/
+.project
+*.patch
+.idea/
+.git/
+runtime/
+vendor/
+.phpintel/
+.env
+.DS_Store
+*.cache
+*.lock
+swow-test/
+swow-examples/
+ssl/

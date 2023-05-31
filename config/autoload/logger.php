@@ -15,7 +15,7 @@ use Monolog\Level;
 if (\Hyperf\Support\env('APP_DEBUG') === true) {
     $handler = SwowSocketHandler::class;
     $constructor = [
-        'level' => Level::Info,
+        'level' => Level::Debug,
         'bubble' => true,
         'useLocking' => true,
     ];

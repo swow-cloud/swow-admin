@@ -1,15 +1,12 @@
 {
-  "name": "hyperf/swow-skeleton",
+  "name": "swow-cloud/swow-admin",
   "type": "project",
   "keywords": [
     "php",
     "swow",
-    "framework",
-    "hyperf",
-    "microservice",
-    "middleware"
+    "admin"
   ],
-  "description": "A coroutine framework that focuses on hyperspeed and flexible, specifically use for build microservices and middlewares.",
+  "description": "swow-admin",
   "license": "MIT",
   "require": {
     "php": ">=8.1",

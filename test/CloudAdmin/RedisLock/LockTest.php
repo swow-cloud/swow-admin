@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 namespace HyperfTest\CloudAdmin\RedisLock;
 
-use CloudAdmin\RedisLock\Lock;
-use CloudAdmin\RedisLock\Options\LockOption;
-use CloudAdmin\RedisLock\Redis;
+use CloudAdmin\RedLock\Lock;
+use CloudAdmin\RedLock\Options\LockOption;
+use CloudAdmin\RedLock\Redis;
 use CloudAdmin\Utils\Os;
 use Hyperf\Engine\Coroutine;
 use PHPUnit\Framework\TestCase;

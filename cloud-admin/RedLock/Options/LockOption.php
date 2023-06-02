@@ -8,9 +8,9 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace CloudAdmin\RedisLock\Options;
+namespace CloudAdmin\RedLock\Options;
 
-use CloudAdmin\RedisLock\Consts;
+use CloudAdmin\RedLock\Consts;
 
 class LockOption
 {

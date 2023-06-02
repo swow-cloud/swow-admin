@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace CloudAdmin\RedisLock;
+namespace CloudAdmin\RedLock;
 
-use CloudAdmin\RedisLock\Exceptions\RuntimeException;
-use CloudAdmin\RedisLock\Options\LockOption;
-use CloudAdmin\RedisLock\Options\RedLockOption;
+use CloudAdmin\RedLock\Exceptions\RuntimeException;
+use CloudAdmin\RedLock\Options\LockOption;
+use CloudAdmin\RedLock\Options\RedLockOption;
 use CloudAdmin\Utils\Os;
 use Hyperf\Coroutine\Coroutine;
 use SplFixedArray;

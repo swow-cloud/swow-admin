@@ -8,9 +8,9 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace CloudAdmin\RedisLock\Exceptions;
+namespace CloudAdmin\RedLock\Exceptions;
 
-use CloudAdmin\RedisLock\Consts;
+use CloudAdmin\RedLock\Consts;
 use RuntimeException;
 
 class ErrLockException extends RuntimeException

@@ -8,12 +8,12 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace CloudAdmin\RedisLock;
+namespace CloudAdmin\RedLock;
 
 use CloudAdmin\Interfaces\LockInterface;
-use CloudAdmin\RedisLock\Exceptions\ErrLockException;
-use CloudAdmin\RedisLock\Exceptions\RuntimeException;
-use CloudAdmin\RedisLock\Options\LockOption;
+use CloudAdmin\RedLock\Exceptions\ErrLockException;
+use CloudAdmin\RedLock\Exceptions\RuntimeException;
+use CloudAdmin\RedLock\Options\LockOption;
 use Exception;
 use Hyperf\Engine\Coroutine;
 use Swow\Channel;

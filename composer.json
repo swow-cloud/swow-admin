@@ -78,6 +78,9 @@
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
+    "pre-install-cmd": [
+      "CloudAdmin\\Composer\\Platform::preInstallCmd"
+    ],
     "post-autoload-dump": [
       "@php -r \"if(PHP_OS_FAMILY === 'Windows') shell_exec('del /f /s /q runtime\\container && rmdir runtime\\container'); else shell_exec('rm -rf runtime/container');\" "
     ],

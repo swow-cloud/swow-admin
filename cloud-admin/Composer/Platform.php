@@ -8,22 +8,11 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace CloudAdmin\RedisLock;
+namespace CloudAdmin\Composer;
 
-// todo
-class Options
+class Platform
 {
-    public string $metadata;
-
-    public string $token;
-
-    public function getMetadata(): string
+    public static function preInstallCmd(): void
     {
-        return $this->metadata;
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
     }
 }

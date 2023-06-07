@@ -31,11 +31,6 @@ class ExampleTest extends HttpTestCase
 {
     public function testExample()
     {
-        test('sum', function () {
-            $result = sum(1, 2);
-
-            expect($result)->toBe(3);
-        });
         $this->assertTrue(true);
 
         $res = $this->get('/');

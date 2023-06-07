@@ -46,7 +46,7 @@ class Server extends Psr7Server implements ServerInterface
         $config = \Hyperf\Config\config('ssl');
         if ($config['enable'] ?? false) {
             $output = shell_exec('php --ri swow');
-            if (! preg_match('/SSL\s*=>\s*(.*)/', $output, $match)) {
+            if (! preg_match('/SSL\s*=>\s*(.*)/', $output)) {
                 exit('ssl配置项未开启!');
             }
             $this->ssl = true;

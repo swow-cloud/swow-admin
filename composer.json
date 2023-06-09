@@ -10,7 +10,9 @@
   "license": "MIT",
   "require": {
     "php": ">=8.1",
-    "hyperf/cache": "3.0.*",
+    "ext-posix": "*",
+    "ext-redis": "*",
+    "hyperf/cache": "^3.0",
     "hyperf/command": "3.0.*",
     "hyperf/config": "3.0.*",
     "hyperf/constants": "3.0.*",
@@ -25,14 +27,15 @@
     "hyperf/guzzle": "3.0.*",
     "hyperf/http-server": "3.0.*",
     "hyperf/logger": "3.0.*",
+    "hyperf/model-cache": "^3.0",
     "hyperf/phar": "3.0.*",
     "hyperf/process": "3.0.*",
     "hyperf/redis": "^3.0",
     "hyperf/signal": "^3.0",
     "hyperf/utils": "3.0.*",
-    "swow-cloud/debugger": "^0.1.0",
-    "ext-redis": "*",
-    "ext-posix": "*"
+    "jetbrains/phpstorm-attributes": "^1.0",
+    "ramsey/uuid": "^4.7",
+    "swow-cloud/debugger": "^0.1.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",
@@ -77,6 +80,9 @@
   "scripts": {
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "pre-install-cmd": [
+      "CloudAdmin\\Composer\\Platform::preInstallCmd"
     ],
     "post-autoload-dump": [
       "@php -r \"if(PHP_OS_FAMILY === 'Windows') shell_exec('del /f /s /q runtime\\container && rmdir runtime\\container'); else shell_exec('rm -rf runtime/container');\" "

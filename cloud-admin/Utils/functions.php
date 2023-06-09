@@ -12,11 +12,13 @@ namespace CloudAdmin\Utils;
 
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
 use Hyperf\Logger\LoggerFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 if (! function_exists('logger')) {
     function logger(string $name = 'default'): LoggerInterface
@@ -38,6 +40,19 @@ if (! function_exists('stdout')) {
     {
         try {
             return di()->get(StdoutLoggerInterface::class);
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+        }
+    }
+}
+
+if (! function_exists('formatThrowable')) {
+    /**
+     * Format a throwable to string.
+     */
+    function formatThrowable(Throwable $throwable): string
+    {
+        try {
+            return di()->get(FormatterInterface::class)->format($throwable);
         } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
         }
     }

@@ -15,9 +15,12 @@ use CloudAdmin\RedLock\Options\LockOption;
 use CloudAdmin\RedLock\Redis;
 use CloudAdmin\Utils\Os;
 use Hyperf\Engine\Coroutine;
+use Hyperf\Redis\RedisFactory;
 use PHPUnit\Framework\TestCase;
 use Swow\Sync\WaitGroup;
 use Throwable;
+
+use function CloudAdmin\Utils\di;
 
 /**
  * @internal
@@ -87,5 +90,21 @@ class LockTest extends TestCase
     public function testBlcokingLock()
     {
         $this->assertTrue(true, 'ok');
+    }
+
+    public function testRedisLock()
+    {
+        $redis1 = di()->get(RedisFactory::class)->get('default');
+        $redis2 = di()->get(RedisFactory::class)->get('default');
+        $key = '110';
+        Coroutine::create(function () use ($redis1, $key) {
+            $lock = new \CloudAdmin\RedisLock\Lock(di(), $redis1);
+            $this->assertTrue($lock->lock($key, 10), '加锁成功1');
+            sleep(5);
+        });
+        Coroutine::create(function () use ($redis2, $key) {
+            $lock = new \CloudAdmin\RedisLock\Lock(di(), $redis2);
+            $this->assertTrue($lock->lock($key), '加锁成功2');
+        });
     }
 }

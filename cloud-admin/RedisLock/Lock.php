@@ -102,19 +102,7 @@ class Lock implements RedisLockInterface
 
     public function unLock(): bool
     {
-        $script = <<<'LUA'
-            local key = KEYS[1]
-            local value = ARGV[1]
-
-            if (redis.call('exists', key) == 1 and redis.call('get', key) == value)
-            then
-                return redis.call('del', key)
-            end
-
-            return 0
-LUA;
-
-        return (bool) $this->execLuaScript($script, [$this->key, $this->value], 1);
+        return (bool) $this->execLuaScript(Lua::UNLOCK, [$this->key, $this->value], 1);
     }
 
     public function lockTtl(): int
@@ -127,26 +115,8 @@ LUA;
      */
     public function keepAlive(int $ttl = 3): bool
     {
-        $script = <<<'LUA'
-                -- get the remaining life time of the key
-                local leftoverTtl = redis.call("TTL", KEYS[1]);
-
-                -- never expired key
-                if (leftoverTtl == -1) then
-                    return -1;
-                end;
-
-                -- key with remaining time
-                if (leftoverTtl ~= -2) then
-                    return redis.call("EXPIRE", KEYS[1], ARGV[1]);
-                end;
-
-                -- key that does not exist
-                return -2;
-LUA;
-
         try {
-            $eval = $this->execLuaScript($script, [$this->key, $ttl], 1);
+            $eval = $this->execLuaScript(Lua::KEEP_ALIVE, [$this->key, $ttl], 1);
 
             return $eval !== -2;
         } catch (Throwable $e) {
@@ -175,31 +145,16 @@ LUA;
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $ttl
-     *
+     * @throws RedisException
      * @throws Throwable
      */
-    protected function doLock($key, $ttl): bool
+    protected function doLock(string $key, int $ttl): bool
     {
-        $script = <<<'LUA'
-            local key = KEYS[1]
-            local value = ARGV[1]
-            local ttl = ARGV[2]
-
-            if (redis.call('setnx', key, value) == 1) then
-                return redis.call('expire', key, ttl)
-            elseif (redis.call('ttl', key) == -1) then
-                return redis.call('expire', key, ttl)
-            end
-
-            return 0
-LUA;
         $this->ttl = $ttl;
         $this->key = $key;
 
         try {
-            $result = $this->execLuaScript($script, [$key, $this->value, $ttl], 1);
+            $result = $this->execLuaScript(Lua::LOCK, [$key, $this->value, $ttl], 1);
             if ($result) {
                 $this->logger->debug(
                     sprintf(

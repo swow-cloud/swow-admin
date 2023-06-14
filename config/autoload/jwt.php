@@ -1,12 +1,18 @@
 <?php
 
 declare(strict_types=1);
-
-use Lcobucci\JWT\Signer\Rsa\Sha512;
-use Lcobucci\JWT\Signer\Hmac\Sha384;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-
 /**
+ * This file is part of Cloud-Admin.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Hmac\Sha384;
+use Lcobucci\JWT\Signer\Rsa\Sha512;
+
+/*
  * This file is part of Cloud-Admin.
  *
  * @link     https://www.cloud-admin.jayjay.cn

@@ -13,6 +13,7 @@ namespace CloudAdmin\RedLock;
 class Lua
 {
     // 判断是否拥有分布式锁的归属权，是则删除
+
     final public const LUA_CHECK_AND_DELETE_DISTRIBUTION_LOCK = <<<'LUA'
   local lockerKey = KEYS[1]
   local targetToken = ARGV[1]

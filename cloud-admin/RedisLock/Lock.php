@@ -48,6 +48,9 @@ class Lock implements RedisLockInterface
 
     private ContainerInterface $container;
 
+    /**
+     * @var mixed|StdoutLoggerInterface
+     */
     private StdoutLoggerInterface $logger;
 
     /**
@@ -74,6 +77,10 @@ class Lock implements RedisLockInterface
         $this->logger = $this->container->get(StdoutLoggerInterface::class);
     }
 
+    /**
+     * @throws RedisException
+     * @throws Throwable
+     */
     public function tryLock(string $key, int $ttl = 3): bool
     {
         $this->value = Uuid::uuid4()->toString();
@@ -81,6 +88,10 @@ class Lock implements RedisLockInterface
         return $this->doLock($key, $ttl);
     }
 
+    /**
+     * @throws RedisException
+     * @throws Throwable
+     */
     public function lock(string $key, int $ttl = 3, int $retries = 3, int $usleep = 10000): bool
     {
         $lock = false;
@@ -100,6 +111,10 @@ class Lock implements RedisLockInterface
         return $lock;
     }
 
+    /**
+     * @throws RedisException
+     * @throws Throwable
+     */
     public function unLock(): bool
     {
         return (bool) $this->execLuaScript(Lua::UNLOCK, [$this->key, $this->value], 1);

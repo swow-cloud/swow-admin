@@ -20,6 +20,9 @@ use RedisException;
 
 class CasbinWatcher implements Watcher
 {
+    /**
+     * @var mixed|Redis
+     */
     protected Redis $redis;
 
     /**

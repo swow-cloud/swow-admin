@@ -19,6 +19,9 @@ class RedLockOption
 
     public int|float $expireDuration = 10 * 1000;
 
+    /**
+     * @return $this
+     */
     public function withSingleNodesTimeout(int $singleNodesTimeout): self
     {
         $this->singleNodesTimeout = $singleNodesTimeout;
@@ -26,6 +29,9 @@ class RedLockOption
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withRedLockExpireDuration(int $expireDuration): self
     {
         $this->expireDuration = $expireDuration;

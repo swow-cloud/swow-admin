@@ -19,6 +19,10 @@ class PolicyChanged
         $this->data = $data;
     }
 
+    /**
+     * @param mixed $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return $this->{$name};
@@ -29,6 +33,10 @@ class PolicyChanged
         $this->{$name} = $value;
     }
 
+    /**
+     * @param mixed $name
+     * @return bool
+     */
     public function __isset($name)
     {
         return isset($this->data[$name]);

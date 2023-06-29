@@ -15,11 +15,18 @@ use CloudAdmin\Interfaces\WatchDogInterface;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Engine\Coroutine as HyperfCoroutine;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Swow\Coroutine;
 use Throwable;
 
 class WatchDog implements WatchDogInterface
 {
+    /**
+     * @throws Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function sentinel(RedisLockInterface $lock, int $time = 60): bool
     {
         $logger = ApplicationContext::getContainer()->get(StdoutLoggerInterface::class);

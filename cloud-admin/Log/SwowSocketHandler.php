@@ -23,7 +23,7 @@ class SwowSocketHandler extends AbstractProcessingHandler
 
     protected Buffer $buffer;
 
-    protected Color $color;
+    protected Toner $toner;
 
     protected bool $useLocking;
 
@@ -33,14 +33,14 @@ class SwowSocketHandler extends AbstractProcessingHandler
 
         $this->output = new Socket(Socket::TYPE_STDOUT);
         $this->buffer = new Buffer(0);
-        $this->color = new Color();
+        $this->toner = new Toner();
 
         $this->useLocking = $useLocking;
     }
 
     protected function write(LogRecord $record): void
     {
-        $message = $this->color->out(
+        $message = $this->toner->out(
             (string) $record->formatted,
             $this->getColorFromLevel($record->level->toPsrLogLevel())
         );

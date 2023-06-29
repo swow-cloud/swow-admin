@@ -24,6 +24,9 @@ class OnPolicyChangedListener implements ListenerInterface
     {
     }
 
+    /**
+     * @return string[]
+     */
     public function listen(): array
     {
         return [

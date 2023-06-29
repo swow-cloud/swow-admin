@@ -13,8 +13,11 @@ namespace CloudAdmin\Log;
 use Exception;
 use RuntimeException;
 
-class Color
+class Toner
 {
+    /**
+     * @var array|string[]
+     */
     public array $colors = [
         'default' => '39',
         'black' => '30',
@@ -35,6 +38,9 @@ class Color
         'white' => '97',
     ];
 
+    /**
+     * @var array|string[]
+     */
     public array $background = [
         'default' => '49',
         'black' => '40',
@@ -55,6 +61,9 @@ class Color
         'white' => '107',
     ];
 
+    /**
+     * @var array|string[]
+     */
     public array $style = [
         'bold' => '1',
         'dim' => '2',
@@ -64,6 +73,9 @@ class Color
         'hidden' => '8',
     ];
 
+    /**
+     * @var array|string[]
+     */
     public array $attributes = [
         'color',
         'background',
@@ -106,6 +118,7 @@ class Color
 
     /**
      * Print a new line.
+     * @phpstan-return string
      */
     public function newLine(): string
     {

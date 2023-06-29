@@ -24,6 +24,9 @@ class LockOption
 
     public ?bool $watchDogMode = true;
 
+    /**
+     * @return $this
+     */
     public function withBlock(): self
     {
         $this->isBlock = true;
@@ -31,6 +34,9 @@ class LockOption
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withBlockWaitingSeconds(int $blockWaitingSeconds): self
     {
         $this->blockWaitingSeconds = $blockWaitingSeconds;
@@ -38,6 +44,9 @@ class LockOption
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withExpireSeconds(int $expireSeconds): self
     {
         $this->expireSeconds = $expireSeconds;
@@ -45,6 +54,9 @@ class LockOption
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withWatchDogMode(bool $watchDogMode): self
     {
         $this->watchDogMode = $watchDogMode;

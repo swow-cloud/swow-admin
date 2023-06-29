@@ -42,6 +42,10 @@ class SslConfig implements Arrayable
             ->setAllowSelfSigned($this->config['allow_self_signed'] ?? false);
     }
 
+    /**
+     * @param mixed $name
+     * @return bool
+     */
     public function __isset($name)
     {
         return isset($this->config[$name]);
@@ -52,11 +56,20 @@ class SslConfig implements Arrayable
         $this->set($name, $value);
     }
 
+    /**
+     * @param mixed $name
+     * @return null|bool|mixed|string
+     */
     public function __get($name)
     {
         return $this->config[$name] ?? null;
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $arguments
+     * @return null|$this|bool|mixed|string
+     */
     public function __call($name, $arguments)
     {
         $prefix = strtolower(substr($name, 0, 3));
@@ -74,6 +87,11 @@ class SslConfig implements Arrayable
         return $this->config;
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return $this
+     */
     protected function set($name, $value): self
     {
         $this->config[$name] = $value;

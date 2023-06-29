@@ -23,8 +23,14 @@ class SwowServerStopHandler implements SignalHandlerInterface
 {
     protected ContainerInterface $container;
 
+    /**
+     * @var ConfigInterface|mixed
+     */
     protected ConfigInterface $config;
 
+    /**
+     * @var mixed|StdoutLoggerInterface
+     */
     protected StdoutLoggerInterface $stdoutLogger;
 
     /**
@@ -38,6 +44,9 @@ class SwowServerStopHandler implements SignalHandlerInterface
         $this->stdoutLogger = $container->get(StdoutLoggerInterface::class);
     }
 
+    /**
+     * @return array[]
+     */
     public function listen(): array
     {
         return [

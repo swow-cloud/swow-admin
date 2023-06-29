@@ -55,6 +55,9 @@ class Server extends Psr7Server implements ServerInterface
         }
     }
 
+    /**
+     * @return $this
+     */
     public function bind(string $name, int $port = 0, int $flags = Socket::BIND_FLAG_NONE): static
     {
         $this->host = $name;
@@ -64,6 +67,9 @@ class Server extends Psr7Server implements ServerInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function handle(callable $callable): static
     {
         $this->handler = $callable;

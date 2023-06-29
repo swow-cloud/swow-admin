@@ -14,6 +14,7 @@ use Casbin\Exceptions\InvalidFilterTypeException;
 use Casbin\Model\Model;
 use Casbin\Persist\Adapter;
 use Casbin\Persist\AdapterHelper;
+use Casbin\Persist\Adapters\Filter;
 use Casbin\Persist\BatchAdapter;
 use Casbin\Persist\FilteredAdapter;
 use Casbin\Persist\UpdatableAdapter;

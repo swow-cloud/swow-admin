@@ -31,5 +31,6 @@ class PolicyChanged
 
     public function __isset($name)
     {
+        return isset($this->data[$name]);
     }
 }

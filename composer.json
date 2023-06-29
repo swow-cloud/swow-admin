@@ -92,7 +92,7 @@
     "post-autoload-dump": [
       "@php -r \"if(PHP_OS_FAMILY === 'Windows') shell_exec('del /f /s /q runtime\\container && rmdir runtime\\container'); else shell_exec('rm -rf runtime/container');\" "
     ],
-    "analyse": "@php vendor/bin/phpstan analyse --memory-limit 512M -l 0 -c phpstan.neon ./app ./config",
+    "analyse": "@php vendor/bin/phpstan analyse --memory-limit 512M -l 0 -c phpstan.neon ./app ./config ./cloud-admin",
     "cs-fix": "@php vendor/bin/php-cs-fixer fix $1",
     "start": "@php bin/hyperf.php start",
     "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always",

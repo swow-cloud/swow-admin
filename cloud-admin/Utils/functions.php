@@ -21,12 +21,13 @@ use Psr\Log\LoggerInterface;
 use Throwable;
 
 if (! function_exists('logger')) {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     function logger(string $name = 'default'): LoggerInterface
     {
-        try {
-            return di()->get(LoggerFactory::class)->get($name);
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-        }
+        return di()->get(LoggerFactory::class)->get($name);
     }
 }
 if (! function_exists('di')) {
@@ -36,24 +37,24 @@ if (! function_exists('di')) {
     }
 }
 if (! function_exists('stdout')) {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     function stdout(): StdoutLoggerInterface
     {
-        try {
-            return di()->get(StdoutLoggerInterface::class);
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-        }
+        return di()->get(StdoutLoggerInterface::class);
     }
 }
 
 if (! function_exists('formatThrowable')) {
     /**
      * Format a throwable to string.
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     function formatThrowable(Throwable $throwable): string
     {
-        try {
-            return di()->get(FormatterInterface::class)->format($throwable);
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-        }
+        return di()->get(FormatterInterface::class)->format($throwable);
     }
 }

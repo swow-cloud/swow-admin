@@ -44,6 +44,7 @@ class SslConfig implements Arrayable
 
     public function __isset($name)
     {
+        return isset($this->config[$name]);
     }
 
     public function __set($name, $value)

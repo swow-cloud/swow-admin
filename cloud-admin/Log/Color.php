@@ -15,7 +15,7 @@ use RuntimeException;
 
 class Color
 {
-    public array $color = [
+    public array $colors = [
         'default' => '39',
         'black' => '30',
         'red' => '31',
@@ -129,7 +129,7 @@ class Color
         if (is_string($attributes)) {
             // Check if color is in list of colors
             try {
-                foreach ($this->color as $color => $code) {
+                foreach ($this->colors as $color => $code) {
                     if ($attributes === $color) {
                         return "\e[{$code}m";
                     }

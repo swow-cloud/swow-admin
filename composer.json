@@ -39,7 +39,8 @@
     "jetbrains/phpstorm-attributes": "^1.0",
     "ramsey/uuid": "^4.7",
     "swow-cloud/debugger": "^0.1.0",
-    "xmo/jwt-auth": "^0.6.0"
+    "xmo/jwt-auth": "^0.6.0",
+    "ext-pcntl": "*"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",

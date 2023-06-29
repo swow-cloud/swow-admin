@@ -10,6 +10,9 @@ declare(strict_types=1);
  */
 namespace CloudAdmin\Log;
 
+use BeBat\ConsoleColor\Style;
+use Hyperf\Codec\Json;
+use JetBrains\PhpStorm\ArrayShape;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
@@ -23,7 +26,7 @@ class SwowSocketHandler extends AbstractProcessingHandler
 
     protected Buffer $buffer;
 
-    protected Toner $toner;
+    protected Style $style;
 
     protected bool $useLocking;
 
@@ -33,29 +36,80 @@ class SwowSocketHandler extends AbstractProcessingHandler
 
         $this->output = new Socket(Socket::TYPE_STDOUT);
         $this->buffer = new Buffer(0);
-        $this->toner = new Toner();
+        $this->style = new Style();
 
         $this->useLocking = $useLocking;
     }
 
     protected function write(LogRecord $record): void
     {
-        $message = $this->toner->out(
-            (string) $record->formatted,
-            $this->getColorFromLevel($record->level->toPsrLogLevel())
-        );
+        $message = '';
+        foreach ($this->toPsrLogRecordColor() as $map => $color) {
+            if ($map === 'channel') {
+                $color = $this->getColorFromLevel($record->level->toPsrLogLevel());
+                $message .= $this->style->apply(
+                    sprintf('[%s.%s]', $record->channel, $record->level->getName()) . ' ',
+                    $color
+                );
+
+                continue;
+            }
+            if ($map === 'level_name') {
+                continue;
+            }
+            if ($map === 'datetime') {
+                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+                $message .= $this->style->apply(
+                    $record->datetime->format($this->getFormatter()->getDateFormat()) . ' ',
+                    $color
+                );
+                continue;
+            }
+            $mapVal = $record->{$map};
+            if (is_array($mapVal)) {
+                $mapVal = Json::encode($mapVal);
+            }
+            if ($mapVal === null || $mapVal === '') {
+                $message .= ' ';
+                continue;
+            }
+            $message .= $this->style->apply((string) $mapVal . ' ', $color);
+        }
+        $message .= PHP_EOL;
         $this->buffer->append($message);
 
         $this->output->send($this->buffer->toString());
+        $this->buffer->clear();
     }
 
-    protected function getColorFromLevel(string $level = LogLevel::DEBUG): string
+    protected function getColorFromLevel(string $level = LogLevel::DEBUG): Style\Color
     {
         return match ($level) {
-            LogLevel::EMERGENCY, LogLevel::ALERT, LogLevel::CRITICAL => 'red',
-            LogLevel::ERROR => 'yellow',
-            LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => 'green',
-            default => 'blue',
+            LogLevel::EMERGENCY, LogLevel::ALERT, LogLevel::CRITICAL => Style\Color::Red,
+            LogLevel::ERROR => Style\Color::Yellow,
+            LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => Style\Color::Green,
+            default => Style\Color::Default,
         };
+    }
+
+    #[ArrayShape([
+        'message' => 'int',
+        'context' => 'int',
+        'level' => 'int',
+        'level_name' => 'int',
+        'channel' => 'int',
+        'datetime' => 'int',
+        'extra' => 'int',
+    ])]
+    protected function toPsrLogRecordColor(): array
+    {
+        return [
+            'datetime' => Style\Color::Cyan,
+            'channel' => Style\Color::BrightWhite,
+            'level_name' => Style\Color::BrightBlue,
+            'message' => Style\Color::Green,
+            'context' => Style\Color::Magenta,
+            'extra' => Style\Color::Yellow,
+        ];
     }
 }

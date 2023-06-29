@@ -22,6 +22,7 @@ class IndexController extends AbstractController
         logger()->error('test error');
         logger()->info('test info');
         logger()->debug('test debug');
+        logger()->alert('test alert');
         stdout()->info('1111222');
 
         return [

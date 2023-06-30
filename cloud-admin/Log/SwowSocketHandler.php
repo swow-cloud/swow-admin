@@ -43,6 +43,24 @@ class SwowSocketHandler extends AbstractProcessingHandler
 
     protected function write(LogRecord $record): void
     {
+        $this->buffer->append($this->formatStdoutLogText($record));
+
+        $this->output->send($this->buffer->toString());
+        $this->buffer->clear();
+    }
+
+    protected function getColorFromLevel(string $level = LogLevel::DEBUG): Style\Color
+    {
+        return match ($level) {
+            LogLevel::EMERGENCY, LogLevel::ALERT, LogLevel::CRITICAL => Style\Color::Red,
+            LogLevel::ERROR => Style\Color::Yellow,
+            LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => Style\Color::Green,
+            default => Style\Color::Default,
+        };
+    }
+
+    protected function formatStdoutLogText(LogRecord $record): string
+    {
         $message = '';
         foreach ($this->toPsrLogRecordColor() as $map => $color) {
             if ($map === 'channel') {
@@ -58,7 +76,7 @@ class SwowSocketHandler extends AbstractProcessingHandler
                 continue;
             }
             if ($map === 'datetime') {
-                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+                /* @noinspection PhpPossiblePolymorphicInvocationInspection */
                 $message .= $this->style->apply(
                     $record->datetime->format($this->getFormatter()->getDateFormat()) . ' ',
                     $color
@@ -76,20 +94,8 @@ class SwowSocketHandler extends AbstractProcessingHandler
             $message .= $this->style->apply((string) $mapVal . ' ', $color);
         }
         $message .= PHP_EOL;
-        $this->buffer->append($message);
 
-        $this->output->send($this->buffer->toString());
-        $this->buffer->clear();
-    }
-
-    protected function getColorFromLevel(string $level = LogLevel::DEBUG): Style\Color
-    {
-        return match ($level) {
-            LogLevel::EMERGENCY, LogLevel::ALERT, LogLevel::CRITICAL => Style\Color::Red,
-            LogLevel::ERROR => Style\Color::Yellow,
-            LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => Style\Color::Green,
-            default => Style\Color::Default,
-        };
+        return $message;
     }
 
     #[ArrayShape([

@@ -24,6 +24,12 @@ class IndexController extends AbstractController
         logger()->debug('test debug');
         logger()->alert('test alert');
         stdout()->info('1111222');
+        // 测试并发写入
+        \Hyperf\Engine\Coroutine::create(function () {
+            for ($i = 0; $i < 100000; ++$i) {
+                stdout()->info($i . 'abc');
+            }
+        });
 
         return [
             'method' => $method,

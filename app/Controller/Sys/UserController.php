@@ -11,17 +11,24 @@ declare(strict_types=1);
 namespace App\Controller\Sys;
 
 use App\Controller\AbstractController;
+use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
 
-class LoginController extends AbstractController
+#[Controller(prefix: 'sys/user')]
+class UserController extends AbstractController
 {
-    #[PostMapping]
+    #[PostMapping(path: 'register')]
     public function register()
     {
     }
 
-    #[PostMapping]
+    #[PostMapping(path: 'signIn')]
     public function login()
+    {
+    }
+
+    #[PostMapping(path: 'signOut')]
+    public function signOut()
     {
     }
 }

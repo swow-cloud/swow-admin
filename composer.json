@@ -34,6 +34,7 @@
     "hyperf/model-cache": "^3.0",
     "hyperf/phar": "3.0.*",
     "hyperf/process": "3.0.*",
+    "hyperf/rate-limit": "^3.0",
     "hyperf/redis": "^3.0",
     "hyperf/signal": "^3.0",
     "hyperf/utils": "3.0.*",

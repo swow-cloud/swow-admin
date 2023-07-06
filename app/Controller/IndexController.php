@@ -27,7 +27,7 @@ class IndexController extends AbstractController
         // 测试并发写入
         \Hyperf\Engine\Coroutine::create(function () {
             for ($i = 0; $i < 100000; ++$i) {
-                stdout()->info($i . 'abc');
+                //                stdout()->info($i . 'abc');
             }
         });
 

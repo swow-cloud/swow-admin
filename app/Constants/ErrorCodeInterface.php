@@ -8,10 +8,11 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace CloudAdmin\HttpMessage;
+namespace App\Constants;
 
-use Swow\Psr7\Message\BufferStream;
+use BackedEnum;
 
-class SwowStream extends BufferStream
+interface ErrorCodeInterface extends BackedEnum
 {
+    public function getMessage(array $translate = null): string;
 }

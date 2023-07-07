@@ -18,6 +18,7 @@ use Carbon\Carbon;
 
 class SmsService
 {
+    //todo
     public function send(string $phone): bool
     {
         $code = Code::generateSmsVerifyCode();

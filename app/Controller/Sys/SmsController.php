@@ -17,6 +17,7 @@ use Hyperf\Constants\Exception\ConstantsException;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\RateLimit\Annotation\RateLimit;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -43,7 +44,7 @@ class SmsController extends AbstractController
      */
     public static function getSmsPhone(ProceedingJoinPoint $proceedingJoinPoint): ?string
     {
-        return di()->get(\Hyperf\HttpServer\Contract\RequestInterface::class)->input('phone');
+        return di()->get(RequestInterface::class)->input('phone');
     }
 
     /**

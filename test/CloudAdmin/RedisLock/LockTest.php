@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace HyperfTest\CloudAdmin\RedisLock;
+namespace CloudAdmin\Test\CloudAdmin\RedisLock;
 
 use CloudAdmin\RedLock\Lock;
 use CloudAdmin\RedLock\Options\LockOption;

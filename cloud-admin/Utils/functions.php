@@ -50,8 +50,6 @@ if (! function_exists('stdout')) {
 if (! function_exists('formatThrowable')) {
     /**
      * Format a throwable to string.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     function formatThrowable(Throwable $throwable): string
     {

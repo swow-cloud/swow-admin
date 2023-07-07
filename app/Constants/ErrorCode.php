@@ -32,6 +32,11 @@ enum ErrorCode: int implements ErrorCodeInterface
     case SMS_EXCEEDING_THE_CURRENT_LIMIT_ERROR = 1010;
 
     /**
+     * @Message("Synchronization of SMS logs failed")
+     */
+    case SMS_FAILED_TO_SYNC_SMS_LOGS = 1011;
+
+    /**
      * @throws ConstantsException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

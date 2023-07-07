@@ -13,7 +13,11 @@ namespace App\Controller\Sys;
 use App\Constants\ErrorCode;
 use App\Controller\AbstractController;
 use App\Kernel\Http\Response;
+use App\Request\SmsRequest;
+use App\Service\SmsService;
+use Exception;
 use Hyperf\Constants\Exception\ConstantsException;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -28,21 +32,29 @@ use function CloudAdmin\Utils\di;
 #[Controller(prefix: 'sys/sms')]
 class SmsController extends AbstractController
 {
+    #[Inject]
+    public SmsService $smsService;
+
+    /**
+     */
     #[PostMapping(path: 'get-sms-verify-code')]
     #[RateLimit(create: 1, consume: 1, capacity: 1, limitCallback: [
         SmsController::class,
         'limitCallback',
-    ], key: [SmsController::class, 'getSmsPhone'])]
-    public function getSmsVerifyCode()
+    ], key: [SmsController::class, 'getKey'])]
+    public function getSmsVerifyCode(SmsRequest $request): ResponseInterface
     {
-        echo __METHOD__ . PHP_EOL;
+        try {
+            $this->smsService->send($request->input('phone'));
+        } catch (Exception $exception) {
+        }
     }
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function getSmsPhone(ProceedingJoinPoint $proceedingJoinPoint): ?string
+    public static function getKey(ProceedingJoinPoint $proceedingJoinPoint): ?string
     {
         return di()->get(RequestInterface::class)->input('phone');
     }
@@ -56,6 +68,6 @@ class SmsController extends AbstractController
         float $seconds,
         ProceedingJoinPoint $proceedingJoinPoint
     ): ResponseInterface {
-        return di()->get(Response::class)->fail(-1, ErrorCode::SMS_EXCEEDING_THE_CURRENT_LIMIT_ERROR->getMessage());
+        return di()->get(Response::class)->fail(ErrorCode::SMS_EXCEEDING_THE_CURRENT_LIMIT_ERROR);
     }
 }

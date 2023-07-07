@@ -8,20 +8,22 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace HyperfTest\Cases;
+namespace CloudAdmin\Test\Cases;
 
-use App\Kernel\Context\Coroutine;
-use App\Kernel\Log\AppendRequestIdProcessor;
+use CloudAdmin\Context\Coroutine;
+use CloudAdmin\Log\AppendRequestIdWithMemoryUsageProcessor;
+use CloudAdmin\Test\HttpTestCase;
 use Hyperf\Context\Context;
 use Hyperf\Di\Definition\FactoryDefinition;
 use Hyperf\Di\Resolver\FactoryResolver;
 use Hyperf\Di\Resolver\ResolverDispatcher;
 use Hyperf\Engine\Channel;
 use Hyperf\Utils\Reflection\ClassInvoker;
-use HyperfTest\HttpTestCase;
 use Mockery;
 use Psr\Container\ContainerInterface;
 use Throwable;
+
+use function CloudAdmin\Utils\di;
 
 /**
  * @internal
@@ -52,7 +54,7 @@ class ExampleTest extends HttpTestCase
         $this->assertSame('POST', $res['data']['method']);
         $this->assertSame('limx', $res['data']['user']);
 
-        Context::set(AppendRequestIdProcessor::REQUEST_ID, $id = uniqid());
+        Context::set(AppendRequestIdWithMemoryUsageProcessor::REQUEST_ID, $id = uniqid());
         $pool = new Channel(1);
         di()->get(Coroutine::class)->create(function () use ($pool) {
             try {
@@ -65,7 +67,7 @@ class ExampleTest extends HttpTestCase
 
         $data = $pool->pop();
         $this->assertIsArray($data);
-        $this->assertSame($id, $data[AppendRequestIdProcessor::REQUEST_ID]);
+        $this->assertSame($id, $data[AppendRequestIdWithMemoryUsageProcessor::REQUEST_ID]);
     }
 
     public function testGetDefinitionResolver()

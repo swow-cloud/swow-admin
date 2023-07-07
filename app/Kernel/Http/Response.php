@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace App\Kernel\Http;
 
+use App\Constants\ErrorCodeInterface;
 use CloudAdmin\HttpMessage\SwowStream;
 use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Exception\HttpException;
@@ -42,11 +43,15 @@ class Response
         ]);
     }
 
-    public function fail(int $code, string $message = ''): PsrResponseInterface
+    public function fail(ErrorCodeInterface|string $error): PsrResponseInterface
     {
+        if ($error instanceof ErrorCodeInterface) {
+            $error = $error->getMessage();
+        }
+
         return $this->response->json([
-            'code' => $code,
-            'message' => $message,
+            'code' => -1,
+            'message' => $error,
         ]);
     }
 

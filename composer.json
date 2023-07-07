@@ -70,7 +70,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "HyperfTest\\": "test/"
+      "CloudAdmin\\Test\\": "test/"
     }
   },
   "minimum-stability": "stable",

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-namespace HyperfTest;
+namespace CloudAdmin\Test;
 
 use Hyperf\Testing;
 use Mockery;
@@ -31,8 +31,7 @@ abstract class HttpTestCase extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->client = make(Testing\Client::class);
-        // $this->client = make(Testing\HttpClient::class, ['baseUri' => 'http://127.0.0.1:9764']);
+        $this->client = make(Testing\HttpClient::class, ['baseUri' => 'http://127.0.0.1:9501']);
     }
 
     public function __call($name, $arguments)

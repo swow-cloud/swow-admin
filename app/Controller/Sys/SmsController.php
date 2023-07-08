@@ -46,7 +46,7 @@ class SmsController extends AbstractController
     {
         try {
            if($this->smsService->send($request->input('phone'))){
-               //todo
+               //todo dto?
                return $this->response->success();
            }
         } catch (Exception $exception) {

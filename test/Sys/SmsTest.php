@@ -28,7 +28,6 @@ class SmsTest extends HttpTestCase
         $this->assertSame(0, $res['code']);
         $this->assertIsString($res['data']['verify_code']);
         $this->assertSame(6, strlen($res['data']['verify_code']));
-        $this->assertSame($phone, $res['data']['phone']);
     }
 
     public function testSmsVerifyCode()

@@ -44,7 +44,7 @@ class SmsController extends AbstractController
     {
         try {
             if ($ret = $this->smsLogic->send($request->input('phone'))) {
-                return $this->response->success($ret);
+                return $this->response->success(['verify_code' => $ret['verify_code']]);
             }
         } catch (Exception $exception) {
             return $this->response->fail($exception->getCode());

@@ -15,11 +15,12 @@ use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Model\SmsLog;
 use Carbon\Carbon;
+use JetBrains\PhpStorm\ArrayShape;
 
 class SmsService
 {
-    //todo
-    public function send(string $phone): bool
+    #[ArrayShape(['id' => 'string', 'phone' => 'string', 'verify_code' => 'string', 'send_time' => 'string'])]
+    public function send(string $phone): array
     {
         $code = Code::generateSmsVerifyCode();
 
@@ -29,7 +30,7 @@ class SmsService
         $smsLog->send_time = Carbon::now()->toDateTimeString();
 
         if ($smsLog->save()) {
-            return true;
+            return $smsLog->toArray();
         }
         throw new BusinessException(ErrorCode::SMS_FAILED_TO_SYNC_SMS_LOGS);
     }

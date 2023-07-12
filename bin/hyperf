@@ -1,0 +1,3 @@
+#!/bin/sh
+dir=`pwd`
+php $dir/bin/hyperf.php start

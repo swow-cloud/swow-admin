@@ -21,11 +21,14 @@ class SmsTest extends HttpTestCase
 {
     public function testGetSmsVerifyCode()
     {
+        $phone = '123456';
         $res = $this->client->post('sys/sms/get-sms-verify-code', [
-            'phone' => '123456',
+            'phone' => $phone,
         ]);
         $this->assertSame(0, $res['code']);
-        $this->assertIsInt($res['data']['code']);
+        $this->assertIsString($res['data']['verify_code']);
+        $this->assertSame(6, strlen($res['data']['verify_code']));
+        $this->assertSame($phone, $res['data']['phone']);
     }
 
     public function testSmsVerifyCode()

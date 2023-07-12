@@ -13,8 +13,8 @@ namespace App\Controller\Sys;
 use App\Constants\ErrorCode;
 use App\Controller\AbstractController;
 use App\Kernel\Http\Response;
+use App\Logic\SmsLogic;
 use App\Request\SmsRequest;
-use App\Service\SmsService;
 use Exception;
 use Hyperf\Constants\Exception\ConstantsException;
 use Hyperf\Di\Annotation\Inject;
@@ -33,10 +33,8 @@ use function CloudAdmin\Utils\di;
 class SmsController extends AbstractController
 {
     #[Inject]
-    public SmsService $smsService;
+    public SmsLogic $smsLogic;
 
-    /**
-     */
     #[PostMapping(path: 'get-sms-verify-code')]
     #[RateLimit(create: 1, consume: 1, capacity: 1, limitCallback: [
         SmsController::class,
@@ -45,11 +43,11 @@ class SmsController extends AbstractController
     public function getSmsVerifyCode(SmsRequest $request): ResponseInterface
     {
         try {
-           if($this->smsService->send($request->input('phone'))){
-               //todo dto?
-               return $this->response->success();
-           }
+            if ($ret = $this->smsLogic->send($request->input('phone'))) {
+                return $this->response->success($ret);
+            }
         } catch (Exception $exception) {
+            return $this->response->fail($exception->getCode());
         }
     }
 

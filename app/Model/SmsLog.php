@@ -30,7 +30,7 @@ class SmsLog extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected array $fillable = ['id', 'phone', 'verify_code', 'send_time', 'create_time', 'update_time'];
+    protected array $fillable = ['id', 'phone', 'verify_code', 'send_time', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast to native types.

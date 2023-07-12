@@ -10,44 +10,43 @@ declare(strict_types=1);
  */
 namespace App\Constants;
 
+use CloudAdmin\Annotation\EnumMessage;
 use Hyperf\Constants\Annotation\Constants;
 use Hyperf\Constants\EnumConstantsTrait;
-use Hyperf\Constants\Exception\ConstantsException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\TranslatorInterface;
+use ReflectionClass;
 
 #[Constants]
 enum ErrorCode: int implements ErrorCodeInterface
 {
     use EnumConstantsTrait;
 
-    /**
-     * @Message("Server Error")
-     */
+    #[EnumMessage('Server Error')]
     case SERVER_ERROR = 500;
 
-    /**
-     * @Message("Captcha request limit exceeded")
-     */
+    #[EnumMessage('Captcha request limit exceeded')]
     case SMS_EXCEEDING_THE_CURRENT_LIMIT_ERROR = 1010;
 
-    /**
-     * @Message("Synchronization of SMS logs failed")
-     */
+    #[EnumMessage('Synchronization of SMS logs failed')]
     case SMS_FAILED_TO_SYNC_SMS_LOGS = 1011;
 
-    /**
-     * @throws ConstantsException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function getMessage(array $translate = null): string
     {
-        $arguments = [];
-        if ($translate) {
-            $arguments = [$translate];
+        $reflection = new ReflectionClass($this);
+        $reflection = $reflection->getReflectionConstant($this->name);
+        $attributes = $reflection->getAttributes(EnumMessage::class);
+        if (empty($attributes)) {
+            return $this->name;
         }
+        try {
+            $translator = ApplicationContext::getContainer()->get(TranslatorInterface::class);
+            $key = sprintf('enums.%s.%s', __CLASS__, $attributes[0]->newInstance()->message);
+            $result = $translator->trans($key);
 
-        return $this->__call('getMessage', $arguments);
+            return $key === $result ? $attributes[0]->newInstance()->message : $result;
+        } catch (\Throwable) {
+            return $attributes[0]->newInstance()->message;
+        }
     }
 }

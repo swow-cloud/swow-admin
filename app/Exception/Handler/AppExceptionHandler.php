@@ -24,9 +24,18 @@ class AppExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
-        $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
+        $this->logger->error(
+            sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile())
+        );
         $this->logger->error($throwable->getTraceAsString());
-        return $response->withHeader('Server', 'Swow')->withStatus(500)->withBody(new SwowStream('Internal Server Error.'));
+        if (\Hyperf\Support\env('APP_DEBUG')) {
+            return $response->withHeader('Server', 'Swow')->withStatus(500)->withBody(
+                new SwowStream($throwable->getTraceAsString())
+            );
+        }
+        return $response->withHeader('Server', 'Swow')->withStatus(500)->withBody(
+            new SwowStream('Internal Server Error.')
+        );
     }
 
     public function isValid(Throwable $throwable): bool

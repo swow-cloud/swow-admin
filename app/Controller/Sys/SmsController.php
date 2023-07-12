@@ -12,10 +12,10 @@ namespace App\Controller\Sys;
 
 use App\Constants\ErrorCode;
 use App\Controller\AbstractController;
+use App\Exception\BusinessException;
 use App\Kernel\Http\Response;
 use App\Logic\SmsLogic;
 use App\Request\SmsRequest;
-use Exception;
 use Hyperf\Constants\Exception\ConstantsException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
@@ -35,7 +35,7 @@ class SmsController extends AbstractController
     #[Inject]
     public SmsLogic $smsLogic;
 
-    #[PostMapping(path: 'get-sms-verify-code')]
+    #[PostMapping(path: 'get-verify-code')]
     #[RateLimit(create: 1, consume: 1, capacity: 1, limitCallback: [
         SmsController::class,
         'limitCallback',
@@ -45,7 +45,7 @@ class SmsController extends AbstractController
         try {
             $ret = $this->smsLogic->send($request->input('phone'));
             return $this->response->success(['verify_code' => $ret['verify_code']]);
-        } catch (Exception $exception) {
+        } catch (BusinessException $exception) {
             return $this->response->fail($exception->getCode());
         }
     }

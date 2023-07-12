@@ -12,6 +12,7 @@ namespace App\Kernel\Http;
 
 use App\Constants\ErrorCodeInterface;
 use CloudAdmin\HttpMessage\SwowStream;
+use Exception;
 use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Exception\HttpException;
 use Hyperf\HttpServer\Contract\ResponseInterface;
@@ -43,7 +44,7 @@ class Response
         ]);
     }
 
-    public function fail(ErrorCodeInterface|string $error): PsrResponseInterface
+    public function fail(ErrorCodeInterface|string|Exception $error): PsrResponseInterface
     {
         if ($error instanceof ErrorCodeInterface) {
             $error = $error->getMessage();

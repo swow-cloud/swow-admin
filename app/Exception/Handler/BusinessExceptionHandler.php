@@ -36,17 +36,17 @@ class BusinessExceptionHandler extends ExceptionHandler
         $this->logger = $container->get(StdoutLoggerInterface::class);
     }
 
-    public function handle(Throwable $throwable, ResponseInterface $response)
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         switch (true) {
             case $throwable instanceof HttpException:
                 return $this->response->handleException($throwable);
             case $throwable instanceof BusinessException:
                 $this->logger->warning(formatThrowable($throwable));
-                return $this->response->fail($throwable->getCode(), $throwable->getMessage());
+                return $this->response->fail($throwable->getCode());
             case $throwable instanceof CircularDependencyException:
                 $this->logger->error($throwable->getMessage());
-                return $this->response->fail(ErrorCode::SERVER_ERROR->value, $throwable->getMessage());
+                return $this->response->fail(ErrorCode::SERVER_ERROR->value);
         }
 
         $this->logger->error(formatThrowable($throwable));

@@ -43,9 +43,8 @@ class SmsController extends AbstractController
     public function getSmsVerifyCode(SmsRequest $request): ResponseInterface
     {
         try {
-            if ($ret = $this->smsLogic->send($request->input('phone'))) {
-                return $this->response->success(['verify_code' => $ret['verify_code']]);
-            }
+            $ret = $this->smsLogic->send($request->input('phone'));
+            return $this->response->success(['verify_code' => $ret['verify_code']]);
         } catch (Exception $exception) {
             return $this->response->fail($exception->getCode());
         }

@@ -14,10 +14,13 @@ use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
 use Hyperf\Logger\LoggerFactory;
+use Hyperf\Redis\RedisFactory;
+use Hyperf\Redis\RedisProxy;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
+use Redis;
 use Throwable;
 
 if (! function_exists('logger')) {
@@ -54,5 +57,16 @@ if (! function_exists('formatThrowable')) {
     function formatThrowable(Throwable $throwable): string
     {
         return di()->get(FormatterInterface::class)->format($throwable);
+    }
+}
+
+if (! function_exists('redisClient')) {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    function redisClient(string $poolName = 'default'): RedisProxy|Redis
+    {
+        return di()->get(RedisFactory::class)->get($poolName);
     }
 }

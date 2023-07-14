@@ -52,7 +52,7 @@ class Response
 
         return $this->response->json([
             'code' => -1,
-            'message' => $error,
+            'message' => (string) $error,
         ]);
     }
 

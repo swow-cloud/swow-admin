@@ -17,6 +17,7 @@ use Hyperf\Process\ProcessManager;
 use Psr\Log\LoggerInterface;
 use Swow\CoroutineException;
 use Swow\Errno;
+use Swow\Extension;
 use Swow\Http\Protocol\ProtocolException as HttpProtocolException;
 use Swow\Psr7\Psr7;
 use Swow\Psr7\Server\Server as Psr7Server;
@@ -45,8 +46,7 @@ class Server extends Psr7Server implements ServerInterface
         /** @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool} $config */
         $config = \Hyperf\Config\config('ssl');
         if ($config['enable'] ?? false) {
-            $output = shell_exec('php --ri swow');
-            if (! preg_match('/SSL\s*=>\s*(.*)/', $output)) {
+            if (! Extension::isBuiltWith('ssl')) {
                 exit('ssl配置项未开启!');
             }
             $this->ssl = true;

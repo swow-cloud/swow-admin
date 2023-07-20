@@ -41,7 +41,7 @@ class SmsLogic
                     return $result;
                 }
             } catch (NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e) {
-                //todo
+                // todo
             }
         }
         throw new BusinessException(ErrorCode::SERVER_ERROR);

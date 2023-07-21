@@ -42,6 +42,9 @@ class MkCertCommand extends HyperfCommand
             return;
         }
 
+        @unlink($this->input->getOption('cert-file'));
+        @unlink($this->input->getOption('key-file'));
+
         $command = sprintf(
             'mkcert  -cert-file %s -key-file %s %s',
             $this->input->getOption('cert-file'),

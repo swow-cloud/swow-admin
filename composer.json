@@ -96,7 +96,7 @@
     ],
     "analyse": "@php vendor/bin/phpstan analyse --memory-limit 512M -l 0 -c phpstan.neon",
     "cs-fix": "@php vendor/bin/php-cs-fixer fix $1",
-    "start": "@php bin/hyperf.php start",
+    "start": "bash bin/hyperf",
     "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always",
     "rector": "rector process --clear-cache"
   }

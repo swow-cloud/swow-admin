@@ -8,9 +8,8 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-
 return [
-    'enable' => \Hyperf\Support\env('ENABLE_SSL'),
+    'enable' => \Hyperf\Support\env('ENABLE_SSL', false),
     'certificate' => \Hyperf\Support\env('CERTIFICATE'),
     'certificate_key' => \Hyperf\Support\env('CERTIFICATE_KEY'),
     'verify_peer' => false,

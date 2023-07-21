@@ -43,10 +43,9 @@ class SslConfig implements Arrayable
     }
 
     /**
-     * @param mixed $name
      * @return bool
      */
-    public function __isset($name)
+    public function __isset(mixed $name)
     {
         return isset($this->config[$name]);
     }
@@ -57,20 +56,17 @@ class SslConfig implements Arrayable
     }
 
     /**
-     * @param mixed $name
      * @return null|bool|mixed|string
      */
-    public function __get($name)
+    public function __get(mixed $name)
     {
         return $this->config[$name] ?? null;
     }
 
     /**
-     * @param mixed $name
-     * @param mixed $arguments
      * @return null|$this|bool|mixed|string
      */
-    public function __call($name, $arguments)
+    public function __call(mixed $name, mixed $arguments)
     {
         $prefix = strtolower(substr($name, 0, 3));
         if (in_array($prefix, ['set', 'get'])) {
@@ -88,11 +84,9 @@ class SslConfig implements Arrayable
     }
 
     /**
-     * @param mixed $name
-     * @param mixed $value
      * @return $this
      */
-    protected function set($name, $value): self
+    protected function set(mixed $name, mixed $value): self
     {
         $this->config[$name] = $value;
 

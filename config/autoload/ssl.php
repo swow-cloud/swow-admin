@@ -8,10 +8,11 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+
 return [
     'enable' => \Hyperf\Support\env('ENABLE_SSL'),
-    'certificate' => BASE_PATH . '/ssl/localhost.pem',
-    'certificate_key' => BASE_PATH . '/ssl/localhost-key.pem',
+    'certificate' => \Hyperf\Support\env('CERTIFICATE'),
+    'certificate_key' => \Hyperf\Support\env('CERTIFICATE_KEY'),
     'verify_peer' => false,
     'verify_peer_name' => false,
     'allow_self_signed' => true,

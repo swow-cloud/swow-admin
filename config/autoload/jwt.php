@@ -27,7 +27,7 @@ return [
      */
     'sso_key' => 'uid',
 
-    'secret' => \Hyperf\Support\env('JWT_SECRET', 'phper666'), // 非对称加密使用字符串,请使用自己加密的字符串
+    'secret' => \Hyperf\Support\env('JWT_SECRET', 'swow-admin'), // 非对称加密使用字符串,请使用自己加密的字符串
 
     /*
      * JWT 权限keys
@@ -35,13 +35,13 @@ return [
      * 非对称算法: RS256, RS384 & RS512 / ES256, ES384 & ES512 使用下面的公钥私钥.
      */
     'keys' => [
-        'public' => \Hyperf\Support\env('JWT_PUBLIC_KEY'), // 公钥，例如：'file:///path/to/public/key'
-        'private' => \Hyperf\Support\env('JWT_PRIVATE_KEY'), // 私钥，例如：'file:///path/to/private/key'
+        'public' => \Hyperf\Support\env('JWT_PUBLIC_KEY'), // 公钥，例如：file:///path/to/public/key
+        'private' => \Hyperf\Support\env('JWT_PRIVATE_KEY'), // 私钥，例如：file:///path/to/private/key
     ],
 
     'ttl' => \Hyperf\Support\env('JWT_TTL', 7200), // token过期时间，单位为秒
 
-    'alg' => \Hyperf\Support\env('JWT_ALG', 'HS256'), // jwt的hearder加密算法
+    'alg' => \Hyperf\Support\env('JWT_ALG', 'HS256'), // jwt的header加密算法
 
     /*
      * 支持的算法
@@ -94,7 +94,7 @@ return [
      */
     'blacklist_cache_ttl' => \Hyperf\Support\env('JWT_TTL', 86400),
 
-    'blacklist_prefix' => 'phper666_jwt', // 黑名单缓存的前缀
+    'blacklist_prefix' => 'swow_jwt', // 黑名单缓存的前缀
 
     /*
      * 区分不同场景的token，比如你一个项目可能会有多种类型的应用接口鉴权,下面自行定义，我只是举例子
@@ -121,7 +121,7 @@ return [
         ],
         'application3' => [
             'secret' => 'application3', // 非对称加密使用字符串,请使用自己加密的字符串
-            'login_type' => 'mppo', //  登录方式，sso为单点登录，mpop为多点登录
+            'login_type' => 'mpop', //  登录方式，sso为单点登录，mpop为多点登录
             'ttl' => 7200, // token过期时间，单位为秒
             'blacklist_cache_ttl' => \Hyperf\Support\env('JWT_TTL', 7200), // 黑名单缓存token时间，注意：该时间一定要设置比token过期时间要大一点，默认为100秒,最好设置跟过期时间一样
         ],

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace CloudAdmin\Test\Sys;
 
 use App\Component\Code;
+use App\Service\SmsService;
 use CloudAdmin\Test\HttpTestCase;
 
 /**
@@ -34,5 +35,11 @@ class SmsTest extends HttpTestCase
     {
         $this->assertIsString(Code::generateSmsVerifyCode(), 'this is string');
         $this->assertSame(6, strlen(Code::generateSmsVerifyCode()));
+    }
+
+    public function testSmsIsRegister(){
+        $service = \Hyperf\Support\make(SmsService::class);
+        $this->assertTrue($service->isRegister('1'));
+        $this->assertTrue($service->isRegister('2'));
     }
 }

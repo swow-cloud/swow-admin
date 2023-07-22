@@ -28,7 +28,8 @@ require BASE_PATH . '/vendor/autoload.php';
     /** @var Symfony\Component\Console\Application $application */
     $application = $container->get(Hyperf\Contract\ApplicationInterface::class);
     if (\Hyperf\Support\env('APP_DEBUG')) {
-        Debugger::runOnTTY();
+        $debugger = Debugger::runOnTTY();
+        $debugger->out('[Info]    Press Ctrl+C to stop the server', true, 'yellow');
     }
     $application->run();
 })();

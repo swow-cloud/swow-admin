@@ -37,7 +37,8 @@ class SmsTest extends HttpTestCase
         $this->assertSame(6, strlen(Code::generateSmsVerifyCode()));
     }
 
-    public function testSmsIsRegister(){
+    public function testSmsIsRegister()
+    {
         $service = \Hyperf\Support\make(SmsService::class);
         $this->assertTrue($service->isRegister('1'));
         $this->assertTrue($service->isRegister('2'));

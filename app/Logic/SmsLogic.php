@@ -23,27 +23,67 @@ use function CloudAdmin\Utils\redisClient;
 
 class SmsLogic
 {
+    private const CACHE_KEY_FORMAT = 'verifyCode-%s';
+
+    private const CACHE_EXPIRATION_TIME = 5 * 60;
+
     #[Inject]
     public SmsService $smsService;
 
+    /**
+     * Sends a verification code to the specified phone number.
+     *
+     * @param string $phone the phone number to send the verification code to
+     *
+     * @return array the response from the SMS service
+     * @throws BusinessException if the verification code could not be sent
+     */
     #[ArrayShape(['id' => 'string', 'phone' => 'string', 'verify_code' => 'string', 'send_time' => 'string'])]
     public function send(string $phone): array
     {
-        $result = $this->smsService->send($phone);
-        if ($result['verify_code']) {
-            try {
-                // todo 需要验证短信验证码是否一直重复提交2023-07-14
-                if (redisClient()->setex(
-                    sprintf('verifyCode-%s', $result['phone']),
-                    5 * 60,
-                    $result['verify_code']
-                )) {
-                    return $result;
-                }
-            } catch (NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e) {
-                // todo
-            }
+        if ($code = $this->getFromCache($phone)) {
+            return ['verify_code' => $code];
         }
+
+        $result = $this->smsService->send($phone);
+
+        if (isset($result['verify_code'])) {
+            $this->saveToCache($result['phone'], $result['verify_code']);
+            return $result;
+        }
+
         throw new BusinessException(ErrorCode::SERVER_ERROR);
+    }
+
+    /**
+     * Retrieves the value from the cache based on the specified phone number.
+     *
+     * @param string $phone the phone number to retrieve from the cache
+     *
+     * @return null|string the value associated with the phone number from the cache,
+     *                     or null if the phone number is not found in the cache
+     */
+    private function getFromCache(string $phone): ?string
+    {
+        return redisClient()->get(sprintf(self::CACHE_KEY_FORMAT, $phone)) ?: null;
+    }
+
+    /**
+     * Saves the verify code to the cache.
+     *
+     * @param string $phone the phone number
+     * @param string $verifyCode the verify code to be saved
+     *
+     * @throws BusinessException if an error occurs while saving to cache
+     */
+    private function saveToCache(string $phone, string $verifyCode): void
+    {
+        try {
+            if (! redisClient()->setex(sprintf(self::CACHE_KEY_FORMAT, $phone), self::CACHE_EXPIRATION_TIME, $verifyCode)) {
+                throw new BusinessException(ErrorCode::SERVER_ERROR);
+            }
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e) {
+            throw new BusinessException(ErrorCode::SERVER_ERROR);
+        }
     }
 }

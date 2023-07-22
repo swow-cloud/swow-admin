@@ -10,28 +10,31 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
+use Carbon\Carbon;
+
 /**
  * @property int $id
+ * @property string $username
+ * @property string $password
+ * @property int $status
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property string $phone
- * @property string $verify_code
- * @property string $send_time
- * @property string $create_time
- * @property string $update_time
  */
-class SmsLog extends Model
+class User extends Model
 {
     /**
      * The table associated with the model.
      */
-    protected ?string $table = 'sms_log';
+    protected ?string $table = 'users';
 
     /**
      * The attributes that are mass assignable.
      */
-    protected array $fillable = ['id', 'phone', 'verify_code', 'send_time', 'created_at', 'updated_at'];
+    protected array $fillable = ['id', 'username', 'password', 'status', 'created_at', 'updated_at', 'phone'];
 
     /**
      * The attributes that should be cast to native types.
      */
-    protected array $casts = ['id' => 'integer'];
+    protected array $casts = ['id' => 'integer', 'status' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

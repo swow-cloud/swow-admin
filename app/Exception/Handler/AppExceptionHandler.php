@@ -29,7 +29,7 @@ class AppExceptionHandler extends ExceptionHandler
         );
         $this->logger->error($throwable->getTraceAsString());
         if (\Hyperf\Support\env('APP_DEBUG')) {
-            return $response->withHeader('Server', 'Swow')->withStatus(500)->withBody(
+            return $response->withHeader('Server', 'SwowAdmin')->withStatus(500)->withBody(
                 new SwowStream($throwable->getTraceAsString())
             );
         }

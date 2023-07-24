@@ -66,7 +66,7 @@ class Response
     public function handleException(HttpException $throwable): PsrResponseInterface
     {
         return $this->response()
-            ->withAddedHeader('Server', 'Hyperf')
+            ->withAddedHeader('Server', 'SwowAdmin')
             ->withStatus($throwable->getStatusCode())
             ->withBody(new SwowStream($throwable->getMessage()));
     }

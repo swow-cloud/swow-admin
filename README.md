@@ -26,3 +26,6 @@
 1. 开启ssl证书的时候需要配置绝对路径不能通过`BASE_PATH`或者其他常量配置
 
 2. Phar打包后是个包,不是源代码目录的形式，需要注意日志，或者其他文件写入的权限
+
+# Github
+[![GitHub Streak](https://streak-stats.demolab.com?user=AuroraYolo&theme=transparent)](https://git.io/streak-stats)

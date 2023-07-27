@@ -11,12 +11,22 @@ declare(strict_types=1);
 namespace CloudAdmin\SDB;
 
 use Error;
+use Exception;
 use Swow\Channel;
 use Swow\Coroutine;
+use Swow\CoroutineException;
 use Swow\Debug\Debugger\Debugger;
 use Swow\Debug\Debugger\DebuggerException;
+use Swow\Errno;
+use Swow\Http\Protocol\ProtocolException;
+use Swow\Http\Status;
+use Swow\Psr7\Message\UpgradeType;
+use Swow\Psr7\Psr7;
 use Swow\Psr7\Server\Server;
 use Swow\Socket;
+use Swow\SocketException;
+use Swow\WebSocket\Opcode;
+use Swow\WebSocket\WebSocket;
 use Throwable;
 
 use function Swow\Debug\var_dump_return;
@@ -40,11 +50,13 @@ class WebSocketDebugger extends Debugger
 
     protected static array $sslConfig = [];
 
-    protected Socket $socket;
+    protected Server $socket;
 
     final public function __construct()
     {
         parent::__construct();
+        $this->makeServer();
+        $this->listen();
     }
 
     final public static function runOnWebSocket(string $keyword = 'sdb', array $serverParams = [], array $sslConfig = []): static
@@ -336,5 +348,65 @@ class WebSocketDebugger extends Debugger
     protected function listen(): void
     {
         $this->socket->bind(self::$serverParams['host'], self::$serverParams['port'])->listen(self::$serverParams['backLog']);
+        while (true) {
+            try {
+                $connection = null;
+                $connection = $this->socket->acceptConnection();
+                Coroutine::run(static function () use ($connection): void {
+                    try {
+                        while (true) {
+                            $request = null;
+                            try {
+                                $request = $connection->recvHttpRequest();
+                                switch ($request->getUri()->getPath()) {
+                                    case '/chat':
+                                        $upgradeType = Psr7::detectUpgradeType($request);
+
+                                        if (($upgradeType & UpgradeType::UPGRADE_TYPE_WEBSOCKET) === 0) {
+                                            throw new ProtocolException(Status::BAD_REQUEST, 'Unsupported Upgrade Type');
+                                        }
+                                        $connection->upgradeToWebSocket($request);
+                                        $request = null;
+                                        while (true) {
+                                            $frame = $connection->recvWebSocketFrame();
+                                            $opcode = $frame->getOpcode();
+                                            switch ($opcode) {
+                                                case Opcode::PING:
+                                                    $connection->send(WebSocket::PONG_FRAME);
+                                                    break;
+                                                case Opcode::PONG:
+                                                    break;
+                                                case Opcode::CLOSE:
+                                                    break 4;
+                                                default:
+                                            }
+                                        }
+
+                                        // no break
+                                    default:
+                                        $connection->error(HttpStatus::NOT_FOUND);
+                                }
+                            } catch (ProtocolException $exception) {
+                                $connection->error($exception->getCode(), $exception->getMessage(), close: true);
+                                break;
+                            }
+                            if (! $connection->shouldKeepAlive()) {
+                                break;
+                            }
+                        }
+                    } catch (Exception) {
+                        // you can log error here
+                    } finally {
+                        $connection->close();
+                    }
+                });
+            } catch (SocketException|CoroutineException $exception) {
+                if (in_array($exception->getCode(), [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM], true)) {
+                    sleep(1);
+                } else {
+                    break;
+                }
+            }
+        }
     }
 }

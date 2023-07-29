@@ -10,8 +10,11 @@ declare(strict_types=1);
  */
 namespace CloudAdmin\SDB;
 
+use CloudAdmin\SDB\Debugger\ServerConfig;
+use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
 use Exception;
+use RuntimeException;
 use Swow\Channel;
 use Swow\Coroutine;
 use Swow\CoroutineException;
@@ -33,24 +36,11 @@ use function Swow\Debug\var_dump_return;
 
 class WebSocketDebugger extends Debugger
 {
-    protected static array $defaultServerParams = [
-        'type' => Socket::TYPE_TCP,
-        'host' => '127.0.0.1',
-        'port' => 9764,
-        'backlog' => Socket::DEFAULT_BACKLOG,
-    ];
-
-    protected static array $defaultSslConfig = [
-    ];
-
-    /**
-     * @var array{type:string,host:string,port:int,backLog:int}
-     */
-    protected static array $serverParams = [];
-
-    protected static array $sslConfig = [];
-
     protected Server $socket;
+
+    protected static ServerConfig $serverConfig;
+
+    protected static SslConfig $sslConfig;
 
     final public function __construct()
     {
@@ -59,10 +49,13 @@ class WebSocketDebugger extends Debugger
         $this->listen();
     }
 
-    final public static function runOnWebSocket(string $keyword = 'sdb', array $serverParams = [], array $sslConfig = []): static
+    final public static function runOnWebSocket(string $keyword = 'sdb', ServerConfig $serverConfig = null, SslConfig $sslConfig = null): static
     {
-        static::$serverParams = $serverParams ?? self::$defaultServerParams;
-        static::$sslConfig = $sslConfig ?? self::$defaultSslConfig;
+        if ($serverConfig === null) {
+            throw new RuntimeException('Debugger Server Not Setting...');
+        }
+        self::$serverConfig = $serverConfig;
+        self::$sslConfig = $sslConfig;
         return static::getInstance()->run($keyword);
     }
 
@@ -342,12 +335,12 @@ class WebSocketDebugger extends Debugger
 
     protected function makeServer(): void
     {
-        $this->socket = new Server(self::$serverParams['type']);
+        $this->socket = new Server(Socket::TYPE_TCP);
     }
 
     protected function listen(): void
     {
-        $this->socket->bind(self::$serverParams['host'], self::$serverParams['port'])->listen(self::$serverParams['backLog']);
+        $this->socket->bind(self::$serverConfig->getHost(), self::$serverConfig->getPort())->listen(self::$serverConfig->getBackLog());
         while (true) {
             try {
                 $connection = null;
@@ -384,7 +377,7 @@ class WebSocketDebugger extends Debugger
 
                                         // no break
                                     default:
-                                        $connection->error(HttpStatus::NOT_FOUND);
+                                        $connection->error(Status::NOT_FOUND);
                                 }
                             } catch (ProtocolException $exception) {
                                 $connection->error($exception->getCode(), $exception->getMessage(), close: true);

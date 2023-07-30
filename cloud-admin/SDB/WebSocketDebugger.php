@@ -15,7 +15,6 @@ use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
 use Exception;
 use RuntimeException;
-use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Swow\Channel;
 use Swow\Coroutine;
 use Swow\CoroutineException;
@@ -113,10 +112,7 @@ class WebSocketDebugger extends Debugger
                                                             switch ($command) {
                                                                 case 'ps':
                                                                     $map = $this->buildCoroutinesMap(Coroutine::getAll());
-                                                                    $converter = new AnsiToHtmlConverter();
-
-                                                                    $html = $converter->convert($this::tableFormat($map));
-                                                                    $this->send($connection, $html);
+                                                                    $this->send($connection, $this::tableFormat($map));
                                                                     break;
                                                                 case 'attach':
                                                                 case 'co':

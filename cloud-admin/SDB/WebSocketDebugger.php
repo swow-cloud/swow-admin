@@ -40,13 +40,11 @@ class WebSocketDebugger extends Debugger
 
     protected static ServerConfig $serverConfig;
 
-    protected static SslConfig $sslConfig;
+    protected static ?SslConfig $sslConfig;
 
     final public function __construct()
     {
         parent::__construct();
-        $this->makeServer();
-        $this->listen();
     }
 
     final public static function runOnWebSocket(string $keyword = 'sdb', ServerConfig $serverConfig = null, SslConfig $sslConfig = null): static
@@ -57,6 +55,72 @@ class WebSocketDebugger extends Debugger
         self::$serverConfig = $serverConfig;
         self::$sslConfig = $sslConfig;
         return static::getInstance()->run($keyword);
+    }
+
+    public function start(): void
+    {
+        $this->socket = new Server(Socket::TYPE_TCP);
+        $this->socket->bind(self::$serverConfig->getHost(), self::$serverConfig->getPort())->listen(self::$serverConfig->getBackLog());
+        while (true) {
+            try {
+                $connection = null;
+                $connection = $this->socket->acceptConnection();
+                Coroutine::run(static function () use ($connection): void {
+                    try {
+                        while (true) {
+                            $request = null;
+                            try {
+                                $request = $connection->recvHttpRequest();
+                                switch ($request->getUri()->getPath()) {
+                                    case '/':
+                                        $upgradeType = Psr7::detectUpgradeType($request);
+
+                                        if (($upgradeType & UpgradeType::UPGRADE_TYPE_WEBSOCKET) === 0) {
+                                            throw new ProtocolException(Status::BAD_REQUEST, 'Unsupported Upgrade Type');
+                                        }
+                                        $connection->upgradeToWebSocket($request);
+                                        $request = null;
+                                        while (true) {
+                                            $frame = $connection->recvWebSocketFrame();
+                                            $opcode = $frame->getOpcode();
+                                            switch ($opcode) {
+                                                case Opcode::PING:
+                                                    $connection->send(WebSocket::PONG_FRAME);
+                                                    break;
+                                                case Opcode::PONG:
+                                                    break;
+                                                case Opcode::CLOSE:
+                                                    break 4;
+                                                default:
+                                            }
+                                        }
+
+                                        // no break
+                                    default:
+                                        $connection->error(Status::NOT_FOUND);
+                                }
+                            } catch (ProtocolException $exception) {
+                                $connection->error($exception->getCode(), $exception->getMessage(), close: true);
+                                break;
+                            }
+                            if (! $connection->shouldKeepAlive()) {
+                                break;
+                            }
+                        }
+                    } catch (Exception) {
+                        // you can log error here
+                    } finally {
+                        $connection->close();
+                    }
+                });
+            } catch (SocketException|CoroutineException $exception) {
+                if (in_array($exception->getCode(), [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM], true)) {
+                    sleep(1);
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
     public function run(string $keyword = ''): static
@@ -331,75 +395,5 @@ class WebSocketDebugger extends Debugger
 
     protected function _run()
     {
-    }
-
-    protected function makeServer(): void
-    {
-        $this->socket = new Server(Socket::TYPE_TCP);
-    }
-
-    protected function listen(): void
-    {
-        $this->socket->bind(self::$serverConfig->getHost(), self::$serverConfig->getPort())->listen(self::$serverConfig->getBackLog());
-        while (true) {
-            try {
-                $connection = null;
-                $connection = $this->socket->acceptConnection();
-                Coroutine::run(static function () use ($connection): void {
-                    try {
-                        while (true) {
-                            $request = null;
-                            try {
-                                $request = $connection->recvHttpRequest();
-                                switch ($request->getUri()->getPath()) {
-                                    case '/chat':
-                                        $upgradeType = Psr7::detectUpgradeType($request);
-
-                                        if (($upgradeType & UpgradeType::UPGRADE_TYPE_WEBSOCKET) === 0) {
-                                            throw new ProtocolException(Status::BAD_REQUEST, 'Unsupported Upgrade Type');
-                                        }
-                                        $connection->upgradeToWebSocket($request);
-                                        $request = null;
-                                        while (true) {
-                                            $frame = $connection->recvWebSocketFrame();
-                                            $opcode = $frame->getOpcode();
-                                            switch ($opcode) {
-                                                case Opcode::PING:
-                                                    $connection->send(WebSocket::PONG_FRAME);
-                                                    break;
-                                                case Opcode::PONG:
-                                                    break;
-                                                case Opcode::CLOSE:
-                                                    break 4;
-                                                default:
-                                            }
-                                        }
-
-                                        // no break
-                                    default:
-                                        $connection->error(Status::NOT_FOUND);
-                                }
-                            } catch (ProtocolException $exception) {
-                                $connection->error($exception->getCode(), $exception->getMessage(), close: true);
-                                break;
-                            }
-                            if (! $connection->shouldKeepAlive()) {
-                                break;
-                            }
-                        }
-                    } catch (Exception) {
-                        // you can log error here
-                    } finally {
-                        $connection->close();
-                    }
-                });
-            } catch (SocketException|CoroutineException $exception) {
-                if (in_array($exception->getCode(), [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM], true)) {
-                    sleep(1);
-                } else {
-                    break;
-                }
-            }
-        }
     }
 }

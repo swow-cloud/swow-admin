@@ -7,7 +7,9 @@
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use SwowCloud\Debugger\Debugger;
+use CloudAdmin\SDB\Debugger\ServerConfig;
+use CloudAdmin\SDB\WebSocketDebugger;
+use Swow\Coroutine;
 
 ini_set('display_errors', 'on');
 ini_set('display_startup_errors', 'on');
@@ -28,7 +30,11 @@ require BASE_PATH . '/vendor/autoload.php';
     /** @var Symfony\Component\Console\Application $application */
     $application = $container->get(Hyperf\Contract\ApplicationInterface::class);
     if (\Hyperf\Support\env('APP_DEBUG')) {
-        $debugger = Debugger::runOnTTY();
+        $serverConfig = new ServerConfig(host: '127.0.0.1', port: 9764);
+        $debugger = WebSocketDebugger::runOnWebSocket('sdb', $serverConfig);
+        Coroutine::run(function () use ($debugger) {
+            $debugger->start();
+        });
         $debugger->out('[Info]    Press Ctrl+C to stop the server', true, 'yellow');
     }
     $application->run();

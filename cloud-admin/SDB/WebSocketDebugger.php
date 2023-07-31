@@ -14,6 +14,7 @@ use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
 use Exception;
+use Hyperf\Codec\Json;
 use RuntimeException;
 use Swow\Channel;
 use Swow\Coroutine;
@@ -111,8 +112,9 @@ class WebSocketDebugger extends Debugger
                                                             $command = array_shift($arguments);
                                                             switch ($command) {
                                                                 case 'ps':
-                                                                    $map = $this->buildCoroutinesMap(Coroutine::getAll());
-                                                                    $this->send($connection, $this::tableFormat($map));
+                                                                    $rows = $this->formatCoroutinesMap(Coroutine::getAll());
+                                                                    $head = ['id', 'state', 'switches', 'elapsed', 'executing', 'source position'];
+                                                                    $this->send($connection, $this->_table($head, $rows));
                                                                     break;
                                                                 case 'attach':
                                                                 case 'co':
@@ -323,7 +325,8 @@ class WebSocketDebugger extends Debugger
                                                                     if (! ctype_print($command)) {
                                                                         $command = bin2hex($command);
                                                                     }
-                                                                    //todo
+                                                                    // todo
+                                                                    $this->send($connection, $this->_out([1, 2]));
                                                                     throw new DebuggerException("Unknown command '{$command}'");
                                                             }
                                                         }
@@ -382,7 +385,7 @@ class WebSocketDebugger extends Debugger
         return $this;
     }
 
-    protected function buildCoroutinesMap(array $coroutines): array
+    protected function formatCoroutinesMap(array $coroutines): array
     {
         $map = [];
         foreach ($coroutines as $coroutine) {
@@ -391,8 +394,38 @@ class WebSocketDebugger extends Debugger
             }
             $info = static::getSimpleInfoOfCoroutine($coroutine, true);
             $info['source position'] = $this->callSourcePositionHandler($info['source position']);
-            $map[] = $info;
+            $map[] = array_values($info);
         }
         return $map;
+    }
+
+    /**
+     * @example
+     * {
+     * type: 'table',
+     * content: {
+     * head: ['title1', 'title2', 'title3', 'title4'],
+     * rows: [
+     * ['name1', 'hello world', 'this is a test1', 'xxxxxxxx'],
+     * ['name2', 'hello world', 'this is a test2 test2', 'xxxxxxxx']
+     * ]
+     * }
+     * }
+     */
+    protected function _table(array $header, array $rows): string
+    {
+        $data = [
+            'type' => 'table',
+            'content' => [
+                'head' => $header,
+                'rows' => $rows,
+            ],
+        ];
+        return $this->_out($data);
+    }
+
+    protected function _out(array $data): string
+    {
+        return Json::encode($data);
     }
 }

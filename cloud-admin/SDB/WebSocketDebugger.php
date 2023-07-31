@@ -323,6 +323,7 @@ class WebSocketDebugger extends Debugger
                                                                     if (! ctype_print($command)) {
                                                                         $command = bin2hex($command);
                                                                     }
+                                                                    //todo
                                                                     throw new DebuggerException("Unknown command '{$command}'");
                                                             }
                                                         }

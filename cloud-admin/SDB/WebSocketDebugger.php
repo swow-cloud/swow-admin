@@ -33,6 +33,7 @@ use Swow\SocketException;
 use Swow\WebSocket\Opcode;
 use Swow\WebSocket\WebSocket;
 use Throwable;
+use WeakMap;
 
 use function Swow\Debug\var_dump_return;
 
@@ -326,14 +327,13 @@ class WebSocketDebugger extends Debugger
                                                                         $command = bin2hex($command);
                                                                     }
                                                                     // todo
-                                                                    $this->send($connection, $this->_out([1, 2]));
                                                                     throw new DebuggerException("Unknown command '{$command}'");
                                                             }
                                                         }
                                                     } catch (DebuggerException $exception) {
-                                                        $this->exception($exception->getMessage());
+                                                        $this->send($connection, $exception->getMessage());
                                                     } catch (Throwable $throwable) {
-                                                        $this->error((string) $throwable);
+                                                        $this->send($connection, (string) $throwable);
                                                     }
                                             }
                                         }

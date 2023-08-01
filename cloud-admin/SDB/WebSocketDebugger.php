@@ -270,7 +270,7 @@ class WebSocketDebugger extends Debugger
                                                                         }
                                                                     }
                                                                     $this
-                                                                        ->out('Following coroutine maybe zombies:')
+                                                                        ->send($connection, 'Following coroutine maybe zombies:')
                                                                         ->showCoroutines($zombies);
                                                                     break;
                                                                 case 'kill':
@@ -279,7 +279,7 @@ class WebSocketDebugger extends Debugger
                                                                     }
                                                                     foreach ($arguments as $index => $argument) {
                                                                         if (! is_numeric($argument)) {
-                                                                            $this->exception("Argument[{$index}] '{$argument}' is not numeric");
+                                                                            $this->send($connection, "Argument[{$index}] '{$argument}' is not numeric");
                                                                         }
                                                                     }
                                                                     foreach ($arguments as $argument) {
@@ -288,7 +288,7 @@ class WebSocketDebugger extends Debugger
                                                                             $coroutine->kill();
                                                                             $this->send($connection, "Coroutine#{$argument} killed");
                                                                         } else {
-                                                                            $this->exception("Coroutine#{$argument} not exists");
+                                                                            $this->send($connection, "Coroutine#{$argument} not exists");
                                                                         }
                                                                     }
                                                                     break;

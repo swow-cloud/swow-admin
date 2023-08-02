@@ -14,7 +14,6 @@ use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
 use Exception;
-use Hyperf\Codec\Json;
 use RuntimeException;
 use Swow\Channel;
 use Swow\Coroutine;
@@ -39,7 +38,7 @@ use function Swow\Debug\var_dump_return;
 
 class WebSocketDebugger extends Debugger
 {
-    protected Server $socket;
+    protected ?Server $socket = null;
 
     protected static ServerConfig $serverConfig;
 
@@ -50,7 +49,7 @@ class WebSocketDebugger extends Debugger
         parent::__construct();
     }
 
-    final public static function runOnWebSocket(string $keyword = 'sdb', ServerConfig $serverConfig = null, SslConfig $sslConfig = null): static
+    final public static function createWithWebSocket(string $keyword = 'sdb', ServerConfig $serverConfig = null, SslConfig $sslConfig = null): static
     {
         if ($serverConfig === null) {
             throw new RuntimeException('Debugger Server Not Setting...');
@@ -113,9 +112,7 @@ class WebSocketDebugger extends Debugger
                                                             $command = array_shift($arguments);
                                                             switch ($command) {
                                                                 case 'ps':
-                                                                    $rows = $this->formatCoroutinesMap(Coroutine::getAll());
-                                                                    $head = ['id', 'state', 'switches', 'elapsed', 'executing', 'source position'];
-                                                                    $this->send($connection, $this->_table($head, $rows));
+                                                                    $this->showCoroutines(Coroutine::getAll());
                                                                     break;
                                                                 case 'attach':
                                                                 case 'co':
@@ -151,7 +148,7 @@ class WebSocketDebugger extends Debugger
                                                                     }
                                                                     $frameIndex = (int) $frameIndex;
                                                                     if ($this->getCurrentFrameIndex() !== $frameIndex) {
-                                                                        $this->send($connection, "Switch to frame {$frameIndex}");
+                                                                        $this->out("Switch to frame {$frameIndex}");
                                                                     }
                                                                     $this->setCurrentFrameIndex($frameIndex);
                                                                     $trace = $this->getCurrentCoroutineTrace();
@@ -205,7 +202,7 @@ class WebSocketDebugger extends Debugger
                                                                         case 'c':
                                                                         case 'continue':
                                                                             static::getDebugContextOfCoroutine($coroutine)->stop = false;
-                                                                            $this->send($connection, "Coroutine#{$coroutine->getId()} continue to run...");
+                                                                            $this->out("Coroutine#{$coroutine->getId()} continue to run...");
                                                                             $coroutine->resume();
                                                                             break;
                                                                         default:
@@ -242,13 +239,13 @@ class WebSocketDebugger extends Debugger
                                                                         $index = $this->getCurrentFrameIndexExtendedForExecution();
                                                                         $result = var_dump_return($coroutine->eval($expression, $index));
                                                                     }
-                                                                    $this->send($connection, $result);
+                                                                    $this->out($result, false);
                                                                     break;
                                                                 case 'vars':
                                                                     $coroutine = $this->getCurrentCoroutine();
                                                                     $index = $this->getCurrentFrameIndexExtendedForExecution();
                                                                     $result = var_dump_return($coroutine->getDefinedVars($index));
-                                                                    $this->send($connection, $result);
+                                                                    $this->out($result, false);
                                                                     break;
                                                                 case 'z':
                                                                 case 'zombie':
@@ -257,7 +254,7 @@ class WebSocketDebugger extends Debugger
                                                                     if (! is_numeric($time)) {
                                                                         throw new DebuggerException('Argument[1]: Time must be numeric');
                                                                     }
-                                                                    $this->send($connection, "Scanning zombie coroutines ({$time}s)...");
+                                                                    $this->out("Scanning zombie coroutines ({$time}s)...");
                                                                     $switchesMap = new WeakMap();
                                                                     foreach (Coroutine::getAll() as $coroutine) {
                                                                         $switchesMap[$coroutine] = $coroutine->getSwitches();
@@ -270,7 +267,7 @@ class WebSocketDebugger extends Debugger
                                                                         }
                                                                     }
                                                                     $this
-                                                                        ->send($connection, 'Following coroutine maybe zombies:')
+                                                                        ->out('Following coroutine maybe zombies:')
                                                                         ->showCoroutines($zombies);
                                                                     break;
                                                                 case 'kill':
@@ -279,22 +276,22 @@ class WebSocketDebugger extends Debugger
                                                                     }
                                                                     foreach ($arguments as $index => $argument) {
                                                                         if (! is_numeric($argument)) {
-                                                                            $this->send($connection, "Argument[{$index}] '{$argument}' is not numeric");
+                                                                            $this->exception("Argument[{$index}] '{$argument}' is not numeric");
                                                                         }
                                                                     }
                                                                     foreach ($arguments as $argument) {
                                                                         $coroutine = Coroutine::get((int) $argument);
                                                                         if ($coroutine) {
                                                                             $coroutine->kill();
-                                                                            $this->send($connection, "Coroutine#{$argument} killed");
+                                                                            $this->out("Coroutine#{$argument} killed");
                                                                         } else {
-                                                                            $this->send($connection, "Coroutine#{$argument} not exists");
+                                                                            $this->exception("Coroutine#{$argument} not exists");
                                                                         }
                                                                     }
                                                                     break;
                                                                 case 'killall':
                                                                     Coroutine::killAll();
-                                                                    $this->send($connection, 'All coroutines has been killed');
+                                                                    $this->out('All coroutines has been killed');
                                                                     break;
                                                                 case 'clear':
                                                                     $this->clear();
@@ -305,14 +302,13 @@ class WebSocketDebugger extends Debugger
                                                                     if (! ctype_print($command)) {
                                                                         $command = bin2hex($command);
                                                                     }
-                                                                    // todo
                                                                     throw new DebuggerException("Unknown command '{$command}'");
                                                             }
                                                         }
                                                     } catch (DebuggerException $exception) {
-                                                        $this->send($connection, $exception->getMessage());
+                                                        $this->out($exception->getMessage());
                                                     } catch (Throwable $throwable) {
-                                                        $this->send($connection, (string) $throwable);
+                                                        $this->out((string) $throwable);
                                                     }
                                             }
                                         }
@@ -349,8 +345,19 @@ class WebSocketDebugger extends Debugger
     {
         if (static::isAlone()) {
             $this->daemon = false;
-            $this->logo()->out('[Info]    Input \'r\' to run your program...');
+            $this->logo()->out('[Info]    Program is running...');
         }
+        return $this;
+    }
+
+    public function out(string $string = '', bool $newline = true): static
+    {
+        if ($this->socket === null) {
+            return parent::out($string);
+        }
+        $this->socket->broadcastWebSocketFrame(Psr7::createWebSocketTextFrame(
+            payloadData: $string . PHP_EOL
+        ));
         return $this;
     }
 
@@ -362,49 +369,5 @@ class WebSocketDebugger extends Debugger
             )
         );
         return $this;
-    }
-
-    protected function formatCoroutinesMap(array $coroutines): array
-    {
-        $map = [];
-        foreach ($coroutines as $coroutine) {
-            if ($coroutine === Coroutine::getCurrent()) {
-                continue;
-            }
-            $info = static::getSimpleInfoOfCoroutine($coroutine, true);
-            $info['source position'] = $this->callSourcePositionHandler($info['source position']);
-            $map[] = array_values($info);
-        }
-        return $map;
-    }
-
-    /**
-     * @example
-     * {
-     * type: 'table',
-     * content: {
-     * head: ['title1', 'title2', 'title3', 'title4'],
-     * rows: [
-     * ['name1', 'hello world', 'this is a test1', 'xxxxxxxx'],
-     * ['name2', 'hello world', 'this is a test2 test2', 'xxxxxxxx']
-     * ]
-     * }
-     * }
-     */
-    protected function _table(array $header, array $rows): string
-    {
-        $data = [
-            'type' => 'table',
-            'content' => [
-                'head' => $header,
-                'rows' => $rows,
-            ],
-        ];
-        return $this->_out($data);
-    }
-
-    protected function _out(array $data): string
-    {
-        return Json::encode($data);
     }
 }

@@ -31,7 +31,7 @@ require BASE_PATH . '/vendor/autoload.php';
     $application = $container->get(Hyperf\Contract\ApplicationInterface::class);
     if (\Hyperf\Support\env('APP_DEBUG')) {
         $serverConfig = new ServerConfig(host: '127.0.0.1', port: 9764);
-        $debugger = WebSocketDebugger::runOnWebSocket('sdb', $serverConfig);
+        $debugger = WebSocketDebugger::createWithWebSocket('sdb', $serverConfig);
         Coroutine::run(function () use ($debugger) {
             $debugger->start();
         });

@@ -299,29 +299,6 @@ class WebSocketDebugger extends Debugger
                                                                 case 'clear':
                                                                     $this->clear();
                                                                     break;
-                                                                case 'q':
-                                                                case 'quit':
-                                                                    //                                                                case 'exit':
-                                                                    //                                                                    $this->clear();
-                                                                    //                                                                    if ($keyword !== '' && !static::isAlone()) {
-                                                                    //                                                                        /* we can input keyword to call out the debugger later */
-                                                                    //                                                                        goto _restart;
-                                                                    //                                                                    }
-                                                                    //                                                                    goto _quit;
-                                                                case 'r':
-                                                                case 'run':
-                                                                    if ($this->daemon) {
-                                                                        throw new DebuggerException('Debugger is already running');
-                                                                    }
-                                                                    $args = func_get_args();
-                                                                    Coroutine::run(function () use ($connection, $args): void {
-                                                                        $this->reloading = true;
-                                                                        $this->daemon = true;
-                                                                        $this->send($connection, 'Program is running...')->run(...$args);
-                                                                    });
-                                                                    // todo 需要输入r后才能启动后续服务
-                                                                    //                                                                    goto _quit;
-                                                                    break;
                                                                 case null:
                                                                     break;
                                                                 default:

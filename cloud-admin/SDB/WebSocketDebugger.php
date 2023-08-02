@@ -346,6 +346,7 @@ class WebSocketDebugger extends Debugger
         if (static::isAlone()) {
             $this->daemon = false;
             $this->logo()->out('[Info]    Program is running...');
+            $this->out('[Info]    Press Ctrl+C to stop the server...');
         }
         return $this;
     }

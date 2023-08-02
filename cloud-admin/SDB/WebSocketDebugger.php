@@ -321,6 +321,7 @@ class WebSocketDebugger extends Debugger
                                                                     });
                                                                     // todo 需要输入r后才能启动后续服务
                                                                     //                                                                    goto _quit;
+                                                                    break;
                                                                 case null:
                                                                     break;
                                                                 default:

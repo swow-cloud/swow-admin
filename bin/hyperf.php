@@ -35,7 +35,7 @@ require BASE_PATH . '/vendor/autoload.php';
         Coroutine::run(function () use ($debugger) {
             $debugger->start();
         });
-        $debugger->out('[Info]    Press Ctrl+C to stop the server', true, 'yellow');
+        $debugger->out('[Info]    Press Ctrl+C to stop the server');
     }
     $application->run();
 })();

@@ -319,7 +319,8 @@ class WebSocketDebugger extends Debugger
                                                                         $this->daemon = true;
                                                                         $this->send($connection, 'Program is running...')->run(...$args);
                                                                     });
-                                                                    //                                                                                                                                    goto _quit;
+                                                                    // todo 需要输入r后才能启动后续服务
+                                                                    //                                                                    goto _quit;
                                                                 case null:
                                                                     break;
                                                                 default:
@@ -370,7 +371,7 @@ class WebSocketDebugger extends Debugger
     {
         if (static::isAlone()) {
             $this->daemon = false;
-            $this->logo()->out('Input \'r\' to run your program');
+            $this->logo()->out('[Info]    Input \'r\' to run your program...');
         }
         return $this;
     }

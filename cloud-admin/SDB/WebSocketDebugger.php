@@ -361,14 +361,4 @@ class WebSocketDebugger extends Debugger
         ));
         return $this;
     }
-
-    protected function send(ServerConnection $connection, string $message): self
-    {
-        $connection->sendWebSocketFrame(
-            Psr7::createWebSocketTextFrame(
-                payloadData: $message
-            )
-        );
-        return $this;
-    }
 }

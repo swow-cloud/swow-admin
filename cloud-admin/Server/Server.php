@@ -81,13 +81,17 @@ class Server extends Psr7Server implements ServerInterface
     public function start(): void
     {
         $this->listen();
+        $options = null;
+        if ($this->ssl) {
+            $options = $this->sslConfig->toArray();
+        }
 
         // 多个 server 自行在外层处理协程与 waitAll
         while (ProcessManager::isRunning()) {
             try {
                 $connection = $this->acceptConnection();
-                if ($this->ssl) {
-                    $connection->enableCrypto($this->sslConfig->toArray());
+                if ($options !== null) {
+                    $connection->enableCrypto($options);
                 }
                 Coroutine::create(function () use ($connection) {
                     try {

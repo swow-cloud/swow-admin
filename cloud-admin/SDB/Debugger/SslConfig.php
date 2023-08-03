@@ -47,16 +47,7 @@ class SslConfig
         }
 
         // Fetch file content
-        $key = file_get_contents($this->certificate);
-
-        // Try parsing it as a certificate
-        /* @noinspection PhpComposerExtensionStubsInspection */
-
-        if (openssl_x509_read($key) === false) {
-            throw new RuntimeException('Not a valid certificate');
-        }
-
-        return $key;
+        return $this->certificate;
     }
 
     /**
@@ -84,17 +75,7 @@ class SslConfig
             throw new RuntimeException("File does not exist: {$this->certificateKey}");
         }
 
-        // Fetch file content
-        $key = file_get_contents($this->certificateKey);
-
-        // Try parsing it as a certificate
-        /* @noinspection PhpComposerExtensionStubsInspection */
-
-        if (openssl_x509_read($key) === false) {
-            throw new RuntimeException('Not a valid certificate key');
-        }
-
-        return $key;
+        return $this->certificateKey;
     }
 
     /**

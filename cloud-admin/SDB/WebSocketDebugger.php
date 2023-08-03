@@ -26,7 +26,6 @@ use Swow\Http\Status;
 use Swow\Psr7\Message\UpgradeType;
 use Swow\Psr7\Psr7;
 use Swow\Psr7\Server\Server;
-use Swow\Psr7\Server\ServerConnection;
 use Swow\Socket;
 use Swow\SocketException;
 use Swow\WebSocket\Opcode;
@@ -63,10 +62,18 @@ class WebSocketDebugger extends Debugger
     {
         $this->socket = new Server(Socket::TYPE_TCP);
         $this->socket->bind(self::$serverConfig->getHost(), self::$serverConfig->getPort())->listen(self::$serverConfig->getBackLog());
+        $options = null;
+        if (self::$sslConfig !== null) {
+            $options = self::$sslConfig->toArray();
+            unset($options['ssl']);
+        }
         while (true) {
             try {
                 $connection = null;
                 $connection = $this->socket->acceptConnection();
+                if ($options !== null) {
+                    $connection->enableCrypto($options);
+                }
                 Coroutine::run(function () use ($connection): void {
                     try {
                         while (true) {
@@ -331,7 +338,7 @@ class WebSocketDebugger extends Debugger
                         $connection->close();
                     }
                 });
-            } catch (SocketException|CoroutineException $exception) {
+            } catch (SocketException|CoroutineException|Throwable $exception) {
                 if (in_array($exception->getCode(), [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM], true)) {
                     sleep(1);
                 } else {

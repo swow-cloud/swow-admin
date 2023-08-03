@@ -31,9 +31,20 @@ require BASE_PATH . '/vendor/autoload.php';
     /** @var Symfony\Component\Console\Application $application */
     $application = $container->get(Hyperf\Contract\ApplicationInterface::class);
     if (\Hyperf\Support\env('APP_DEBUG')) {
-        $serverConfig = new ServerConfig(host: '127.0.0.1', port: 9764);
-        $options = \Hyperf\Config\config('ssl');
-        $sslConfig = new SslConfig($options['enable'], $options['certificate'], $options['certificate_key'], $options['verify_peer'], $options['verify_peer_name'], $options['allow_self_signed']);
+        $debuggerOptions = \Hyperf\Config\config('debugger');
+        [$serverOptions,$sslOptions] = array_values($debuggerOptions);
+        $serverConfig = new ServerConfig(
+            host: $serverOptions['host'],
+            port: $serverOptions['port']
+        );
+        $sslConfig = new SslConfig(
+            $sslOptions['enable'],
+            $sslOptions['certificate'],
+            $sslOptions['certificate_key'],
+            $sslOptions['verify_peer'],
+            $sslOptions['verify_peer_name'],
+            $sslOptions['allow_self_signed']
+        );
         $debugger = WebSocketDebugger::createWithWebSocket('sdb', $serverConfig, $sslConfig);
         Coroutine::run(function () use ($debugger) {
             $debugger->start();

@@ -14,8 +14,10 @@ use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
 use Exception;
-use Hyperf\Pool\Pool;
+use Hyperf\Codec\Json;
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Redis\Pool\PoolFactory;
+use ReflectionClass;
 use RuntimeException;
 use Swow\Channel;
 use Swow\Coroutine;
@@ -308,28 +310,37 @@ class WebSocketDebugger extends Debugger
                                                                     break;
                                                                 case 'pool':
                                                                     $poolCmd = $arguments[0] ?? 'unknown';
+
                                                                     if (! is_string($poolCmd)) {
                                                                         throw new DebuggerException('Argument[1]: Coroutine id must be string,like: pool redis:default,pool mysql:mysql1');
                                                                     }
-                                                                    [$pool,$name] = explode(':', $poolCmd);
-                                                                    $pool = $pool ?? 'mysql';
-                                                                    $name = $name ?? 'default';
-                                                                    if ($pool === 'redis') {
-                                                                        $factory = PoolFactory::class;
-                                                                    } elseif ($pool === 'mysql') {
-                                                                        $factory = \Hyperf\DbConnection\Pool\PoolFactory::class;
-                                                                    } else {
-                                                                        $factory = PoolFactory::class;
-                                                                    }
-                                                                    /** @var Pool $mysqlPool */
+
+                                                                    [$pool, $name] = explode(':', $poolCmd, 2) + ['mysql', 'default'];
+
+                                                                    $factory = match (strtolower($pool)) {
+                                                                        'mysql' => \Hyperf\DbConnection\Pool\PoolFactory::class,
+                                                                        default => PoolFactory::class,
+                                                                    };
+
                                                                     $pools = di()->get($factory)->getPool($name);
+
+                                                                    $info = [];
+
                                                                     $info[] = [
                                                                         'pool' => $pool,
                                                                         'poolName' => $name,
                                                                         'currentConnections' => $pools->getCurrentConnections(),
                                                                         'connectionsInChannel' => $pools->getConnectionsInChannel(),
                                                                     ];
+
                                                                     $this->table($info);
+                                                                    break;
+                                                                case 'config':
+                                                                    // todo 但是不建议获取敏感信息
+                                                                    $config = di()->get(ConfigInterface::class);
+                                                                    $reflection = new ReflectionClass($config);
+                                                                    $property = $reflection->getProperty('configs');
+                                                                    $this->out(Json::encode($property->getValue($config)));
                                                                     break;
                                                                 case null:
                                                                     break;

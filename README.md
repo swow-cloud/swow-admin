@@ -120,6 +120,13 @@ kill <id>
 pool redis:name1,pool mysql:name2
 ```
 
+## 18. 查看线上配置信息
+`config`命令
+```
+config
+```
+![img_1.png](img_1.png)
+
 
 
 

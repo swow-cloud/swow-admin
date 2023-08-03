@@ -14,6 +14,8 @@ use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
 use Exception;
+use Hyperf\Pool\Pool;
+use Hyperf\Redis\Pool\PoolFactory;
 use RuntimeException;
 use Swow\Channel;
 use Swow\Coroutine;
@@ -33,6 +35,7 @@ use Swow\WebSocket\WebSocket;
 use Throwable;
 use WeakMap;
 
+use function CloudAdmin\Utils\di;
 use function Swow\Debug\var_dump_return;
 
 class WebSocketDebugger extends Debugger
@@ -302,6 +305,31 @@ class WebSocketDebugger extends Debugger
                                                                     break;
                                                                 case 'clear':
                                                                     $this->clear();
+                                                                    break;
+                                                                case 'pool':
+                                                                    $poolCmd = $arguments[0] ?? 'unknown';
+                                                                    if (! is_string($poolCmd)) {
+                                                                        throw new DebuggerException('Argument[1]: Coroutine id must be string,like: pool redis:default,pool mysql:mysql1');
+                                                                    }
+                                                                    [$pool,$name] = explode(':', $poolCmd);
+                                                                    $pool = $pool ?? 'mysql';
+                                                                    $name = $name ?? 'default';
+                                                                    if ($pool === 'redis') {
+                                                                        $factory = PoolFactory::class;
+                                                                    } elseif ($pool === 'mysql') {
+                                                                        $factory = \Hyperf\DbConnection\Pool\PoolFactory::class;
+                                                                    } else {
+                                                                        $factory = PoolFactory::class;
+                                                                    }
+                                                                    /** @var Pool $mysqlPool */
+                                                                    $pools = di()->get($factory)->getPool($name);
+                                                                    $info[] = [
+                                                                        'pool' => $pool,
+                                                                        'poolName' => $name,
+                                                                        'currentConnections' => $pools->getCurrentConnections(),
+                                                                        'connectionsInChannel' => $pools->getConnectionsInChannel(),
+                                                                    ];
+                                                                    $this->table($info);
                                                                     break;
                                                                 case null:
                                                                     break;

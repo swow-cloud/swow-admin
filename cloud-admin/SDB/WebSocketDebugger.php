@@ -357,7 +357,7 @@ class WebSocketDebugger extends Debugger
             return parent::out($string);
         }
         $this->socket->broadcastWebSocketFrame(Psr7::createWebSocketTextFrame(
-            payloadData: $string . PHP_EOL
+            payloadData: $string
         ));
         return $this;
     }

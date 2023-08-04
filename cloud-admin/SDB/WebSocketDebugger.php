@@ -341,6 +341,8 @@ class WebSocketDebugger extends Debugger
                                                                     $property = $reflection->getProperty('configs');
                                                                     $this->out(Json::encode($property->getValue($config)));
                                                                     break;
+                                                                case 'route':
+                                                                    break;
                                                                 case null:
                                                                     break;
                                                                 default:

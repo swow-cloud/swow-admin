@@ -10,36 +10,219 @@ declare(strict_types=1);
  */
 namespace CloudAdmin\SDB;
 
-use CloudAdmin\SDB\Debugger\ServerConfig;
-use CloudAdmin\SDB\Debugger\SslConfig;
-use Error;
-use Exception;
-use Hyperf\Codec\Json;
-use Hyperf\Contract\ConfigInterface;
-use Hyperf\Redis\Pool\PoolFactory;
-use ReflectionClass;
-use RuntimeException;
-use Swow\Channel;
-use Swow\Coroutine;
-use Swow\CoroutineException;
-use Swow\Debug\Debugger\Debugger;
-use Swow\Debug\Debugger\DebuggerException;
-use Swow\Errno;
+use /*
+ * Class ServerConfig
+ *
+ * This class represents the server configuration for the CloudAdmin SDB Debugger.
+ */
+CloudAdmin\SDB\Debugger\ServerConfig;
+use /*
+ * Class SslConfig
+ *
+ * This class represents the SSL configuration for the SDB Debugger.
+ */
+CloudAdmin\SDB\Debugger\SslConfig;
+use /*
+ * Error class used for handling errors in the application.
+ *
+ * @package MyApp
+ */
+Error;
+use /*
+ * Exception class representing an error in the application.
+ *
+ * @category  Exceptions
+ * @package   YourNamespace\YourPackage
+ */
+Exception;
+use /*
+ * Hyperf\Codec\Json
+ *
+ * JSON Codec for encoding and decoding data.
+ */
+Hyperf\Codec\Json;
+use /*
+ * Interface ConfigInterface
+ *
+ * Defines the contract for accessing configuration data in Hyperf.
+ */
+Hyperf\Contract\ConfigInterface;
+use /*
+ * Class PoolFactory
+ *
+ * The PoolFactory class is responsible for creating and managing instances of Redis connection pools.
+ */
+Hyperf\Redis\Pool\PoolFactory;
+use /*
+ * Class ReflectionClass
+ *
+ * The ReflectionClass class reports information about a class.
+ */
+ReflectionClass;
+use /*
+ * Class RuntimeException
+ *
+ * The RuntimeException class represents a generic runtime exception.
+ *
+ * @package MyApp
+ */
+RuntimeException;
+use /*
+ * Class Swow\Channel
+ *
+ * The Swow\Channel class represents a communication channel between senders and receivers.
+ *
+ * Each channel has a capacity, which defines the number of messages that can be sent or
+ * received before blocking the sender or receiver. If the capacity is zero, the channel
+ * is considered unbuffered and each send operation must wait for a corresponding receive
+ * operation and vice versa.
+ *
+ * @package Swow
+ */
+Swow\Channel;
+use /*
+ * Class Swow\Coroutine
+ *
+ * This class represents a coroutine in Swow.
+ * Coroutines are used for cooperative multitasking, allowing multiple tasks to be executed concurrently
+ * without the need for threads or parallel processing.
+ */
+Swow\Coroutine;
+use /*
+ * Class Swow\CoroutineException
+ *
+ * An exception that is thrown when an error occurs in a coroutine.
+ *
+ * @package Swow
+ */
+Swow\CoroutineException;
+use /*
+ * Class Debugger
+ *
+ * The Debugger class provides various debugging and logging functionalities.
+ *
+ * @package Swow\Debug\Debugger
+ */
+Swow\Debug\Debugger\Debugger;
+use /*
+ * Class DebuggerException
+ *
+ * An exception class used by the Debugger class in the Swow\Debug\Debugger namespace.
+ *
+ * @package Swow\Debug\Debugger
+ */
+Swow\Debug\Debugger\DebuggerException;
+use /*
+ * Namespace for handling system error codes.
+ *
+ * This namespace provides functionality for handling and working with system error codes.
+ */
+Swow\Errno;
 use Swow\Http\Protocol\ProtocolException;
-use Swow\Http\Status;
-use Swow\Psr7\Message\UpgradeType;
-use Swow\Psr7\Psr7;
-use Swow\Psr7\Server\Server;
-use Swow\Socket;
-use Swow\SocketException;
-use Swow\WebSocket\Opcode;
-use Swow\WebSocket\WebSocket;
-use Throwable;
-use WeakMap;
+use /*
+ * Class HttpStatus
+ *
+ * This class contains constants representing the HTTP status codes according to the HTTP/1.1 specification.
+ * Each constant is named after the corresponding HTTP status code.
+ *
+ * @package Swow\Http
+ */
+Swow\Http\Status;
+use /*
+ * Class UpgradeType
+ *
+ * Represents an HTTP/1.x Upgrade type in a request or response message.
+ * This class implements the Psr\Http\Message\UpgradeTypeInterface.
+ */
+Swow\Psr7\Message\UpgradeType;
+use /*
+ * The Psr7 class provides utilities for working with PSR-7 HTTP message interfaces.
+ *
+ * @package Swow\Psr7
+ */
+Swow\Psr7\Psr7;
+use /*
+ * Represents an HTTP server.
+ *
+ * This class provides a convenient way to handle HTTP requests and send HTTP responses.
+ *
+ * @package Swow\Psr7\Server
+ */
+Swow\Psr7\Server\Server;
+use /*
+ * Class Swow\Socket
+ *
+ * This class represents a socket object that provides a high-level interface for
+ * creating, managing, and interacting with TCP/IP sockets.
+ *
+ * @package Swow\Socket
+ */
+Swow\Socket;
+use /*
+ * Class Swow\SocketException
+ *
+ * SocketException represents an exception that is thrown when there is an error related to sockets.
+ *
+ * @package Swow
+ */
+Swow\SocketException;
+use /*
+ * Provides constants for WebSocket opcodes.
+ *
+ * @package Swow\WebSocket
+ */
+Swow\WebSocket\Opcode;
+use /*
+ * Class WebSocket
+ *
+ * The WebSocket class represents a WebSocket connection used for real-time communication.
+ *
+ * @package Swow\WebSocket
+ */
+Swow\WebSocket\WebSocket;
+use /*
+ * Throwable is the base class for all the exceptions.
+ *
+ * @since PHP 5, PHP 7
+ */
+Throwable;
+use /*
+ * A WeakMap is a built-in object in JavaScript that allows you to establish
+ * weak relationships between objects and values. WeakMap keys are weak
+ * references, which means they don't prevent garbage collection of the object
+ * they refer to. In other words, if there are no other references to the key
+ * object, it may be garbage collected (removed from memory) and the WeakMap
+ * will automatically remove its corresponding value.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
+ *
+ * @class WeakMap
+ */
+WeakMap;
 
-use function CloudAdmin\Utils\di;
-use function Swow\Debug\var_dump_return;
+use function /*
+ * Class di
+ *
+ * The di (Dependency Injection) class provides a simple implementation of dependency injection container.
+ * It allows for easy management of object dependencies and their creation.
+ * The di class follows the Singleton design pattern, ensuring only one instance of the container is used.
+ */
+CloudAdmin\Utils\di;
+use function /*
+ * Dump a variable and return its output as a string.
+ *
+ * @param mixed $variable The variable to be dumped.
+ *
+ * @return string The output string of the variable dump.
+ */
+Swow\Debug\var_dump_return;
 
+/**
+ * Class WebSocketDebugger.
+ *
+ * This class represents a WebSocket debugger that extends the base Debugger class.
+ * It allows debugging of coroutines using a WebSocket connection.
+ */
 class WebSocketDebugger extends Debugger
 {
     protected ?Server $socket = null;

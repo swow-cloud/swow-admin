@@ -316,7 +316,6 @@ class WebSocketDebugger extends Debugger
                                                                     break;
                                                                 case 'pool':
                                                                     $poolCmd = $arguments[0] ?? 'unknown';
-
                                                                     if (! is_string($poolCmd)) {
                                                                         throw new DebuggerException('Argument[1]: Coroutine id must be string,like: pool redis:default,pool mysql:mysql1');
                                                                     }

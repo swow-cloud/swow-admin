@@ -12,31 +12,47 @@ use CloudAdmin\SDB\Debugger\SslConfig;
 use CloudAdmin\SDB\WebSocketDebugger;
 use Swow\Coroutine;
 
-ini_set('display_errors', 'on');
-ini_set('display_startup_errors', 'on');
+/**
+ * This file is part of the Cloud-Admin project.
+ *
+ * @see     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
+function initialize(): void
+{
+    ini_set('display_errors', 'on');
+    ini_set('display_startup_errors', 'on');
+    error_reporting(E_ALL);
+    date_default_timezone_set('Asia/Shanghai');
 
-error_reporting(E_ALL);
-date_default_timezone_set('Asia/Shanghai');
+    defined('BASE_PATH') || define('BASE_PATH', dirname(__DIR__, 1));
+    defined('SWOOLE_HOOK_FLAGS') || define('SWOOLE_HOOK_FLAGS', 0);
 
-! defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__, 1));
-! defined('SWOOLE_HOOK_FLAGS') && define('SWOOLE_HOOK_FLAGS', 0);
+    require BASE_PATH . '/vendor/autoload.php';
+}
 
-require BASE_PATH . '/vendor/autoload.php';
+initialize();
 
-// Self-called anonymous function that creates its own scope and keep the global namespace clean.
-(static function () {
+(static function (): void {
     Hyperf\Di\ClassLoader::init(handler: new Hyperf\Di\ScanHandler\ProcScanHandler());
+
     /** @var Psr\Container\ContainerInterface $container */
     $container = require BASE_PATH . '/config/container.php';
+
     /** @var Symfony\Component\Console\Application $application */
     $application = $container->get(Hyperf\Contract\ApplicationInterface::class);
-    if (\Hyperf\Support\env('APP_DEBUG')) {
-        $debuggerOptions = \Hyperf\Config\config('debugger');
-        [$serverOptions,$sslOptions] = array_values($debuggerOptions);
+
+    $debuggerOptions = \Hyperf\Support\env('APP_DEBUG') ? \Hyperf\Config\config('debugger') : null;
+
+    if ($debuggerOptions) {
+        [$serverOptions, $sslOptions] = array_values($debuggerOptions);
+
         $serverConfig = new ServerConfig(
             host: $serverOptions['host'],
             port: $serverOptions['port']
         );
+
         $sslConfig = new SslConfig(
             $sslOptions['enable'],
             $sslOptions['certificate'],
@@ -45,10 +61,11 @@ require BASE_PATH . '/vendor/autoload.php';
             $sslOptions['verify_peer_name'],
             $sslOptions['allow_self_signed']
         );
+
         $debugger = WebSocketDebugger::createWithWebSocket('sdb', $serverConfig, $sslConfig);
-        Coroutine::run(function () use ($debugger) {
-            $debugger->start();
-        });
+
+        Coroutine::run(fn () => $debugger?->start());
     }
+
     $application->run();
 })();

@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace CloudAdmin\SDB;
 
+use CloudAdmin\SDB\Business\Route;
 use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
 use Error;
@@ -342,13 +343,8 @@ class WebSocketDebugger extends Debugger
                                                                     $this->out(Json::encode($property->getValue($config)));
                                                                     break;
                                                                 case 'route':
-                                                                    $transfer = new Channel();
-                                                                    //todo 这里执行命令不太好，看是否需要单独实现
-                                                                    Coroutine::run(static function () use ($transfer): void {
-                                                                        $transfer->push(Coroutine::getCurrent()->eval('`php bin/hyperf.php describe:routes`'));
-                                                                    });
-                                                                    $result = var_dump_return($transfer->pop());
-                                                                    $this->out($result);
+                                                                    $route = \Hyperf\Support\make(Route::class);
+                                                                    $this->out(Json::encode($route->getRoute()));
                                                                     break;
                                                                 case null:
                                                                     break;

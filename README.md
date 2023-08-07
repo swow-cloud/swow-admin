@@ -127,6 +127,12 @@ config
 ```
 ![img_1.png](img_1.png)
 
+## 19. 查看路由
+`route`命令
+```
+route
+```
+
 
 
 

@@ -63,7 +63,6 @@ class SmsController extends AbstractController
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ConstantsException
      */
     public static function limitCallback(
         float $seconds,

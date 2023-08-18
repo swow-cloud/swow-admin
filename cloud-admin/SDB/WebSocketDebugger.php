@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+
 namespace CloudAdmin\SDB;
 
 use CloudAdmin\SDB\Business\Route;
@@ -316,7 +317,7 @@ class WebSocketDebugger extends Debugger
                                                                     $this->clear();
                                                                     break;
                                                                 case 'pool':
-                                                                    $poolCmd = $arguments[0] ?? 'unknown';
+                                                                    $poolCmd = $arguments[0] ?? 'mysql';
                                                                     if (! is_string($poolCmd)) {
                                                                         throw new DebuggerException('Argument[1]: Coroutine id must be string,like: pool redis:default,pool mysql:mysql1');
                                                                     }
@@ -346,7 +347,8 @@ class WebSocketDebugger extends Debugger
                                                                     $route = \Hyperf\Support\make(Route::class);
                                                                     $this->out(Json::encode($route->getRoute()));
                                                                     break;
-                                                                case null:
+                                                                case 'ping':
+                                                                    $this->out('pong');
                                                                     break;
                                                                 default:
                                                                     if (! ctype_print($command)) {

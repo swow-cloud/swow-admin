@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+
 namespace CloudAdmin\Casbin;
 
 use Casbin\Enforcer as BaseEnforcer;

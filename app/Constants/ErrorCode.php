@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+
 namespace App\Constants;
 
 use CloudAdmin\Annotation\EnumMessage;
@@ -16,6 +17,7 @@ use Hyperf\Constants\EnumConstantsTrait;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\TranslatorInterface;
 use ReflectionClass;
+use Throwable;
 
 #[Constants]
 enum ErrorCode: int implements ErrorCodeInterface
@@ -45,7 +47,7 @@ enum ErrorCode: int implements ErrorCodeInterface
             $result = $translator->trans($key);
 
             return $key === $result ? $attributes[0]->newInstance()->message : $result;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $attributes[0]->newInstance()->message;
         }
     }

@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * This file is part of Cloud-Admin.
+ * This file is part of Cloud-Admin project.
  *
  * @link     https://www.cloud-admin.jayjay.cn
  * @document https://wiki.cloud-admin.jayjay.cn
@@ -12,13 +12,6 @@ use CloudAdmin\SDB\Debugger\SslConfig;
 use CloudAdmin\SDB\WebSocketDebugger;
 use Swow\Coroutine;
 
-/**
- * This file is part of the Cloud-Admin project.
- *
- * @see     https://www.cloud-admin.jayjay.cn
- * @document https://wiki.cloud-admin.jayjay.cn
- * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
- */
 function initialize(): void
 {
     ini_set('display_errors', 'on');

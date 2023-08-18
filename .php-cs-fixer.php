@@ -1,7 +1,7 @@
 <?php
 
 $header = <<<'EOF'
-This file is part of Cloud-Admin.
+This file is part of Cloud-Admin project.
 
 @link     https://www.cloud-admin.jayjay.cn
 @document https://wiki.cloud-admin.jayjay.cn

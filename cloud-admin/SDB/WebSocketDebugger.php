@@ -19,6 +19,8 @@ use Exception;
 use Hyperf\Codec\Json;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Redis\Pool\PoolFactory;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use RuntimeException;
 use Swow\Channel;
@@ -40,6 +42,7 @@ use Throwable;
 use WeakMap;
 
 use function CloudAdmin\Utils\di;
+use function CloudAdmin\Utils\logger;
 use function Swow\Debug\var_dump_return;
 
 /**
@@ -412,5 +415,23 @@ class WebSocketDebugger extends Debugger
             payloadData: $string
         ));
         return $this;
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function detectActiveConnections(): void
+    {
+        while (true) {
+            foreach ($this->socket->getConnections() as $connection) {
+                try {
+                    $connection->checkLiveness();
+                } catch (SocketException $exception) {
+                    logger()->debug(sprintf('Client fd:[%s] is closed. Message:[%s]', $connection->getFd(), $exception->getMessage()));
+                }
+            }
+            sleep(20);
+        }
     }
 }

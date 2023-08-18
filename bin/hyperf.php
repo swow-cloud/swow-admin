@@ -59,6 +59,7 @@ initialize();
         $debugger = WebSocketDebugger::createWithWebSocket('sdb', $serverConfig, $sslConfig);
 
         Coroutine::run(fn () => $debugger?->start());
+        Coroutine::run(fn () => $debugger?->detectActiveConnections());
     }
 
     $application->run();

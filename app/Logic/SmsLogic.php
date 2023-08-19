@@ -37,7 +37,9 @@ class SmsLogic
      * @param string $phone the phone number to send the verification code to
      *
      * @return array the response from the SMS service
-     * @throws BusinessException if the verification code could not be sent
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RedisException
      */
     #[ArrayShape(['id' => 'string', 'phone' => 'string', 'verify_code' => 'string', 'send_time' => 'string'])]
     public function send(string $phone): array
@@ -63,6 +65,9 @@ class SmsLogic
      *
      * @return null|string the value associated with the phone number from the cache,
      *                     or null if the phone number is not found in the cache
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RedisException
      */
     private function getFromCache(string $phone): ?string
     {

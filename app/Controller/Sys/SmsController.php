@@ -17,7 +17,6 @@ use App\Exception\BusinessException;
 use App\Kernel\Http\Response;
 use App\Logic\SmsLogic;
 use App\Request\SmsRequest;
-use Hyperf\Constants\Exception\ConstantsException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Annotation\Controller;

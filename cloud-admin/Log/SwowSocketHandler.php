@@ -64,38 +64,22 @@ class SwowSocketHandler extends AbstractProcessingHandler
     {
         $message = '';
         foreach ($this->toPsrLogRecordColor() as $map => $color) {
-            if ($map === 'channel') {
-                $color = $this->getColorFromLevel($record->level->toPsrLogLevel());
-                $message .= $this->style->apply(
-                    sprintf('[%s.%s]', $record->channel, $record->level->getName()) . ' ',
-                    $color
-                );
-
-                continue;
-            }
             if ($map === 'level_name') {
                 continue;
             }
-            if ($map === 'datetime') {
-                /* @noinspection PhpPossiblePolymorphicInvocationInspection */
-                $message .= $this->style->apply(
-                    $record->datetime->format($this->getFormatter()->getDateFormat()) . ' ',
-                    $color
-                );
-                continue;
+
+            $isChannel = $map === 'channel';
+            if ($isChannel) {
+                $color = $this->getColorFromLevel($record->level->toPsrLogLevel());
             }
-            $mapVal = $record->{$map};
-            if (is_array($mapVal)) {
-                $mapVal = Json::encode($mapVal);
-            }
-            if ($mapVal === null || $mapVal === '') {
-                $message .= ' ';
-                continue;
-            }
+
+            $mapVal = $isChannel ? sprintf('[%s.%s]', $record->channel, $record->level->getName()) . ' ' : $record->{$map};
+            $mapVal = is_array($mapVal) ? Json::encode($mapVal) : ($mapVal ?? ' ');
+
             $message .= $this->style->apply((string) $mapVal . ' ', $color);
         }
-        $message .= PHP_EOL;
 
+        $message .= PHP_EOL;
         return $message;
     }
 

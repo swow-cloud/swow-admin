@@ -26,6 +26,8 @@ class Response
 {
     public const OK = 0;
 
+    public const ERROR = -1;
+
     protected ResponseInterface $response;
 
     /**
@@ -40,7 +42,7 @@ class Response
     public function success(mixed $data = []): PsrResponseInterface
     {
         return $this->response->json([
-            'code' => 0,
+            'code' => self::OK,
             'data' => $data,
         ]);
     }
@@ -52,7 +54,7 @@ class Response
         }
 
         return $this->response->json([
-            'code' => -1,
+            'code' => self::ERROR,
             'message' => (string) $error,
         ]);
     }

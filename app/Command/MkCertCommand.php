@@ -11,11 +11,51 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\Command as HyperfCommand;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\Console\Input\InputOption;
+use /*
+ * Annotation class for defining a Hyperf Command.
+ *
+ * @Annotation
+ * @Target({"CLASS"})
+ */
+Hyperf\Command\Annotation\Command;
+use /*
+ * Class HyperfCommand
+ *
+ * Represents a command in the Hyperf framework.
+ *
+ * @package Hyperf\Command
+ */
+Hyperf\Command\Command as HyperfCommand;
+use /*
+ * The ContainerInterface represents a dependency injection container.
+ *
+ * It provides a minimal set of methods to define and retrieve services.
+ *
+ * @link https://www.php-fig.org/psr/psr-11/
+ */
+Psr\Container\ContainerInterface;
+use /*
+ * Class InputOption
+ *
+ * Represents a command line option.
+ *
+ * @package Symfony\Component\Console\Input
+ */
+Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class MkCertCommand
+ *
+ * This class represents a command for generating SSL certificates using the mkcert tool.
+ * The command can be invoked by running `php bin/hyperf.php mkcert:command`.
+ *
+ * Available options:
+ * - `--domain-name` or `-d`: Set the domain name for generating the SSL certificate.
+ * - `--cert-file` or `-c`: Set the path for the generated certificate file.
+ * - `--key-file` or `-k`: Set the path for the generated key file.
+ *
+ * Example usage: `php bin/hyperf.php mkcert:command -d example.com -c ./ssl/cert.pem -k ./ssl/key.pem`
+ */
 #[Command]
 class MkCertCommand extends HyperfCommand
 {

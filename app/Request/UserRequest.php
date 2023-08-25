@@ -15,4 +15,16 @@ use Hyperf\Validation\Request\FormRequest;
 
 class UserRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [
+            'username' => 'required',
+            'password' => 'required',
+        ];
+    }
 }

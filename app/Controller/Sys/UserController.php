@@ -12,8 +12,11 @@ declare(strict_types=1);
 namespace App\Controller\Sys;
 
 use App\Controller\AbstractController;
+use App\Request\UserRequest;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 #[Controller(prefix: 'sys/user')]
 class UserController extends AbstractController
@@ -24,8 +27,15 @@ class UserController extends AbstractController
     }
 
     #[PostMapping(path: 'signIn')]
-    public function login()
+    public function login(UserRequest $request): ResponseInterface
     {
+        try {
+            $this->request->input('username');
+            $this->request->input('password');
+            return $this->response->success();
+        } catch (Throwable $e) {
+        }
+        return $this->response->fail();
     }
 
     #[PostMapping(path: 'signOut')]

@@ -33,6 +33,12 @@ enum ErrorCode: int implements ErrorCodeInterface
     #[EnumMessage('Synchronization of SMS logs failed')]
     case SMS_FAILED_TO_SYNC_SMS_LOGS = 1011;
 
+    #[EnumMessage('User does not exist or is not enabled')]
+    case USER_LOGIN_ERR = 2010;
+
+    #[EnumMessage('用户名或密码错误')]
+    case USER_LOGIN_PASSWORD_ERR = 2011;
+
     public function getMessage(array $translate = null): string
     {
         $reflection = new ReflectionClass($this);

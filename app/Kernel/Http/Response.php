@@ -39,11 +39,12 @@ class Response
         $this->response = $container->get(ResponseInterface::class);
     }
 
-    public function success(mixed $data = []): PsrResponseInterface
+    public function success(mixed $data = [], string $message = 'ok'): PsrResponseInterface
     {
         return $this->response->json([
             'code' => self::OK,
             'data' => $data,
+            'message' => $message,
         ]);
     }
 

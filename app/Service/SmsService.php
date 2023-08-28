@@ -17,6 +17,7 @@ use App\Exception\BusinessException;
 use App\Model\SmsLog;
 use App\Model\User;
 use Carbon\Carbon;
+use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 
 class SmsService
@@ -26,7 +27,7 @@ class SmsService
      *
      * @param string $phone the phone number to send the verification code to
      * @return array an array containing the SMS log details if the SMS was sent successfully
-     * @throws /Exception if the SMS failed to sync with SMS logs
+     * @throws Exception if the SMS failed to sync with SMS logs
      */
     #[ArrayShape(['id' => 'string', 'phone' => 'string', 'verify_code' => 'string', 'send_time' => 'string'])]
     public function send(string $phone): array

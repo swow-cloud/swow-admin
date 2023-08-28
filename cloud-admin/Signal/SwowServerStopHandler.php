@@ -50,10 +50,7 @@ class SwowServerStopHandler implements SignalHandlerInterface
      */
     public function listen(): array
     {
-        return [
-            [self::WORKER, SIGTERM],
-            [self::WORKER, SIGINT],
-        ];
+        return [[self::WORKER, SIGTERM], [self::WORKER, SIGINT]];
     }
 
     public function handle(int $signal): void
@@ -61,6 +58,7 @@ class SwowServerStopHandler implements SignalHandlerInterface
         ProcessManager::setRunning(false);
         $this->stdoutLogger->error('Server shutdown');
         Coroutine::killAll();
+
         if (\Hyperf\Support\env('APP_DEBUG')) {
             foreach (Coroutine::getAll() as $coroutine) {
                 if ($coroutine->isAlive()) {

@@ -44,12 +44,14 @@ class Lock implements LockInterface
                 $this->watchDog();
             }
         });
+
         // 不管是不是阻塞模式，都要先获取一次锁
         try {
             return $this->tryLock();
         } catch (Exception $exception) {
             $error = $exception;
         }
+
         // 非阻塞模式加锁失败直接返回错误
         if (! $this->lockOption->isBlock) {
             return $error;
@@ -73,7 +75,10 @@ class Lock implements LockInterface
             }
         });
         $keysAndArgs = [$this->getLockKey(), $this->token];
-        $reply = $this->redis->eval(Lua::LUA_CHECK_AND_DELETE_DISTRIBUTION_LOCK, 1, $keysAndArgs);
+        $reply = $this
+            ->redis
+            ->eval(Lua::LUA_CHECK_AND_DELETE_DISTRIBUTION_LOCK, 1, $keysAndArgs);
+
         if ((int) $reply !== 1) {
             throw new RuntimeException('can not unlock without ownership of lock');
         }
@@ -84,6 +89,7 @@ class Lock implements LockInterface
     public function blockingLock(): bool
     {
         $blockEndTime = time() + $this->lockOption->blockWaitingSeconds;
+
         while (time() < $blockEndTime) {
             try {
                 // 加锁成功，返回结果
@@ -91,13 +97,21 @@ class Lock implements LockInterface
             } catch (Exception $exception) {
                 $error = $exception;
             }
+
             // 不可重试类型的错误，直接返回
             if ($this->isRetryableErr($error)) {
                 return false;
             }
+
             usleep(50);
         }
-        throw new ErrLockException(sprintf('block waiting time out, err: %s', Consts::ERR_LOCK_ACQUIRED_BY_OTHERS));
+
+        throw new ErrLockException(
+            sprintf(
+                'block waiting time out, err: %s',
+                Consts::ERR_LOCK_ACQUIRED_BY_OTHERS,
+            ),
+        );
     }
 
     public function watchDog(): void
@@ -105,9 +119,11 @@ class Lock implements LockInterface
         if (! $this->lockOption->watchDogMode) {
             return;
         }
+
         if ($this->runningDog) {
             return;
         }
+
         Coroutine::create(function () {
             \Swow\defer(function () {
                 $this->runningDog = 0;
@@ -119,10 +135,12 @@ class Lock implements LockInterface
     public function runWatchDog(): void
     {
         $isStop = false;
+
         while (! $isStop) {
             try {
                 $this->delayExpire(Consts::WATCH_DOG_WORK_STEP_SECONDS);
                 sleep(Consts::WATCH_DOG_WORK_STEP_SECONDS);
+
                 if (! $this->stopDog->isAvailable()) {
                     $isStop = true;
                 }
@@ -134,7 +152,10 @@ class Lock implements LockInterface
     public function delayExpire(int $expireSeconds): void
     {
         $keysAndArgs = [$this->getLockKey(), $this->token, $expireSeconds];
-        $reply = $this->redis->eval(Lua::LUA_CHECK_AND_EXPIRE_DISTRIBUTION_LOCK, 1, $keysAndArgs);
+        $reply = $this
+            ->redis
+            ->eval(Lua::LUA_CHECK_AND_EXPIRE_DISTRIBUTION_LOCK, 1, $keysAndArgs);
+
         if ((int) $reply !== 1) {
             throw new RuntimeException('can not expire lock without ownership of lock');
         }
@@ -142,7 +163,14 @@ class Lock implements LockInterface
 
     protected function tryLock(): bool
     {
-        $reply = $this->redis->setNex($this->getLockKey(), $this->token, $this->lockOption->expireSeconds);
+        $reply = $this
+            ->redis
+            ->setNex(
+                $this->getLockKey(),
+                $this->token,
+                $this->lockOption->expireSeconds,
+            );
+
         if ($reply === false) {
             throw new ErrLockException();
         }

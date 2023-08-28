@@ -26,7 +26,6 @@ class RedLockOption
     public function withSingleNodesTimeout(int $singleNodesTimeout): self
     {
         $this->singleNodesTimeout = $singleNodesTimeout;
-
         return $this;
     }
 
@@ -36,7 +35,6 @@ class RedLockOption
     public function withRedLockExpireDuration(int $expireDuration): self
     {
         $this->expireDuration = $expireDuration;
-
         return $this;
     }
 

@@ -50,6 +50,7 @@
     "hyperf/testing": "3.0.*",
     "mockery/mockery": "^1.0",
     "phpstan/phpstan": "^1.0",
+    "pmjones/php-styler": "0.x-dev",
     "symfony/var-dumper": "^6.2"
   },
   "suggest": {

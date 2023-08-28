@@ -31,7 +31,6 @@ class LockOption
     public function withBlock(): self
     {
         $this->isBlock = true;
-
         return $this;
     }
 
@@ -41,7 +40,6 @@ class LockOption
     public function withBlockWaitingSeconds(int $blockWaitingSeconds): self
     {
         $this->blockWaitingSeconds = $blockWaitingSeconds;
-
         return $this;
     }
 
@@ -51,7 +49,6 @@ class LockOption
     public function withExpireSeconds(int $expireSeconds): self
     {
         $this->expireSeconds = $expireSeconds;
-
         return $this;
     }
 
@@ -61,7 +58,6 @@ class LockOption
     public function withWatchDogMode(bool $watchDogMode): self
     {
         $this->watchDogMode = $watchDogMode;
-
         return $this;
     }
 
@@ -75,6 +71,7 @@ class LockOption
         if ($this->expireSeconds > 0) {
             return;
         }
+
         // 用户未显式指定锁的过期时间，则此时会启动看门狗
         $this->expireSeconds = Consts::DEFAULT_LOCK_EXPIRE_SECONDS;
         $this->watchDogMode = true;

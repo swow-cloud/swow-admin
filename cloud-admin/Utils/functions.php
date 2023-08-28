@@ -34,12 +34,14 @@ if (! function_exists('logger')) {
         return di()->get(LoggerFactory::class)->get($name);
     }
 }
+
 if (! function_exists('di')) {
     function di(): ContainerInterface
     {
         return ApplicationContext::getContainer();
     }
 }
+
 if (! function_exists('stdout')) {
     /**
      * @throws ContainerExceptionInterface

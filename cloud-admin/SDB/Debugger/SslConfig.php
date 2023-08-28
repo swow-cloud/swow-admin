@@ -21,7 +21,7 @@ class SslConfig
         public string $certificateKey,
         public bool $verifyPeer,
         public bool $verifyPeerName,
-        public bool $allowSelfSigned
+        public bool $allowSelfSigned,
     ) {
     }
 

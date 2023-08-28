@@ -39,10 +39,13 @@ class Coroutine
         $coroutine = Co::create(function () use ($callable, $id) {
             try {
                 // Shouldn't copy all contexts to avoid socket already been bound to another coroutine.
-                Context::copy($id, [
-                    AppendRequestIdWithMemoryUsageProcessor::REQUEST_ID,
-                    ServerRequestInterface::class,
-                ]);
+                Context::copy(
+                    $id,
+                    [
+                        AppendRequestIdWithMemoryUsageProcessor::REQUEST_ID,
+                        ServerRequestInterface::class,
+                    ],
+                );
                 $callable();
             } catch (Throwable $throwable) {
                 $this->logger->warning((string) $throwable);
@@ -53,7 +56,6 @@ class Coroutine
             return $coroutine->getId();
         } catch (Throwable $throwable) {
             $this->logger->warning((string) $throwable);
-
             return -1;
         }
     }

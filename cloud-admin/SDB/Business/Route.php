@@ -25,8 +25,10 @@ use Symfony\Component\Console\Helper\TableSeparator;
  */
 class Route
 {
-    public function __construct(private readonly ContainerInterface $container, private readonly ConfigInterface $config)
-    {
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly ConfigInterface $config,
+    ) {
     }
 
     public function getRoute(): array
@@ -35,41 +37,62 @@ class Route
         $router = $factory->getRouter('http');
         $data = $this->analyzeRouter('http', $router, null);
         $rows = [];
+
         foreach ($data as $route) {
             $route['method'] = implode('|', $route['method']);
             $rows[] = $route;
             $rows[] = new TableSeparator();
         }
+
         return array_slice($rows, 0, count($rows) - 1);
     }
 
-    protected function analyzeRouter(string $server, RouteCollector $router, ?string $path): array
-    {
+    protected function analyzeRouter(
+        string $server,
+        RouteCollector $router,
+        ?string $path,
+    ): array {
         $data = [];
         [$staticRouters, $variableRouters] = $router->getData();
+
         foreach ($staticRouters as $method => $items) {
             foreach ($items as $handler) {
                 $this->analyzeHandler($data, $server, $method, $path, $handler);
             }
         }
+
         foreach ($variableRouters as $method => $items) {
             foreach ($items as $item) {
                 if (is_array($item['routeMap'] ?? false)) {
                     foreach ($item['routeMap'] as $routeMap) {
-                        $this->analyzeHandler($data, $server, $method, $path, $routeMap[0]);
+                        $this->analyzeHandler(
+                            $data,
+                            $server,
+                            $method,
+                            $path,
+                            $routeMap[0],
+                        );
                     }
                 }
             }
         }
+
         return $data;
     }
 
-    protected function analyzeHandler(array &$data, string $serverName, string $method, ?string $path, Handler $handler): void
-    {
+    protected function analyzeHandler(
+        array &$data,
+        string $serverName,
+        string $method,
+        ?string $path,
+        Handler $handler,
+    ): void {
         $uri = $handler->route;
+
         if (! is_null($path) && ! Str::contains($uri, $path)) {
             return;
         }
+
         if (is_array($handler->callback)) {
             $action = $handler->callback[0] . '::' . $handler->callback[1];
         } elseif (is_string($handler->callback)) {
@@ -77,14 +100,18 @@ class Route
         } else {
             $action = 'Closure';
         }
+
         $unique = "{$serverName}|{$uri}|{$action}";
+
         if (isset($data[$unique])) {
             $data[$unique]['method'][] = $method;
         } else {
             // method,uri,name,action,middleware
             $registeredMiddlewares = MiddlewareManager::get($serverName, $uri, $method);
-            $middlewares = $this->config->get('middlewares.' . $serverName, []);
-
+            $middlewares = $this->config->get(
+                'middlewares.' . $serverName,
+                [],
+            );
             $middlewares = array_merge($middlewares, $registeredMiddlewares);
             $data[$unique] = [
                 'server' => $serverName,

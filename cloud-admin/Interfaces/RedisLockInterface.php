@@ -33,7 +33,12 @@ interface RedisLockInterface
      *
      * @throws Throwable
      */
-    public function lock(string $key, int $ttl = 3, int $retries = 3, int $usleep = 10000): bool;
+    public function lock(
+        string $key,
+        int $ttl = 3,
+        int $retries = 3,
+        int $usleep = 10000,
+    ): bool;
 
     /**
      * release lock.

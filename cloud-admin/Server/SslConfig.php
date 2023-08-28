@@ -36,7 +36,8 @@ class SslConfig implements Arrayable
     public function __construct(array $config = [])
     {
         $this->config = $config;
-        $this->setCertificate($this->config['certificate'] ?? '')
+        $this
+            ->setCertificate($this->config['certificate'] ?? '')
             ->setCertificateKey($config['certificate_key'] ?? '')
             ->setVerifyPeer($this->config['verify_peer'] ?? false)
             ->setVerifyPeerName($this->config['verify_peer_name'] ?? false)
@@ -70,10 +71,15 @@ class SslConfig implements Arrayable
     public function __call(mixed $name, mixed $arguments)
     {
         $prefix = strtolower(substr($name, 0, 3));
-        if (in_array($prefix, ['set', 'get'])) {
-            $propertyName = strtolower(substr($name, 3));
 
-            return $prefix === 'set' ? $this->set($propertyName, ...$arguments) : $this->__get($propertyName);
+        if (in_array(
+            $prefix,
+            ['set', 'get'],
+        )) {
+            $propertyName = strtolower(substr($name, 3));
+            return $prefix === 'set'
+                ? $this->set($propertyName, ...$arguments)
+                : $this->__get($propertyName);
         }
 
         throw new InvalidArgumentException(sprintf('Invalid method %s', $name));
@@ -90,7 +96,6 @@ class SslConfig implements Arrayable
     protected function set(mixed $name, mixed $value): self
     {
         $this->config[$name] = $value;
-
         return $this;
     }
 }

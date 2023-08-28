@@ -31,21 +31,21 @@ class SwowSocketHandler extends AbstractProcessingHandler
 
     protected bool $useLocking;
 
-    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true, bool $useLocking = false)
-    {
+    public function __construct(
+        int|string|Level $level = Level::Debug,
+        bool $bubble = true,
+        bool $useLocking = false,
+    ) {
         parent::__construct($level, $bubble);
-
         $this->output = new Socket(Socket::TYPE_STDOUT);
         $this->buffer = new Buffer(0);
         $this->style = new Style();
-
         $this->useLocking = $useLocking;
     }
 
     protected function write(LogRecord $record): void
     {
         $this->buffer->append($this->formatStdoutLogText($record));
-
         $this->output->send($this->buffer->toString());
         $this->buffer->clear();
     }
@@ -53,7 +53,9 @@ class SwowSocketHandler extends AbstractProcessingHandler
     protected function getColorFromLevel(string $level = LogLevel::DEBUG): Style\Color
     {
         return match ($level) {
-            LogLevel::EMERGENCY, LogLevel::ALERT, LogLevel::CRITICAL => Style\Color::Red,
+            LogLevel::EMERGENCY,
+            LogLevel::ALERT,
+            LogLevel::CRITICAL => Style\Color::Red,
             LogLevel::ERROR => Style\Color::Yellow,
             LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => Style\Color::Green,
             default => Style\Color::Default,
@@ -63,19 +65,23 @@ class SwowSocketHandler extends AbstractProcessingHandler
     protected function formatStdoutLogText(LogRecord $record): string
     {
         $message = '';
+
         foreach ($this->toPsrLogRecordColor() as $map => $color) {
             if ($map === 'level_name') {
                 continue;
             }
 
             $isChannel = $map === 'channel';
+
             if ($isChannel) {
                 $color = $this->getColorFromLevel($record->level->toPsrLogLevel());
             }
 
-            $mapVal = $isChannel ? sprintf('[%s.%s]', $record->channel, $record->level->getName()) . ' ' : $record->{$map};
-            $mapVal = is_array($mapVal) ? Json::encode($mapVal) : ($mapVal ?? ' ');
-
+            $mapVal = $isChannel
+                ? sprintf('[%s.%s]', $record->channel, $record->level->getName())
+                    . ' '
+                : $record->{$map};
+            $mapVal = is_array($mapVal) ? Json::encode($mapVal) : $mapVal ?? ' ';
             $message .= $this->style->apply((string) $mapVal . ' ', $color);
         }
 

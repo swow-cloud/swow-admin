@@ -25,7 +25,10 @@ class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterface
 
     public function __invoke(LogRecord $record): array|LogRecord
     {
-        $record['extra']['request_id'] = Context::getOrSet(self::REQUEST_ID, uniqid('swow-admin', true));
+        $record['extra']['request_id'] = Context::getOrSet(
+            self::REQUEST_ID,
+            uniqid('swow-admin', true),
+        );
         $record['extra']['coroutine_id'] = Coroutine::id();
         $record['extra']['process_id'] = Os::getProcessId();
         $usage = memory_get_usage(true);
@@ -35,7 +38,6 @@ class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterface
         }
 
         $record['extra']['memory_usage'] = $usage;
-
         return $record;
     }
 

@@ -30,9 +30,7 @@ class OnPolicyChangedListener implements ListenerInterface
      */
     public function listen(): array
     {
-        return [
-            PolicyChanged::class,
-        ];
+        return [PolicyChanged::class];
     }
 
     /**

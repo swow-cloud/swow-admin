@@ -44,12 +44,15 @@ class Server extends Psr7Server implements ServerInterface
     public function __construct(protected LoggerInterface $logger)
     {
         parent::__construct();
+
         /** @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool} $config */
         $config = \Hyperf\Config\config('ssl');
+
         if ($config['enable'] ?? false) {
             if (! Extension::isBuiltWith('ssl')) {
                 exit('ssl配置项未开启!');
             }
+
             $this->ssl = true;
             unset($config['enable']);
             $this->sslConfig = new SslConfig($config);
@@ -59,12 +62,14 @@ class Server extends Psr7Server implements ServerInterface
     /**
      * @return $this
      */
-    public function bind(string $name, int $port = 0, int $flags = Socket::BIND_FLAG_NONE): static
-    {
+    public function bind(
+        string $name,
+        int $port = 0,
+        int $flags = Socket::BIND_FLAG_NONE,
+    ): static {
         $this->host = $name;
         $this->port = $port;
         parent::bind($name, $port, $flags);
-
         return $this;
     }
 
@@ -74,7 +79,6 @@ class Server extends Psr7Server implements ServerInterface
     public function handle(callable $callable): static
     {
         $this->handler = $callable;
-
         return $this;
     }
 
@@ -83,6 +87,7 @@ class Server extends Psr7Server implements ServerInterface
     {
         $this->listen();
         $options = null;
+
         if ($this->ssl) {
             $options = $this->sslConfig->toArray();
         }
@@ -91,20 +96,27 @@ class Server extends Psr7Server implements ServerInterface
         while (ProcessManager::isRunning()) {
             try {
                 $connection = $this->acceptConnection();
+
                 if ($options !== null) {
                     $connection->enableCrypto($options);
                 }
+
                 Coroutine::create(function () use ($connection) {
                     try {
                         while (true) {
                             $request = null;
+
                             try {
                                 $request = $connection->recvHttpRequest();
                                 $handler = $this->handler;
                                 $handler($request, $connection);
                             } catch (HttpProtocolException $exception) {
-                                $connection->error($exception->getCode(), $exception->getMessage());
+                                $connection->error(
+                                    $exception->getCode(),
+                                    $exception->getMessage(),
+                                );
                             }
+
                             if (! $request || ! Psr7::detectShouldKeepAlive($request)) {
                                 break;
                             }
@@ -116,7 +128,11 @@ class Server extends Psr7Server implements ServerInterface
                     }
                 });
             } catch (SocketException|CoroutineException $exception) {
-                if (in_array($exception->getCode(), [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM], true)) {
+                if (in_array(
+                    $exception->getCode(),
+                    [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM],
+                    true,
+                )) {
                     $this->logger->warning('Socket resources have been exhausted.');
                     sleep(1);
                 } elseif ($exception->getCode() === Errno::ECANCELED) {

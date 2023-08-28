@@ -68,12 +68,22 @@ class Lock implements RedisLockInterface
         /* @noinspection UnusedConstructorDependenciesInspection */
         $this->container = $container;
         $this->redis = $redis;
+
         if (! $this->container->has(StdoutLoggerInterface::class)) {
             throw new InvalidArgumentException('StdoutLogger not found#');
         }
-        if (! $config = $this->container->get(ConfigInterface::class)->get('redis_lock')) {
+
+        if (
+            ! (
+                $config = $this
+                    ->container
+                    ->get(ConfigInterface::class)
+                    ->get('redis_lock')
+            )
+        ) {
             throw new InvalidArgumentException('redis lock configuration not found#');
         }
+
         $this->config = $config;
         $this->logger = $this->container->get(StdoutLoggerInterface::class);
     }
@@ -85,7 +95,6 @@ class Lock implements RedisLockInterface
     public function tryLock(string $key, int $ttl = 3): bool
     {
         $this->value = Uuid::uuid4()->toString();
-
         return $this->doLock($key, $ttl);
     }
 
@@ -93,20 +102,33 @@ class Lock implements RedisLockInterface
      * @throws RedisException
      * @throws Throwable
      */
-    public function lock(string $key, int $ttl = 3, int $retries = 3, int $usleep = 10000): bool
-    {
+    public function lock(
+        string $key,
+        int $ttl = 3,
+        int $retries = 3,
+        int $usleep = 10000,
+    ): bool {
         $lock = false;
         $retryTimes = max($retries, 1);
+
         while ($retryTimes-- > 0) {
             $this->value = Uuid::uuid4()->toString();
             $lock = $this->doLock($key, $ttl);
+
             if ($lock) {
                 break;
             }
+
             usleep($usleep);
-            $this->logger->debug(
-                sprintf('Try to acquire the lock again, the number of attempts: %s,Key: %s', $retryTimes, $key)
-            );
+            $this
+                ->logger
+                ->debug(
+                    sprintf(
+                        'Try to acquire the lock again, the number of attempts: %s,Key: %s',
+                        $retryTimes,
+                        $key,
+                    ),
+                );
         }
 
         return $lock;
@@ -118,7 +140,11 @@ class Lock implements RedisLockInterface
      */
     public function unLock(): bool
     {
-        return (bool) $this->execLuaScript(Lua::UNLOCK, [$this->key, $this->value], 1);
+        return (bool) $this->execLuaScript(
+            Lua::UNLOCK,
+            [$this->key, $this->value],
+            1,
+        );
     }
 
     public function lockTtl(): int
@@ -132,11 +158,15 @@ class Lock implements RedisLockInterface
     public function keepAlive(int $ttl = 3): bool
     {
         try {
-            $eval = $this->execLuaScript(Lua::KEEP_ALIVE, [$this->key, $ttl], 1);
-
+            $eval = $this->execLuaScript(
+                Lua::KEEP_ALIVE,
+                [$this->key, $ttl],
+                1,
+            );
             return $eval !== -2;
         } catch (Throwable $e) {
             $this->logger->error(formatThrowable($e));
+
             throw $e;
         }
     }
@@ -152,10 +182,10 @@ class Lock implements RedisLockInterface
 
         try {
             $eval = $this->redis->get($this->key);
-
             return $eval === $this->value;
         } catch (Throwable $e) {
             $this->logger->error(formatThrowable($e));
+
             throw $e;
         }
     }
@@ -170,16 +200,23 @@ class Lock implements RedisLockInterface
         $this->key = $key;
 
         try {
-            $result = $this->execLuaScript(Lua::LOCK, [$key, $this->value, $ttl], 1);
+            $result = $this->execLuaScript(
+                Lua::LOCK,
+                [$key, $this->value, $ttl],
+                1,
+            );
+
             if ($result) {
-                $this->logger->debug(
-                    sprintf(
-                        'coroutine[%s] successfully hold lock[uuid:%s,key:%s], initialize the watchdog',
-                        Coroutine::getCurrent()->getId(),
-                        $this->value,
-                        $this->key
-                    )
-                );
+                $this
+                    ->logger
+                    ->debug(
+                        sprintf(
+                            'coroutine[%s] successfully hold lock[uuid:%s,key:%s], initialize the watchdog',
+                            Coroutine::getCurrent()->getId(),
+                            $this->value,
+                            $this->key,
+                        ),
+                    );
                 SwowCo::create(function () {
                     $watchdog = \Hyperf\Support\make(WatchDog::class);
                     $watchdog->sentinel($this, $this->config['watchDogTime'] ?? 60);
@@ -189,6 +226,7 @@ class Lock implements RedisLockInterface
             return (bool) $result;
         } catch (Throwable $exception) {
             $this->logger->error(formatThrowable($exception));
+
             throw $exception;
         }
     }
@@ -199,6 +237,8 @@ class Lock implements RedisLockInterface
      */
     private function execLuaScript(string $script, array $args, int $number = 0): mixed
     {
-        return $this->redis->evalSha($this->redis->script('load', $script), $args, $number);
+        return $this
+            ->redis
+            ->evalSha($this->redis->script('load', $script), $args, $number);
     }
 }

@@ -23,7 +23,7 @@ class ServerConfig
     final public function __construct(
         public string $host,
         public int $port,
-        public int $backLog = Socket::DEFAULT_BACKLOG
+        public int $backLog = Socket::DEFAULT_BACKLOG,
     ) {
     }
 

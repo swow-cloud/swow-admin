@@ -30,8 +30,10 @@ class CasbinWatcher implements Watcher
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(public ContainerInterface $container, public string $channel)
-    {
+    public function __construct(
+        public ContainerInterface $container,
+        public string $channel,
+    ) {
         $this->redis = $this->container->get(Redis::class);
     }
 

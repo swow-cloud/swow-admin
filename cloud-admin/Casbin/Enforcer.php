@@ -52,7 +52,10 @@ class Enforcer
     public function __call($method, $parameters)
     {
         try {
-            return $this->container->get(BaseEnforcer::class)->{$method}(...$parameters);
+            return $this
+                ->container
+                ->get(BaseEnforcer::class)
+                ->{$method}(...$parameters);
         } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
         }
     }
@@ -64,6 +67,8 @@ class Enforcer
      */
     public static function __callStatic(string $method, array $parameters)
     {
-        return ApplicationContext::getContainer()->get(BaseEnforcer::class)->{$method}(...$parameters);
+        return ApplicationContext::getContainer()
+            ->get(BaseEnforcer::class)
+            ->{$method}(...$parameters);
     }
 }

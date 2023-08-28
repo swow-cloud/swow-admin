@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 /**
  * This file is part of Cloud-Admin project.
  *
@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+
 namespace CloudAdmin\RedLock;
 
 use CloudAdmin\RedLock\Exceptions\UnknownSetNexException;
@@ -24,7 +25,7 @@ class Redis
     {
     }
 
-    public function setNex(string $key, string $value, int $expireSeconds) : bool
+    public function setNex(string $key, string $value, int $expireSeconds): bool
     {
         if ($key === '' || $value === '') {
             throw new UnknownSetNexException("redis SET keyNX or value can't be empty");
@@ -37,19 +38,19 @@ class Redis
                 ['nx', 'ex' => $expireSeconds],
             );
         } catch (
-            NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e,
+            NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e
         ) {
         }
 
         return false;
     }
 
-    public function eval(string $src, int $keyCount, array $keysAndArgs) : mixed
+    public function eval(string $src, int $keyCount, array $keysAndArgs): mixed
     {
         try {
             return $this->getRedisCon()->eval($src, $keysAndArgs, $keyCount);
         } catch (
-            NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e,
+            NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e
         ) {
         }
 
@@ -60,7 +61,7 @@ class Redis
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getRedisCon() : RedisProxy
+    protected function getRedisCon(): RedisProxy
     {
         $container = ApplicationContext::getContainer();
         return $container->get(RedisFactory::class)->get($this->pool);

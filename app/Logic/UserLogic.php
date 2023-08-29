@@ -11,15 +11,20 @@ declare(strict_types=1);
 
 namespace App\Logic;
 
+use App\Event\UserLoggedInEvent;
 use App\Service\UserService;
 use Hyperf\Di\Annotation\Inject;
 use Phper666\JWTAuth\JWT;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 
 class UserLogic
 {
     #[Inject]
     protected UserService $userService;
+
+    #[Inject]
+    protected EventDispatcherInterface $eventDispatcher;
 
     #[Inject]
     protected JWT $JWT;
@@ -35,6 +40,8 @@ class UserLogic
             'uid' => $user->id,
             'username' => $user->username,
         ]);
+
+        $this->eventDispatcher->dispatch(new UserLoggedInEvent($user->id, $user->username));
 
         return ['token' => $token->toString(), 'expire_in' => $this->JWT->getTTL($token->toString())];
     }

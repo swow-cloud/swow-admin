@@ -31,9 +31,9 @@ class UserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'username.required' => '用户名必须填写!',
-            'password.required' => '密码必须填写!',
-            'password.regex' => '密码必须带有数字和字符串!',
+            'username.required' => 'attribute必须填写!',
+            'password.required' => ':attribute是必填的!',
+            'password.regex' => ':attribute必须是英文字母或数字!',
         ];
     }
 }

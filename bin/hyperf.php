@@ -11,6 +11,7 @@ use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
 use CloudAdmin\SDB\WebSocketDebugger;
 use Swow\Coroutine;
+use Swow\Debug\Debugger\Debugger;
 
 function initialize(): void
 {
@@ -40,26 +41,30 @@ initialize();
     $debuggerOptions = \Hyperf\Support\env('APP_DEBUG') ? \Hyperf\Config\config('debugger') : null;
 
     if ($debuggerOptions) {
-        [$serverOptions, $sslOptions] = array_values($debuggerOptions);
+        if ($debuggerOptions['handler'] === Debugger::class) {
+            Debugger::runOnTTY();
+        } else {
+            [$serverOptions, $sslOptions] = array_values($debuggerOptions['options']);
 
-        $serverConfig = new ServerConfig(
-            host: $serverOptions['host'],
-            port: $serverOptions['port']
-        );
+            $serverConfig = new ServerConfig(
+                host: $serverOptions['host'],
+                port: $serverOptions['port']
+            );
 
-        $sslConfig = new SslConfig(
-            $sslOptions['enable'],
-            $sslOptions['certificate'],
-            $sslOptions['certificate_key'],
-            $sslOptions['verify_peer'],
-            $sslOptions['verify_peer_name'],
-            $sslOptions['allow_self_signed']
-        );
+            $sslConfig = new SslConfig(
+                $sslOptions['enable'],
+                $sslOptions['certificate'],
+                $sslOptions['certificate_key'],
+                $sslOptions['verify_peer'],
+                $sslOptions['verify_peer_name'],
+                $sslOptions['allow_self_signed']
+            );
 
-        $debugger = WebSocketDebugger::createWithWebSocket('sdb', $serverConfig, $sslConfig);
+            $debugger = WebSocketDebugger::createWithWebSocket('sdb', $serverConfig, $sslConfig);
 
-        Coroutine::run(fn () => $debugger?->start());
-        Coroutine::run(fn () => $debugger?->detectActiveConnections());
+            Coroutine::run(fn () => $debugger?->start());
+            Coroutine::run(fn () => $debugger?->detectActiveConnections());
+        }
     }
 
     $application->run();

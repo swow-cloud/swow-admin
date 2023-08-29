@@ -24,7 +24,7 @@ class UserService
     public function login(string $username, string $password): User
     {
         /** @var User $userModel */
-        $userModel = User::query()->where(['username' => $username, 'status' => \App\Constants\User::ACTIVE])->getModel();
+        $userModel = User::query()->where(['username' => $username, 'status' => \App\Constants\User::ACTIVE])->first();
         if (! $userModel) {
             throw new BusinessException(ErrorCode::USER_LOGIN_ERR);
         }

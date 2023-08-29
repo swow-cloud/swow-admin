@@ -8,11 +8,16 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+use App\Exception\Handler\AppExceptionHandler;
+use App\Exception\Handler\FormValidateExceptionHandler;
+use Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler;
+
 return [
     'handler' => [
         'http' => [
-            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
-            App\Exception\Handler\AppExceptionHandler::class,
+            FormValidateExceptionHandler::class,
+            HttpExceptionHandler::class,
+            AppExceptionHandler::class,
         ],
     ],
 ];

@@ -14,11 +14,14 @@ namespace App\Controller\Sys;
 use App\Controller\AbstractController;
 use App\Exception\BusinessException;
 use App\Logic\UserLogic;
+use App\Middleware\Auth\AuthMiddleware;
 use App\Request\UserRequest;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Psr\Http\Message\ResponseInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 #[Controller(prefix: 'sys/user')]
 class UserController extends AbstractController
@@ -31,6 +34,9 @@ class UserController extends AbstractController
     {
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     #[PostMapping(path: 'signIn')]
     public function login(UserRequest $request): ResponseInterface
     {
@@ -47,6 +53,7 @@ class UserController extends AbstractController
     }
 
     #[PostMapping(path: 'signOut')]
+    #[Middleware(middleware: AuthMiddleware::class)]
     public function signOut()
     {
     }

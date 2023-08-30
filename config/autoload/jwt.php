@@ -24,10 +24,13 @@ return [
      * 正则写法：["**", "/api/{name:.+}"]  支持模块化不做jwt token的校验，例如：/api/login/login
      */
     'no_check_route' => [
-        ['**', '/**'],
+        //        [
+        //            '**',
+        //            '/**'
+        //        ],
     ],
 
-    'login_type' => env('JWT_LOGIN_TYPE', 'mpop'), //  登录方式，sso为单点登录，同一个用户只能登录一个端，mpop为多点登录
+    'login_type' => \Hyperf\Support\env('JWT_LOGIN_TYPE', 'mpop'), //  登录方式，sso为单点登录，同一个用户只能登录一个端，mpop为多点登录
 
     /*
      * 单点登录自定义数据中必须存在uid的键值，这个key你可以自行定义，只要自定义数据中存在该键即可

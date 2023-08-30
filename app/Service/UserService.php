@@ -26,7 +26,7 @@ class UserService
         /** @var User $userModel */
         $userModel = User::query()->where(['username' => $username, 'status' => \App\Constants\User::ACTIVE])->first();
         if (! $userModel) {
-            throw new BusinessException(ErrorCode::USER_LOGIN_ERR);
+            throw new BusinessException(ErrorCode::USER_LOGIN_PASSWORD_ERR);
         }
 
         if (! Password::verify($password, $userModel->password)) {

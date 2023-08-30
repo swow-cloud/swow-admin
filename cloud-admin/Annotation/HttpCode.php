@@ -9,13 +9,18 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Constants;
+namespace CloudAdmin\Annotation;
 
-use BackedEnum;
+use Attribute;
+use Swow\Http\Status;
 
-interface ErrorCodeInterface extends BackedEnum
+#[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
+class HttpCode
 {
-    public function getMessage(array $translate = null): string;
+    public readonly int $code;
 
-    public function getHttpCode(array $translate = null): int;
+    public function __construct(int $code = Status::OK)
+    {
+        $this->code = $code;
+    }
 }

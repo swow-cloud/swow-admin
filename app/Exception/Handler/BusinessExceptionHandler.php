@@ -125,10 +125,14 @@ class BusinessExceptionHandler extends ExceptionHandler
     {
         switch (true) {
             case $throwable instanceof HttpException:
+                // todo 是否阻止冒泡
+                $this->stopPropagation();
                 return $this->response->handleException($throwable);
             case $throwable instanceof BusinessException:
+                // todo 是否阻止冒泡
+                $this->stopPropagation();
                 $this->logger->warning(formatThrowable($throwable));
-                return $this->response->fail($throwable->getCode());
+                return $this->response->fail($throwable->getErrorCode());
             case $throwable instanceof CircularDependencyException:
                 $this->logger->error($throwable->getMessage());
                 return $this->response->fail(ErrorCode::SERVER_ERROR->value);
@@ -136,7 +140,7 @@ class BusinessExceptionHandler extends ExceptionHandler
 
         $this->logger->error(formatThrowable($throwable));
 
-        return $this->response->fail(ErrorCode::SERVER_ERROR->value);
+        return $this->response->fail(ErrorCode::SERVER_ERROR);
     }
 
     public function isValid(Throwable $throwable): bool

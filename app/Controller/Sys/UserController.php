@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Controller\Sys;
 
 use App\Controller\AbstractController;
-use App\Exception\BusinessException;
 use App\Logic\UserLogic;
 use App\Middleware\Auth\AuthMiddleware;
 use App\Model\User;
@@ -49,16 +48,12 @@ class UserController extends AbstractController
     #[PostMapping(path: 'signIn')]
     public function login(UserRequest $request): ResponseInterface
     {
-        try {
-            $token = $this->userLogic->login(
-                $request->input('username'),
-                $request->input('password')
-            );
+        $token = $this->userLogic->login(
+            $request->input('username'),
+            $request->input('password')
+        );
 
-            return $this->response->success($token);
-        } catch (BusinessException $e) {
-            return $this->response->fail($e);
-        }
+        return $this->response->success($token);
     }
 
     #[PostMapping(path: 'signOut')]
@@ -75,7 +70,7 @@ class UserController extends AbstractController
             }
             return $this->response->fail('退出失败,请稍候再试!');
         } catch (Throwable $throwable) {
-            /** @noinspection PhpUnhandledExceptionInspection */
+            /* @noinspection PhpUnhandledExceptionInspection */
             logger()->error(sprintf('用户[%s]退出失败,原因:[%s]', $user->id, $throwable->getMessage()));
             return $this->response->fail('退出失败,请稍候再试!');
         }

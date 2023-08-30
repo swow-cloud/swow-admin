@@ -24,7 +24,7 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 class Response
 {
-    public const OK = 0;
+    public const OK = 200;
 
     public const ERROR = -1;
 
@@ -44,19 +44,21 @@ class Response
         return $this->response->json([
             'code' => self::OK,
             'data' => $data,
-            'message' => $message,
+            'msg' => $message,
         ]);
     }
 
     public function fail(ErrorCodeInterface|string|Exception $error): PsrResponseInterface
     {
+        $code = self::ERROR;
         if ($error instanceof ErrorCodeInterface) {
+            $code = $error->getHttpCode();
             $error = $error->getMessage();
         }
 
         return $this->response->json([
-            'code' => self::ERROR,
-            'message' => (string) $error,
+            'code' => $code,
+            'msg' => (string) $error,
         ]);
     }
 

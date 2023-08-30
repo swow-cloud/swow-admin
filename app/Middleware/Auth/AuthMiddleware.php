@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Middleware\Auth;
 
+use App\Constants\ErrorCode;
 use App\Exception\AuthException;
 use App\Kernel\Http\Response;
 use App\Service\UserService;
@@ -56,9 +57,9 @@ class AuthMiddleware implements MiddlewareInterface
                 return $handler->handle($request);
             }
         } catch (TokenValidException $exception) {
-            return $this->response->handleException(new AuthException(Status::UNAUTHORIZED, $exception->getMessage()));
+            return $this->response->fail(ErrorCode::UNAUTHORIZED);
         }
-        return $this->response->handleException(new AuthException(Status::UNAUTHORIZED, 'Token authentication does not pass'));
+        return $this->response->fail(ErrorCode::UNAUTHORIZED);
     }
 
     protected function setUserContextWithToken(string $token): void

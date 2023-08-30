@@ -19,12 +19,26 @@ use function is_null;
 
 class BusinessException extends ServerException
 {
+    protected ErrorCodeInterface $errorCode;
+
     public function __construct(ErrorCodeInterface $code, string $message = null, Throwable $previous = null)
     {
+        $this->errorCode = $code;
+
         if (is_null($message)) {
             $message = $code->getMessage();
         }
 
         parent::__construct($message, $code->value, $previous);
+    }
+
+    public function getHttpCode(): int
+    {
+        return $this->errorCode->getHttpCode();
+    }
+
+    public function getErrorCode(): ErrorCodeInterface
+    {
+        return $this->errorCode;
     }
 }

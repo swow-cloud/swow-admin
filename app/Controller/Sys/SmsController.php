@@ -13,7 +13,6 @@ namespace App\Controller\Sys;
 
 use App\Constants\ErrorCode;
 use App\Controller\AbstractController;
-use App\Exception\BusinessException;
 use App\Kernel\Http\Response;
 use App\Logic\SmsLogic;
 use App\Request\SmsRequest;
@@ -42,12 +41,8 @@ class SmsController extends AbstractController
     ], key: [SmsController::class, 'getKey'])]
     public function getSmsVerifyCode(SmsRequest $request): ResponseInterface
     {
-        try {
-            $ret = $this->smsLogic->send($request->input('phone'));
-            return $this->response->success(['verify_code' => $ret['verify_code']]);
-        } catch (BusinessException $exception) {
-            return $this->response->fail($exception->getCode());
-        }
+        $ret = $this->smsLogic->send($request->input('phone'));
+        return $this->response->success(['verify_code' => $ret['verify_code']]);
     }
 
     /**

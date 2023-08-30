@@ -27,6 +27,9 @@ use Swow\Coroutine;
 use Throwable;
 
 use function CloudAdmin\Utils\formatThrowable;
+use function max;
+use function sprintf;
+use function usleep;
 
 class Lock implements RedisLockInterface
 {

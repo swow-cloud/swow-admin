@@ -17,6 +17,8 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Logger\LoggerFactory;
 
+use function sprintf;
+
 class UserLoggedInListener implements ListenerInterface
 {
     #[Inject]

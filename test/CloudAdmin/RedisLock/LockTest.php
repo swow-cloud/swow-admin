@@ -22,6 +22,8 @@ use Swow\Sync\WaitGroup;
 use Throwable;
 
 use function CloudAdmin\Utils\di;
+use function sleep;
+use function sprintf;
 
 /**
  * @internal

@@ -17,6 +17,10 @@ use Hyperf\Engine\Coroutine;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 
+use function memory_get_usage;
+use function round;
+use function uniqid;
+
 class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterface
 {
     public const REQUEST_ID = 'log.request.id';

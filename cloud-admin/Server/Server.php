@@ -26,6 +26,9 @@ use Swow\Socket;
 use Swow\SocketException;
 use Throwable;
 
+use function in_array;
+use function sleep;
+
 class Server extends Psr7Server implements ServerInterface
 {
     public ?string $host = null;

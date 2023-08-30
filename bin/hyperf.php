@@ -15,19 +15,19 @@ use Swow\Debug\Debugger\Debugger;
 
 function initialize(): void
 {
-    ini_set('display_errors', 'on');
-    ini_set('display_startup_errors', 'on');
+    \ini_set('display_errors', 'on');
+    \ini_set('display_startup_errors', 'on');
 
-    error_reporting(E_ALL);
+    \error_reporting(E_ALL);
 
-    date_default_timezone_set('Asia/Shanghai');
+    \date_default_timezone_set('Asia/Shanghai');
 
-    defined('BASE_PATH') || define('BASE_PATH', dirname(__DIR__, 1));
+    \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 1));
 
     require BASE_PATH . '/vendor/autoload.php';
 }
 
-initialize();
+\initialize();
 
 (static function (): void {
     Hyperf\Di\ClassLoader::init(handler: new Hyperf\Di\ScanHandler\ProcScanHandler());
@@ -44,7 +44,7 @@ initialize();
         if ($debuggerOptions['handler'] === Debugger::class) {
             Debugger::runOnTTY();
         } else {
-            [$serverOptions, $sslOptions] = array_values($debuggerOptions['options']);
+            [$serverOptions, $sslOptions] = \array_values($debuggerOptions['options']);
 
             $serverConfig = new ServerConfig(
                 host: $serverOptions['host'],

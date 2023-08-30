@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-error_reporting(E_ALL);
-date_default_timezone_set('Asia/Shanghai');
+\error_reporting(E_ALL);
+\date_default_timezone_set('Asia/Shanghai');
 
-! defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__, 1));
-! defined('SWOOLE_HOOK_FLAGS') && define('SWOOLE_HOOK_FLAGS', 0);
+! \defined('BASE_PATH') && \define('BASE_PATH', \dirname(__DIR__, 1));
+! \defined('SWOOLE_HOOK_FLAGS') && \define('SWOOLE_HOOK_FLAGS', 0);
 
 require BASE_PATH . '/vendor/autoload.php';
 

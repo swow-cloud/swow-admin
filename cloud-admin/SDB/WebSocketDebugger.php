@@ -41,9 +41,24 @@ use Swow\WebSocket\WebSocket;
 use Throwable;
 use WeakMap;
 
+use function array_filter;
+use function array_shift;
+use function bin2hex;
 use function CloudAdmin\Utils\di;
 use function CloudAdmin\Utils\logger;
+use function count;
+use function ctype_print;
+use function explode;
+use function implode;
+use function in_array;
+use function is_numeric;
+use function is_string;
+use function sleep;
+use function sprintf;
+use function strtolower;
 use function Swow\Debug\var_dump_return;
+use function trim;
+use function usleep;
 
 /**
  * Class WebSocketDebugger.

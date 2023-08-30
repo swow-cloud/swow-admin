@@ -15,6 +15,8 @@ use App\Constants\ErrorCodeInterface;
 use Hyperf\Server\Exception\ServerException;
 use Throwable;
 
+use function is_null;
+
 class BusinessException extends ServerException
 {
     public function __construct(ErrorCodeInterface $code, string $message = null, Throwable $previous = null)

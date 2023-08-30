@@ -16,6 +16,10 @@ use Hyperf\Command\Command as HyperfCommand;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputOption;
 
+use function shell_exec;
+use function sprintf;
+use function unlink;
+
 /**
  * Class MkCertCommand.
  *

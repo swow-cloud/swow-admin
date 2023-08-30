@@ -21,6 +21,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use RedisException;
 
 use function CloudAdmin\Utils\redisClient;
+use function sprintf;
 
 class SmsLogic
 {

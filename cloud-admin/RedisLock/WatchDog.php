@@ -21,6 +21,10 @@ use Psr\Container\NotFoundExceptionInterface;
 use Swow\Coroutine;
 use Throwable;
 
+use function microtime;
+use function sprintf;
+use function usleep;
+
 class WatchDog implements WatchDogInterface
 {
     /**

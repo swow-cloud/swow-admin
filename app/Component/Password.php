@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace App\Component;
 
+use function password_hash;
+use function password_needs_rehash;
+use function password_verify;
+
 class Password
 {
     public static function hash(string $plaintext): string

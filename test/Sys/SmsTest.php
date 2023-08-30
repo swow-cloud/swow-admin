@@ -15,6 +15,8 @@ use App\Component\Code;
 use App\Service\SmsService;
 use CloudAdmin\Test\HttpTestCase;
 
+use function strlen;
+
 /**
  * @internal
  * @coversNothing

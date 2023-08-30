@@ -17,6 +17,8 @@ use Hyperf\ExceptionHandler\ExceptionHandler;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
+use function sprintf;
+
 class AppExceptionHandler extends ExceptionHandler
 {
     public function __construct(protected StdoutLoggerInterface $logger)

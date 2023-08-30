@@ -44,4 +44,12 @@ class UserService
 
         return $userModel;
     }
+
+    /**
+     * 获取用户信息.
+     */
+    public static function get(int $uid): User
+    {
+        return User::find($uid);
+    }
 }

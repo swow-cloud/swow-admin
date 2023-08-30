@@ -25,6 +25,7 @@ use Psr\Container\ContainerInterface;
 use Throwable;
 
 use function CloudAdmin\Utils\di;
+use function uniqid;
 
 /**
  * @internal

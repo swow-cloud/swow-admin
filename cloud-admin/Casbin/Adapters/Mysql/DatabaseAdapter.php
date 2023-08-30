@@ -30,6 +30,15 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
+use function array_filter;
+use function count;
+use function func_get_args;
+use function implode;
+use function is_null;
+use function is_string;
+use function range;
+use function trim;
+
 class DatabaseAdapter implements Adapter, BatchAdapter, UpdatableAdapter, FilteredAdapter
 {
     use AdapterHelper;

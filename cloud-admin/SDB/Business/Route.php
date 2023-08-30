@@ -20,6 +20,15 @@ use Hyperf\Stringable\Str;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Helper\TableSeparator;
 
+use function array_merge;
+use function array_slice;
+use function array_unique;
+use function count;
+use function implode;
+use function is_array;
+use function is_null;
+use function is_string;
+
 /**
  * @see  \Hyperf\Devtool\Describe\RoutesCommand
  */

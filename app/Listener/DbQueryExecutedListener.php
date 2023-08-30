@@ -19,6 +19,11 @@ use Hyperf\Logger\LoggerFactory;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
+use function sprintf;
+use function strlen;
+use function strpos;
+use function substr_replace;
+
 #[Listener]
 class DbQueryExecutedListener implements ListenerInterface
 {

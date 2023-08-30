@@ -19,6 +19,8 @@ use Hyperf\Contract\TranslatorInterface;
 use ReflectionClass;
 use Throwable;
 
+use function sprintf;
+
 #[Constants]
 enum ErrorCode: int implements ErrorCodeInterface
 {

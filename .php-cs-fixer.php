@@ -46,6 +46,10 @@ return (new PhpCsFixer\Config())
             ],
             'sort_algorithm' => 'alpha',
         ],
+        'native_function_invocation' => [
+            'include' => ['@all'],
+            'strict' => false
+        ],
         'single_line_comment_style' => [
             'comment_types' => [
             ],

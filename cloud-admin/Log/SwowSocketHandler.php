@@ -21,6 +21,9 @@ use Psr\Log\LogLevel;
 use Swow\Buffer;
 use Swow\Socket;
 
+use function is_array;
+use function sprintf;
+
 class SwowSocketHandler extends AbstractProcessingHandler
 {
     protected Socket $output;

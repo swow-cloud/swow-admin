@@ -18,6 +18,10 @@ use CloudAdmin\Utils\Os;
 use Hyperf\Coroutine\Coroutine;
 use SplFixedArray;
 
+use function count;
+use function sprintf;
+use function time;
+
 class RedLock
 {
     /**

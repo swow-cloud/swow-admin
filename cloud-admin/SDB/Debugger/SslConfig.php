@@ -13,6 +13,8 @@ namespace CloudAdmin\SDB\Debugger;
 
 use RuntimeException;
 
+use function file_exists;
+
 class SslConfig
 {
     final public function __construct(

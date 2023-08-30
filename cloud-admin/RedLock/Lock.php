@@ -20,6 +20,11 @@ use Hyperf\Engine\Coroutine;
 use Swow\Channel;
 use Throwable;
 
+use function sleep;
+use function sprintf;
+use function time;
+use function usleep;
+
 class Lock implements LockInterface
 {
     public Channel $stopDog;

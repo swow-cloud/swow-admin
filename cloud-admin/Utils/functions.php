@@ -24,6 +24,8 @@ use Psr\Log\LoggerInterface;
 use Redis;
 use Throwable;
 
+use function function_exists;
+
 if (! function_exists('logger')) {
     /**
      * @throws ContainerExceptionInterface

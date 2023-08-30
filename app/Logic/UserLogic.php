@@ -45,4 +45,12 @@ class UserLogic
 
         return ['token' => $token->toString(), 'expire_in' => $this->JWT->getTTL($token->toString())];
     }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function logout(string $token): bool
+    {
+        return $this->JWT->logout($token);
+    }
 }

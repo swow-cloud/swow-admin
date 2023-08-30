@@ -16,6 +16,7 @@ use App\Kernel\Http\Response;
 use App\Service\UserService;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
+use Phper666\JWTAuth\Exception\TokenValidException;
 use Phper666\JWTAuth\JWT;
 use Phper666\JWTAuth\Util\JWTUtil;
 use Psr\Http\Message\ResponseInterface;
@@ -49,11 +50,14 @@ class AuthMiddleware implements MiddlewareInterface
 
         $token = JWTUtil::handleToken($token);
 
-        if ($token !== false && $this->jwt->verifyToken($token)) {
-            $this->setUserContextWithToken($token);
-            return $handler->handle($request);
+        try {
+            if ($token !== false && $this->jwt->verifyToken($token)) {
+                $this->setUserContextWithToken($token);
+                return $handler->handle($request);
+            }
+        } catch (TokenValidException $exception) {
+            return $this->response->handleException(new AuthException(Status::UNAUTHORIZED, $exception->getMessage()));
         }
-
         return $this->response->handleException(new AuthException(Status::UNAUTHORIZED, 'Token authentication does not pass'));
     }
 

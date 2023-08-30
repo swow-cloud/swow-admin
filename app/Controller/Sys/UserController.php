@@ -15,13 +15,22 @@ use App\Controller\AbstractController;
 use App\Exception\BusinessException;
 use App\Logic\UserLogic;
 use App\Middleware\Auth\AuthMiddleware;
+use App\Model\User;
 use App\Request\UserRequest;
+use Carbon\Carbon;
+use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Contract\RequestInterface;
+use Phper666\JWTAuth\Util\JWTUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\InvalidArgumentException;
+use Throwable;
+
+use function CloudAdmin\Utils\logger;
+use function sprintf;
 
 #[Controller(prefix: 'sys/user')]
 class UserController extends AbstractController
@@ -54,7 +63,21 @@ class UserController extends AbstractController
 
     #[PostMapping(path: 'signOut')]
     #[Middleware(middleware: AuthMiddleware::class)]
-    public function signOut()
+    public function logout(RequestInterface $request): ResponseInterface
     {
+        /** @var User $user */
+        $user = Context::get('user');
+        try {
+            $isLogout = $this->userLogic->logout(JWTUtil::getToken($request));
+            if ($isLogout) {
+                logger()->error(sprintf('用户[%s]:[%s]退出登录', $user->id, Carbon::now()->toDateTimeString()));
+                return $this->response->success([], '退出成功!');
+            }
+            return $this->response->fail('退出失败,请稍候再试!');
+        } catch (Throwable $throwable) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            logger()->error(sprintf('用户[%s]退出失败,原因:[%s]', $user->id, $throwable->getMessage()));
+            return $this->response->fail('退出失败,请稍候再试!');
+        }
     }
 }

@@ -19,6 +19,6 @@ class AuthException extends HttpException
 {
     public function __construct(int $code = Status::UNAUTHORIZED, string $message = null, ?Throwable $previous = null)
     {
-        parent::__construct($code, $message, $previous);
+        parent::__construct(statusCode: $code, message: $message);
     }
 }

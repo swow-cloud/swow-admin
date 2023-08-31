@@ -46,6 +46,7 @@ class AuthMiddleware implements MiddlewareInterface
         $token = $request->getHeaderLine('Authorization') ?? '';
 
         if ($token === '') {
+            //token为空返回 http_code Status::BAD_REQUEST
             return $this->response->handleException(new AuthException(Status::BAD_REQUEST, \Hyperf\HttpMessage\Base\Response::getReasonPhraseByCode(Status::BAD_REQUEST)));
         }
 

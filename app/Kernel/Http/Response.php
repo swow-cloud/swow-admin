@@ -26,7 +26,7 @@ class Response
 {
     public const OK = 200;
 
-    public const ERROR = -1;
+    public const ERROR = 500;
 
     protected ResponseInterface $response;
 

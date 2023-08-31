@@ -43,7 +43,7 @@ class UserLogic
 
         $this->eventDispatcher->dispatch(new UserLoggedInEvent($user->id, $user->username));
 
-        return ['token' => $token->toString(), 'expire_in' => $this->JWT->getTTL($token->toString())];
+        return ['access_token' => $token->toString(), 'expire_in' => $this->JWT->getTTL($token->toString())];
     }
 
     /**

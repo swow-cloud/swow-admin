@@ -17,6 +17,7 @@ use App\Kernel\Http\Response;
 use App\Service\UserService;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
+use Phper666\JWTAuth\Exception\JWTException;
 use Phper666\JWTAuth\Exception\TokenValidException;
 use Phper666\JWTAuth\JWT;
 use Phper666\JWTAuth\Util\JWTUtil;
@@ -46,7 +47,7 @@ class AuthMiddleware implements MiddlewareInterface
         $token = $request->getHeaderLine('Authorization') ?? '';
 
         if ($token === '') {
-            //token为空返回 http_code Status::BAD_REQUEST
+            // token为空返回 http_code Status::BAD_REQUEST
             return $this->response->handleException(new AuthException(Status::BAD_REQUEST, \Hyperf\HttpMessage\Base\Response::getReasonPhraseByCode(Status::BAD_REQUEST)));
         }
 
@@ -57,7 +58,7 @@ class AuthMiddleware implements MiddlewareInterface
                 $this->setUserContextWithToken($token);
                 return $handler->handle($request);
             }
-        } catch (TokenValidException $exception) {
+        } catch (TokenValidException|JWTException $exception) {
             return $this->response->fail(ErrorCode::UNAUTHORIZED);
         }
         return $this->response->fail(ErrorCode::UNAUTHORIZED);

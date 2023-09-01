@@ -1,22 +1,27 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
 
 namespace App\Model;
 
-
-
 /**
- * @property int $id 
- * @property int $parent_id 
- * @property int $is_display 
- * @property string $path 
- * @property string $method 
- * @property string $display_name 
- * @property string $url 
- * @property string $validate 
- * @property string $description 
- * @property int $sort 
+ * @property int $id
+ * @property int $parent_id
+ * @property int $is_display
+ * @property string $path
+ * @property string $method
+ * @property string $display_name
+ * @property string $url
+ * @property string $validate
+ * @property string $description
+ * @property int $sort
  */
 class Permission extends Model
 {

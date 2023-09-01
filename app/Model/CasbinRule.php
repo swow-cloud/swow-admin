@@ -1,20 +1,25 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
 
 namespace App\Model;
 
-
-
 /**
- * @property int $id 
- * @property string $ptype 
- * @property string $v0 
- * @property string $v1 
- * @property string $v2 
- * @property string $v3 
- * @property string $v4 
- * @property string $v5 
+ * @property int $id
+ * @property string $ptype
+ * @property string $v0
+ * @property string $v1
+ * @property string $v2
+ * @property string $v3
+ * @property string $v4
+ * @property string $v5
  */
 class CasbinRule extends Model
 {

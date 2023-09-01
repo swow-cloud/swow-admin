@@ -8,12 +8,17 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use CloudAdmin\Middleware\ProfilerMiddleware;
-use Hyperf\Validation\Middleware\ValidationMiddleware;
 
-return [
-    'http' => [
-        ProfilerMiddleware::class,
-        ValidationMiddleware::class,
-    ],
-];
+namespace CloudAdmin\Profiler\Handlers;
+
+use CloudAdmin\Profiler\EventInterface;
+
+final class CleanupEvent implements EventInterface
+{
+    public function handle(array $event): array
+    {
+        unset($event['profile']);
+
+        return $event;
+    }
+}

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpComposerExtensionStubsInspection */
+
 declare(strict_types=1);
 /**
  * This file is part of Cloud-Admin project.
@@ -8,12 +10,9 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use CloudAdmin\Middleware\ProfilerMiddleware;
-use Hyperf\Validation\Middleware\ValidationMiddleware;
-
 return [
-    'http' => [
-        ProfilerMiddleware::class,
-        ValidationMiddleware::class,
+    'enable' => \Hyperf\Support\env('ENABLE_PROFILER', false),
+    'options' => [
+        'flags' => XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY,
     ],
 ];

@@ -591,6 +591,20 @@ class MenuController extends AbstractController
                     }
                 },
                 {
+                    "path":"/echarts/flameGraphChart",
+                    "name":"flameGraphChart",
+                    "component":"/echarts/flameGraphChart/index",
+                    "meta":{
+                        "icon":"Menu",
+                        "title":"火焰图",
+                        "isLink":"",
+                        "isHide":false,
+                        "isFull":false,
+                        "isAffix":false,
+                        "isKeepAlive":true
+                    }
+                },
+                {
                     "path":"/echarts/radarChart",
                     "name":"radarChart",
                     "component":"/echarts/radarChart/index",

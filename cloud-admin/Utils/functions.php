@@ -20,6 +20,7 @@ use Hyperf\Redis\RedisProxy;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Redis;
 use Throwable;
@@ -73,5 +74,13 @@ if (! function_exists('redisClient')) {
     function redisClient(string $poolName = 'default'): RedisProxy|Redis
     {
         return di()->get(RedisFactory::class)->get($poolName);
+    }
+}
+
+if (! function_exists('ip')) {
+    function ip(ServerRequestInterface $request): string
+    {
+        $serverParams = $request->getServerParams();
+        return $serverParams['remote_addr'] ?? '';
     }
 }

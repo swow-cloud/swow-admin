@@ -50,6 +50,10 @@ enum ErrorCode: int implements ErrorCodeInterface
     #[HttpCode(Status::UNAUTHORIZED)]
     case USER_LOGIN_PASSWORD_ERR = 2011;
 
+    #[EnumMessage('资源不存在!')]
+    #[HttpCode(Status::NOT_FOUND)]
+    case NOT_FOUND = 404;
+
     public function getMessage(array $translate = null): string
     {
         return $this->getReflectedAttribute(EnumMessage::class, 'message');

@@ -21,6 +21,7 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 use function file_put_contents;
+use function str_replace;
 
 #[Controller(prefix: '/profile')]
 class ProfileController extends AbstractController
@@ -43,8 +44,10 @@ class ProfileController extends AbstractController
     #[GetMapping(path: 'flame')]
     public function flame(RequestInterface $request): ResponseInterface
     {
-        $data = $this->profileService->flame((int) $request->input('id'));
-        file_put_contents(__DIR__ . '/1.json', Json::encode($data['wt']));
+        $data = Json::encode($this->profileService->flame((int) $request->input('id')));
+        // file_put_contents(__DIR__ . '/1.json', str_replace('\\','\\\\',Json::encode($data['wt'])));
+        // 需要处理转义\\的问题
+        $data = str_replace('\\', '\\\\', $data);
         return $this->response->success($data);
     }
 }

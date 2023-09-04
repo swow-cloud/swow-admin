@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Profiler\DataAnalysis;
 
+use Hyperf\Stringable\Str;
 use InvalidArgumentException;
 
 use function array_merge;
@@ -300,6 +301,7 @@ class Profile
             }
             $current = [
                 'name' => $childName,
+                'id' => Str::random(18),
                 'value' => $metrics[$metric],
             ];
             $revisit = false;

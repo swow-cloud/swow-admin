@@ -44,7 +44,7 @@ class ProfileController extends AbstractController
     public function flame(RequestInterface $request): ResponseInterface
     {
         $data = $this->profileService->flame((int) $request->input('id'));
-        file_put_contents(__DIR__ . '/1.json',$json = str_replace('"', '\"', Json::encode($data)));
+        file_put_contents(__DIR__ . '/1.json', Json::encode($data['wt']));
         return $this->response->success($data);
     }
 }

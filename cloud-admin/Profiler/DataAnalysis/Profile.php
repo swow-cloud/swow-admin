@@ -173,7 +173,7 @@ class Profile
      * @param mixed|string $metric
      * @param float|mixed $threshold
      */
-    public function getFlamegraph(string $metric = 'wt', float $threshold = 0.01): array
+    public function getFlameGraph(string $metric = 'wt', float $threshold = 0.01): array
     {
         $valid = array_merge($this->keys, $this->exclusiveKeys);
         if (! in_array($metric, $valid)) {

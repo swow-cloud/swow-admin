@@ -31,8 +31,8 @@ class ProfileService
         }
         $list = Json::decode($model->profile);
         $profileData = \Hyperf\Support\make(Profile::class, [$list]);
-        $data['wt'] = $profileData->getFlamegraph('wt', 0)['data'];
-        $data['mu'] = $profileData->getFlamegraph('mu', 0)['data'];
+        $data['wt'] = $profileData->getFlameGraph('wt', 0)['data'];
+        $data['mu'] = $profileData->getFlameGraph('mu', 0)['data'];
         return $data;
     }
 }

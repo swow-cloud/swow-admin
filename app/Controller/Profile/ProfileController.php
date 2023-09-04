@@ -12,18 +12,17 @@ declare(strict_types=1);
 namespace App\Controller\Profile;
 
 use App\Controller\AbstractController;
+use App\Middleware\Auth\AuthMiddleware;
 use App\Service\ProfileService;
-use Hyperf\Codec\Json;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use function file_put_contents;
-use function str_replace;
-
 #[Controller(prefix: '/profile')]
+#[Middleware(middleware: AuthMiddleware::class)]
 class ProfileController extends AbstractController
 {
     #[Inject]
@@ -38,16 +37,14 @@ class ProfileController extends AbstractController
     #[GetMapping(path: 'get')]
     public function get(RequestInterface $request): ResponseInterface
     {
-        return $this->response->success(2);
+        $data = $this->profileService->info((int) $request->input('id'));
+        return $this->response->success($data);
     }
 
     #[GetMapping(path: 'flame')]
     public function flame(RequestInterface $request): ResponseInterface
     {
-        $data = Json::encode($this->profileService->flame((int) $request->input('id')));
-        // file_put_contents(__DIR__ . '/1.json', str_replace('\\','\\\\',Json::encode($data['wt'])));
-        // 需要处理转义\\的问题
-        $data = str_replace('\\', '\\\\', $data);
+        $data = $this->profileService->flame((int) $request->input('id'));
         return $this->response->success($data);
     }
 }

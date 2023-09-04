@@ -48,14 +48,13 @@ class ProfilerMiddleware implements MiddlewareInterface
         if ($this->enable()) {
             xhprof_enable($this->config->get('profiler.options.flags'));
         }
-        \Swow\defer(function () use ($time, $request) {
+        \Hyperf\Coroutine\defer(function () use ($time, $request) {
             try {
                 $this->logAndSave($time, $request, Context::get(ResponseInterface::class));
             } catch (Throwable $throwable) {
                 // todo: not here
             }
         });
-
         $response = $handler->handle($request);
         Context::set(ResponseInterface::class, $response);
         return $response;

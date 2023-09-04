@@ -21,6 +21,7 @@ use function count;
 use function current;
 use function explode;
 use function in_array;
+use function str_contains;
 use function uasort;
 use function usort;
 
@@ -301,9 +302,17 @@ class Profile
             }
             $current = [
                 'name' => $childName,
-                'id' => Str::random(18),
+                'id' => Str::uuid(),
                 'value' => $metrics[$metric],
             ];
+            // todo: 设计前端返回的色彩，根据类型渲染颜色
+            if ($childName === 'main()') {
+                $current['type'] = 'main()';
+            } elseif (str_contains($childName, '::')) {
+                $current['type'] = 'class';
+            } else {
+                $current['type'] = 'function';
+            }
             $revisit = false;
 
             // Keep track of which nodes we've visited and their position

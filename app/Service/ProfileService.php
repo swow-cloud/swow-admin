@@ -18,7 +18,6 @@ use CloudAdmin\Profiler\DataAnalysis\Profile;
 use Hyperf\Codec\Json;
 
 use function date;
-use function json_decode;
 
 class ProfileService
 {
@@ -65,7 +64,7 @@ class ProfileService
         if (! $model) {
             throw new BusinessException(ErrorCode::NOT_FOUND);
         }
-        $profile = json_decode($model->profile, true);
+        $profile = Json::decode($model->profile, true);
         $data['sql'] = '';
         $ProfileData = \Hyperf\Support\make(Profile::class, [$profile]);
         $data['funcList'] = $ProfileData->getProfileBySort();

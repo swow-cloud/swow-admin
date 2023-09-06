@@ -13,7 +13,7 @@ use Hyperf\Validation\Middleware\ValidationMiddleware;
 
 return [
     'http' => [
-//        ProfilerMiddleware::class,
+        //        ProfilerMiddleware::class,
         ValidationMiddleware::class,
     ],
 ];

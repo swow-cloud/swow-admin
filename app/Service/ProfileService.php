@@ -58,6 +58,8 @@ class ProfileService
                 'wt' => '',
                 'mu' => '',
                 'ip' => '',
+                'pmu' => '',
+                'cpu' => '',
             ],
         ];
         $model = Monitor::find($id)->first();
@@ -75,6 +77,8 @@ class ProfileService
             'wt' => $model->wt,
             'mu' => $model->mu,
             'ip' => $model->request_ip,
+            'pmu' => $model->pmu,
+            'cpu' => $model->cpu,
         ];
         return $data;
     }

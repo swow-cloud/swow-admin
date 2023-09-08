@@ -11,6 +11,4 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock\Exceptions;
 
-class RuntimeException extends \RuntimeException
-{
-}
+class RuntimeException extends \RuntimeException {}

@@ -24,8 +24,7 @@ class SslConfig
         public bool $verifyPeer,
         public bool $verifyPeerName,
         public bool $allowSelfSigned,
-    ) {
-    }
+    ) {}
 
     /**
      * Retrieves the SSL flag for the object.

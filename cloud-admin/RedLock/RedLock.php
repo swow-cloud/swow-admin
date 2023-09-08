@@ -27,9 +27,7 @@ class RedLock
     /**
      * @param array<int,Lock> $locks
      */
-    public function __construct(public array $locks, public RedLockOption $lockOption)
-    {
-    }
+    public function __construct(public array $locks, public RedLockOption $lockOption) {}
 
     /**
      * @param array{array{poolName:string}} $configs

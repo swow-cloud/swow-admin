@@ -21,9 +21,7 @@ use Throwable;
 
 class OnPolicyChangedListener implements ListenerInterface
 {
-    public function __construct(public ContainerInterface $container)
-    {
-    }
+    public function __construct(public ContainerInterface $container) {}
 
     /**
      * @return string[]

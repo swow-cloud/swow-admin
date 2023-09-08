@@ -38,9 +38,7 @@ class UserController extends AbstractController
     public UserLogic $userLogic;
 
     #[PostMapping(path: 'register')]
-    public function register()
-    {
-    }
+    public function register() {}
 
     /**
      * @throws InvalidArgumentException

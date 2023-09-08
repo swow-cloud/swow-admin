@@ -13,6 +13,4 @@ namespace App\Model;
 
 use Hyperf\DbConnection\Model\Model as BaseModel;
 
-class Model extends BaseModel
-{
-}
+class Model extends BaseModel {}

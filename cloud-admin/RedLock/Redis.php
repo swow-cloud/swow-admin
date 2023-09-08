@@ -21,9 +21,7 @@ use RedisException;
 
 class Redis
 {
-    public function __construct(public string $pool = 'default')
-    {
-    }
+    public function __construct(public string $pool = 'default') {}
 
     public function setNex(string $key, string $value, int $expireSeconds): bool
     {

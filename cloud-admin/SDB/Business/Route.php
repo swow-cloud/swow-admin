@@ -37,8 +37,7 @@ class Route
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly ConfigInterface $config,
-    ) {
-    }
+    ) {}
 
     public function getRoute(): array
     {

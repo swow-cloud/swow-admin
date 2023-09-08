@@ -13,7 +13,5 @@ namespace CloudAdmin\Composer;
 
 class Platform
 {
-    public static function preInstallCmd(): void
-    {
-    }
+    public static function preInstallCmd(): void {}
 }

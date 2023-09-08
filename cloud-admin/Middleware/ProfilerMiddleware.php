@@ -38,9 +38,7 @@ use function xhprof_enable;
 
 class ProfilerMiddleware implements MiddlewareInterface
 {
-    public function __construct(protected readonly ContainerInterface $container, protected readonly ConfigInterface $config)
-    {
-    }
+    public function __construct(protected readonly ContainerInterface $container, protected readonly ConfigInterface $config) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

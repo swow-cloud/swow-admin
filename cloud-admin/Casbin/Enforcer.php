@@ -45,9 +45,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class Enforcer
 {
-    public function __construct(public ContainerInterface $container)
-    {
-    }
+    public function __construct(public ContainerInterface $container) {}
 
     public function __call($method, $parameters)
     {

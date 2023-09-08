@@ -3,6 +3,12 @@
 ![](resource/swow-admin.png)
 **基于hyperf-swow开发的后台管理系统.🚀🐰**
 
+# 项目功能 🔨:
+- 支持性能分析xhprof，但不限于，CPU 使用率、内存使用情况、函数执行时间等，然后生成详细的性能分析报告，以及可视化的图表
+
+![img_2.png](resource/img_2.png)
+![img_3.png](resource/img_3.png)
+![img_4.png](resource/img_4.png)
 # 生成ssl证书
 
 ```shell

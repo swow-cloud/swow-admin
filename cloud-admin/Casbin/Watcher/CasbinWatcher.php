@@ -37,9 +37,7 @@ class CasbinWatcher implements Watcher
         $this->redis = $this->container->get(Redis::class);
     }
 
-    public function setUpdateCallback(Closure $func): void
-    {
-    }
+    public function setUpdateCallback(Closure $func): void {}
 
     /**
      * @throws RedisException

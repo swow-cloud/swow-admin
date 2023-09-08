@@ -24,9 +24,7 @@ class UserLoggedInListener implements ListenerInterface
     #[Inject]
     protected LoggerFactory $loggerFactory;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function listen(): array
     {

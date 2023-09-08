@@ -20,9 +20,7 @@ class EventHandler implements EventInterface
     /**
      * @param class-string<EventInterface>[] $handlers
      */
-    public function __construct(private readonly ContainerInterface $container, private readonly array $handlers)
-    {
-    }
+    public function __construct(private readonly ContainerInterface $container, private readonly array $handlers) {}
 
     public function handle(array $event): array
     {

@@ -591,7 +591,7 @@ class MenuController extends AbstractController
                     }
                 },
                 {
-                    "path":"/echarts/flameGraphChart",
+                    "path":"/echarts/flameGraphChart/:id",
                     "name":"flameGraphChart",
                     "component":"/echarts/flameGraphChart/index",
                     "meta":{

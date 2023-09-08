@@ -21,9 +21,7 @@ use function sprintf;
 
 class AppExceptionHandler extends ExceptionHandler
 {
-    public function __construct(protected StdoutLoggerInterface $logger)
-    {
-    }
+    public function __construct(protected StdoutLoggerInterface $logger) {}
 
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {

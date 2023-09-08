@@ -62,10 +62,11 @@ class ProfileService
                 'cpu' => '',
             ],
         ];
-        $model = Monitor::find($id)->first();
+        $model = Monitor::find($id);
         if (! $model) {
             throw new BusinessException(ErrorCode::NOT_FOUND);
         }
+        $model = $model->first();
         $profile = Json::decode($model->profile, true);
         $data['sql'] = '';
         $ProfileData = \Hyperf\Support\make(Profile::class, [$profile]);

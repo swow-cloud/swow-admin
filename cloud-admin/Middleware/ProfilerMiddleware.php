@@ -14,11 +14,6 @@ declare(strict_types=1);
 namespace CloudAdmin\Middleware;
 
 use App\Model\Monitor;
-use CloudAdmin\Profiler\EventHandler as ProfilerEventHandler;
-use CloudAdmin\Profiler\Handlers\CalculateDiffsBetweenEdges;
-use CloudAdmin\Profiler\Handlers\CleanupEvent;
-use CloudAdmin\Profiler\Handlers\PrepareEdges;
-use CloudAdmin\Profiler\Handlers\PreparePeaks;
 use Hyperf\Codec\Json;
 use Hyperf\Context\Context;
 use Hyperf\Contract\ConfigInterface;
@@ -45,14 +40,14 @@ class ProfilerMiddleware implements MiddlewareInterface
         $time = microtime();
         if ($this->enable()) {
             xhprof_enable($this->config->get('profiler.options.flags'));
+            \Hyperf\Coroutine\defer(function () use ($time, $request) {
+                try {
+                    $this->logAndSave($time, $request, Context::get(ResponseInterface::class));
+                } catch (Throwable $throwable) {
+                    // todo: not here
+                }
+            });
         }
-        \Hyperf\Coroutine\defer(function () use ($time, $request) {
-            try {
-                $this->logAndSave($time, $request, Context::get(ResponseInterface::class));
-            } catch (Throwable $throwable) {
-                // todo: not here
-            }
-        });
         $response = $handler->handle($request);
         Context::set(ResponseInterface::class, $response);
         return $response;
@@ -60,7 +55,7 @@ class ProfilerMiddleware implements MiddlewareInterface
 
     protected function logAndSave(string $startTime, ?ServerRequestInterface $request, ?ResponseInterface $response): bool
     {
-        $times = explode(' ', (string) $startTime);
+        $times = explode(' ', $startTime);
         $monitor = new Monitor();
         $monitor->request_url = $request->getUri()->getPath();
         $monitor->app_name = \Hyperf\Support\env('APP_NAME');
@@ -69,15 +64,7 @@ class ProfilerMiddleware implements MiddlewareInterface
         $monitor->request_time_micro = $times[0] * 1000000;
         $monitor->type = $request->getMethod();
         $monitor->request_ip = ip($request);
-        // TODO: 是否格式化profiler
-        //            $eventHandler = \Hyperf\Support\make(ProfilerEventHandler::class, [$this->container, [
-        //                PreparePeaks::class,
-        //                CalculateDiffsBetweenEdges::class,
-        //                PrepareEdges::class,
-        //                CleanupEvent::class,
-        //            ]]);
         $profiler = xhprof_disable();
-        //            $data = $eventHandler->handle($profiler);
         $monitor->profile = Json::encode($profiler);
         $monitor->mu = $profiler['main()']['mu'];
         $monitor->pmu = $profiler['main()']['pmu'];

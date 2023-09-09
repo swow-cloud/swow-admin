@@ -16,3 +16,4 @@ swow-examples/
 ssl/
 server/
 php-monitor/
+hyperf-casbin-example/

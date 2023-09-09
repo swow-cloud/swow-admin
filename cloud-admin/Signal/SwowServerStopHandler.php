@@ -56,7 +56,7 @@ class SwowServerStopHandler implements SignalHandlerInterface
     public function handle(int $signal): void
     {
         ProcessManager::setRunning(false);
-        $this->stdoutLogger->error('Server shutdown');
+        $this->stdoutLogger->critical('Server shutdown');
         Coroutine::killAll();
 
         if (\Hyperf\Support\env('APP_DEBUG')) {

@@ -17,13 +17,14 @@ use Hyperf\Codec\Json;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\PostMapping;
 use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: 'sys/menu')]
+#[Middleware(AuthMiddleware::class)]
 class MenuController extends AbstractController
 {
     #[GetMapping(path: 'list')]
-    #[Middleware(AuthMiddleware::class)]
     public function list(): ResponseInterface
     {
         return $this->response->success(Json::decode('[
@@ -1069,4 +1070,13 @@ class MenuController extends AbstractController
     ]
 '));
     }
+
+    #[PostMapping(path: 'add')]
+    public function add(): ResponseInterface {}
+
+    #[PostMapping(path: 'update')]
+    public function update(): ResponseInterface {}
+
+    #[PostMapping(path: 'delete')]
+    public function delete(): ResponseInterface {}
 }

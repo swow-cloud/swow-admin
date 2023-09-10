@@ -9,16 +9,8 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace CloudAdmin\Profiler\Handlers;
+namespace App\Request\Rbac;
 
-use CloudAdmin\Profiler\EventInterface;
+use Hyperf\Validation\Request\FormRequest;
 
-final class CleanupEvent implements EventInterface
-{
-    public function handle(array $event): array
-    {
-        unset($event['profile']);
-
-        return $event;
-    }
-}
+class RoleRequest extends FormRequest {}

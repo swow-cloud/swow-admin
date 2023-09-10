@@ -26,8 +26,11 @@ class RoleController extends AbstractController
     #[GetMapping(path: 'list')]
     public function list(): ResponseInterface {}
 
-    #[PostMapping(path: 'add')]
-    public function add(): ResponseInterface {}
+    #[PostMapping(path: 'store')]
+    public function store(): ResponseInterface {}
+
+    #[PostMapping(path: 'update')]
+    public function update(): ResponseInterface {}
 
     #[PostMapping(path: 'delete')]
     public function delete(): ResponseInterface {}

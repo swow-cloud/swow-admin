@@ -9,9 +9,8 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace CloudAdmin\Profiler;
+namespace App\Request\Rbac;
 
-interface EventInterface
-{
-    public function handle(array $event): array;
-}
+use Hyperf\Validation\Request\FormRequest;
+
+class UserRequest extends FormRequest {}

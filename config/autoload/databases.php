@@ -40,6 +40,7 @@ return [
                 'path' => 'app/Model',
                 'force_casts' => true,
                 'inheritance' => 'Model',
+                'with_comments' => true,
                 'uses' => '',
                 'refresh_fillable' => true,
                 'table_mapping' => [],

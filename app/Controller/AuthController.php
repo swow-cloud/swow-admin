@@ -13,7 +13,7 @@ namespace App\Controller;
 
 use App\Logic\UserLogic;
 use App\Middleware\Auth\AuthMiddleware;
-use App\Model\User;
+use App\Model\SystemUser;
 use App\Request\UserRequest;
 use Carbon\Carbon;
 use Hyperf\Codec\Json;
@@ -1125,7 +1125,7 @@ class AuthController extends AbstractController
     #[Middleware(middleware: AuthMiddleware::class)]
     public function logout(RequestInterface $request): ResponseInterface
     {
-        /** @var User $user */
+        /** @var SystemUser $user */
         $user = Context::get('user');
         try {
             $isLogout = $this->userLogic->logout(JWTUtil::getToken($request));

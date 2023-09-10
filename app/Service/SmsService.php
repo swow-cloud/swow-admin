@@ -15,7 +15,7 @@ use App\Component\Code;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Model\SmsLog;
-use App\Model\User;
+use App\Model\SystemUser;
 use Carbon\Carbon;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
@@ -50,7 +50,7 @@ class SmsService
      */
     public function isRegister(string $phone): bool
     {
-        return User::query()->where(['phone' => $phone])->exists();
+        return SystemUser::query()->where(['phone' => $phone])->exists();
     }
 
     /**

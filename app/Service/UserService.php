@@ -14,17 +14,17 @@ namespace App\Service;
 use App\Component\Password;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
-use App\Model\User;
+use App\Model\SystemUser;
 
 class UserService
 {
     /**
      * @throws BusinessException
      */
-    public function login(string $username, string $password): User
+    public function login(string $username, string $password): SystemUser
     {
-        /** @var User $userModel */
-        $userModel = User::query()->where(['username' => $username, 'status' => \App\Constants\User::ACTIVE])->first();
+        /** @var SystemUser $userModel */
+        $userModel = SystemUser::query()->where(['username' => $username, 'status' => \App\Constants\User::ACTIVE])->first();
         if (! $userModel) {
             throw new BusinessException(ErrorCode::USER_LOGIN_PASSWORD_ERR);
         }
@@ -48,8 +48,8 @@ class UserService
     /**
      * 获取用户信息.
      */
-    public static function get(int $uid): User
+    public static function get(int $uid): SystemUser
     {
-        return User::find($uid);
+        return SystemUser::find($uid);
     }
 }

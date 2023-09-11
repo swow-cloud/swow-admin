@@ -33,7 +33,7 @@ class FormRequest extends HyperfRequest
     public function getRules(): array
     {
         $scene = $this->getScene();
-        $rules = call_user_func_array([$this, sprintf('%sRules', $scene)], $this->rules() ?? []);
+        $rules = $scene ? call_user_func_array([$this, sprintf('%sRules', $scene)], $this->rules()) : [];
         if ($scene && isset($this->scenes[$scene]) && is_array($this->scenes[$scene])) {
             return Arr::only($rules, $this->scenes[$scene]);
         }

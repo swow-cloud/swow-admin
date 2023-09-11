@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use CloudAdmin\Model\Model;
+
 /**
  * @property int $id
  * @property string $phone

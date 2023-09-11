@@ -9,8 +9,9 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Model;
+namespace App\Service\System;
 
-use Hyperf\DbConnection\Model\Model as BaseModel;
-
-class Model extends BaseModel {}
+class MenuService
+{
+    public function add(array $info = []) {}
+}

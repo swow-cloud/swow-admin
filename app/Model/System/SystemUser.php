@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Model\System;
 
-use App\Model\Model;
+use CloudAdmin\Model\Model;
 
 /**
  * @property int $id 用户ID，主键

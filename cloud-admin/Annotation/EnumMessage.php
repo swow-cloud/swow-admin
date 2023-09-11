@@ -17,5 +17,6 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 class EnumMessage extends AbstractAnnotation
 {
+    /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(public readonly string $message = '') {}
 }

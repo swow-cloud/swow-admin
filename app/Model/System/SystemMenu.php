@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace App\Model\System;
 
-use App\Model\Model;
+use Carbon\Carbon;
+use CloudAdmin\Model\Model;
 
 /**
  * @property int $id 主键
@@ -29,13 +30,21 @@ use App\Model\Model;
  * @property int $sort 排序
  * @property int $created_by 创建者
  * @property int $updated_by 更新者
- * @property \Carbon\Carbon $created_at 创建时间
- * @property \Carbon\Carbon $updated_at 更新时间
+ * @property Carbon $created_at 创建时间
+ * @property Carbon $updated_at 更新时间
  * @property string $deleted_at 删除时间
  * @property string $remark 备注
  */
 class SystemMenu extends Model
 {
+    public const LINK = 'L';
+
+    public const IFRAME = 'I';
+
+    public const MENU = 'M';
+
+    public const BUTTON = 'B';
+
     /**
      * The table associated with the model.
      */

@@ -14,7 +14,7 @@ namespace App\Service;
 use App\Component\Password;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
-use App\Model\SystemUser;
+use App\Model\Sys\SystemUser;
 
 class UserService
 {

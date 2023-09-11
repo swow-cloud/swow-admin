@@ -13,7 +13,7 @@ namespace App\Controller;
 
 use App\Logic\UserLogic;
 use App\Middleware\Auth\AuthMiddleware;
-use App\Model\SystemUser;
+use App\Model\Sys\SystemUser;
 use App\Request\UserRequest;
 use Carbon\Carbon;
 use Hyperf\Codec\Json;

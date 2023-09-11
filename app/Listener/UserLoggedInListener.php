@@ -12,11 +12,15 @@ declare(strict_types=1);
 namespace App\Listener;
 
 use App\Event\UserLoggedInEvent;
+use App\Model\Sys\SystemUser;
 use Carbon\Carbon;
+use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Logger\LoggerFactory;
+use Psr\Http\Message\ServerRequestInterface;
 
+use function CloudAdmin\Utils\ip;
 use function sprintf;
 
 class UserLoggedInListener implements ListenerInterface
@@ -40,6 +44,12 @@ class UserLoggedInListener implements ListenerInterface
             $logger = $this->loggerFactory->get();
 
             $logger->info(sprintf('用户:[%s]-[%s] 在[%s] 登录了系统.', $event->userId, $event->username, Carbon::now()->toDateTimeString()));
+
+            /** @var SystemUser $user */
+            $user = SystemUser::query()->find($event->userId);
+            $request = Context::get(ServerRequestInterface::class);
+            $user->login_ip = ip($request);
+            $user->save();
         }
     }
 }

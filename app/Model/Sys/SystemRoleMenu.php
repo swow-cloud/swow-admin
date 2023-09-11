@@ -9,26 +9,28 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Model;
+namespace App\Model\Sys;
+
+use App\Model\Model;
 
 /**
- * @property int $user_id 用户主键
  * @property int $role_id 角色主键
+ * @property int $menu_id 菜单主键
  */
-class SystemUserRole extends Model
+class SystemRoleMenu extends Model
 {
     /**
      * The table associated with the model.
      */
-    protected ?string $table = 'system_user_role';
+    protected ?string $table = 'system_role_menu';
 
     /**
      * The attributes that are mass assignable.
      */
-    protected array $fillable = ['user_id', 'role_id'];
+    protected array $fillable = ['role_id', 'menu_id'];
 
     /**
      * The attributes that should be cast to native types.
      */
-    protected array $casts = ['user_id' => 'integer', 'role_id' => 'integer'];
+    protected array $casts = ['role_id' => 'integer', 'menu_id' => 'integer'];
 }

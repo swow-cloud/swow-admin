@@ -9,7 +9,9 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Model;
+namespace App\Model\Sys;
+
+use App\Model\Model;
 
 /**
  * @property int $id 用户ID，主键

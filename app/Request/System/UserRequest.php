@@ -9,11 +9,8 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Constants;
+namespace App\Request\System;
 
-class User
-{
-    public const ACTIVE = 1;
+use CloudAdmin\Validation\Request\FormRequest;
 
-    public const DISABLED = 0;
-}
+class UserRequest extends FormRequest {}

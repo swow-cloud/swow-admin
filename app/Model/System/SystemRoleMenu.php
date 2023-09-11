@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Model\Sys;
+namespace App\Model\System;
 
 use App\Model\Model;
 

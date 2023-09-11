@@ -9,8 +9,8 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Request\Rbac;
+namespace App\Request\System;
 
-use Hyperf\Validation\Request\FormRequest;
+use CloudAdmin\Validation\Request\FormRequest;
 
 class RoleRequest extends FormRequest {}

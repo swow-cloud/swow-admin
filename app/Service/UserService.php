@@ -13,8 +13,9 @@ namespace App\Service;
 
 use App\Component\Password;
 use App\Constants\ErrorCode;
+use App\Constants\Status;
 use App\Exception\BusinessException;
-use App\Model\Sys\SystemUser;
+use App\Model\System\SystemUser;
 
 class UserService
 {
@@ -24,7 +25,7 @@ class UserService
     public function login(string $username, string $password): SystemUser
     {
         /** @var SystemUser $userModel */
-        $userModel = SystemUser::query()->where(['username' => $username, 'status' => \App\Constants\User::ACTIVE])->first();
+        $userModel = SystemUser::query()->where(['username' => $username, 'status' => Status::ACTIVE])->first();
         if (! $userModel) {
             throw new BusinessException(ErrorCode::USER_LOGIN_PASSWORD_ERR);
         }

@@ -13,7 +13,7 @@ namespace App\Controller;
 
 use App\Logic\UserLogic;
 use App\Middleware\Auth\AuthMiddleware;
-use App\Model\Sys\SystemUser;
+use App\Model\System\SystemUser;
 use App\Request\UserRequest;
 use Carbon\Carbon;
 use Hyperf\Codec\Json;
@@ -60,8 +60,8 @@ class AuthController extends AbstractController
     }'));
     }
 
-    #[GetMapping(path: 'permission')]
-    public function permission(): ResponseInterface
+    #[GetMapping(path: 'menus')]
+    public function menus(): ResponseInterface
     {
         return $this->response->success(Json::decode('[
         {

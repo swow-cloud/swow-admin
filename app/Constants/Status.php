@@ -9,8 +9,11 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Request\Rbac;
+namespace App\Constants;
 
-use Hyperf\Validation\Request\FormRequest;
+class Status
+{
+    public const ACTIVE = 1;
 
-class UserRequest extends FormRequest {}
+    public const DISABLED = 0;
+}

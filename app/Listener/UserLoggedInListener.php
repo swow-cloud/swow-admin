@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Listener;
 
 use App\Event\UserLoggedInEvent;
-use App\Model\Sys\SystemUser;
+use App\Model\System\SystemUser;
 use Carbon\Carbon;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;

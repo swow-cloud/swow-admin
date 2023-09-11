@@ -15,7 +15,7 @@ use App\Component\Code;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Model\SmsLog;
-use App\Model\Sys\SystemUser;
+use App\Model\System\SystemUser;
 use Carbon\Carbon;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;

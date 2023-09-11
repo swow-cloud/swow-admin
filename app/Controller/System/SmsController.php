@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Controller\Sys;
+namespace App\Controller\System;
 
 use App\Constants\ErrorCode;
 use App\Controller\AbstractController;
@@ -28,7 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 
 use function CloudAdmin\Utils\di;
 
-#[Controller(prefix: 'sys/sms')]
+#[Controller(prefix: 'system/sms')]
 class SmsController extends AbstractController
 {
     #[Inject]

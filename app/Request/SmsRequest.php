@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Request;
 
-use Hyperf\Validation\Request\FormRequest;
+use CloudAdmin\Validation\Request\FormRequest;
 
 class SmsRequest extends FormRequest
 {

@@ -12,14 +12,10 @@ declare(strict_types=1);
 namespace CloudAdmin\Annotation;
 
 use Attribute;
+use Hyperf\Di\Annotation\AbstractAnnotation;
 
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
-class EnumMessage
+class EnumMessage extends AbstractAnnotation
 {
-    public readonly string $message;
-
-    public function __construct(string $message = '')
-    {
-        $this->message = $message;
-    }
+    public function __construct(public readonly string $message = '') {}
 }

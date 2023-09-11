@@ -12,15 +12,11 @@ declare(strict_types=1);
 namespace CloudAdmin\Annotation;
 
 use Attribute;
+use Hyperf\Di\Annotation\AbstractAnnotation;
 use Swow\Http\Status;
 
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
-class HttpCode
+class HttpCode extends AbstractAnnotation
 {
-    public readonly int $code;
-
-    public function __construct(int $code = Status::OK)
-    {
-        $this->code = $code;
-    }
+    public function __construct(public readonly int $code = Status::OK) {}
 }

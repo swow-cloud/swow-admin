@@ -9,20 +9,22 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Controller\Sys;
+namespace App\Controller\System;
 
 use App\Controller\AbstractController;
 use App\Middleware\Auth\AuthMiddleware;
+use App\Request\System\MenuRequest;
 use Hyperf\Codec\Json;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\Validation\Annotation\Scene;
 use Psr\Http\Message\ResponseInterface;
 
-#[Controller(prefix: 'sys/permission')]
-#[Middleware(AuthMiddleware::class)]
-class PermissionController extends AbstractController
+#[Controller(prefix: '/system/menu')]
+// #[Middleware(AuthMiddleware::class)]
+class MenuController extends AbstractController
 {
     #[GetMapping(path: 'list')]
     public function list(): ResponseInterface
@@ -1071,10 +1073,12 @@ class PermissionController extends AbstractController
 '));
     }
 
-    #[PostMapping(path: 'store')]
-    public function store(): ResponseInterface {}
+    #[PostMapping(path: 'add')]
+    #[Scene(scene: 'add')]
+    public function add(MenuRequest $request): ResponseInterface {}
 
     #[PostMapping(path: 'update')]
+    #[Scene]
     public function update(): ResponseInterface {}
 
     #[PostMapping(path: 'delete')]

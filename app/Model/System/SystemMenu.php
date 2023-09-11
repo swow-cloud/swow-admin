@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Model\Sys;
+namespace App\Model\System;
 
 use App\Model\Model;
 
@@ -23,9 +23,9 @@ use App\Model\Model;
  * @property string $route 路由地址
  * @property string $component 组件路径
  * @property string $redirect 跳转地址
- * @property int $is_hidden 是否隐藏 (1是 2否)
+ * @property int $is_hidden 是否隐藏 (1是 0否)
  * @property string $type 菜单类型, (M菜单 B按钮 L链接 I iframe)
- * @property int $status 状态 (1正常 2停用)
+ * @property int $status 状态 (1正常 0停用)
  * @property int $sort 排序
  * @property int $created_by 创建者
  * @property int $updated_by 更新者

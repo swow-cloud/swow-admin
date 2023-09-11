@@ -9,29 +9,28 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace App\Controller\Sys;
+namespace App\Controller\System;
 
 use App\Controller\AbstractController;
-use App\Middleware\Auth\AuthMiddleware;
+use App\Logic\UserLogic;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
-use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Psr\Http\Message\ResponseInterface;
 
-#[Controller(prefix: '/sys/role')]
-#[Middleware(middleware: AuthMiddleware::class)]
-class RoleController extends AbstractController
+#[Controller(prefix: 'system/user')]
+class UserController extends AbstractController
 {
-    #[GetMapping(path: 'list')]
+    #[Inject]
+    public UserLogic $userLogic;
+
+    #[PostMapping(path: 'list')]
     public function list(): ResponseInterface {}
 
     #[PostMapping(path: 'store')]
     public function store(): ResponseInterface {}
 
-    #[PostMapping(path: 'update')]
     public function update(): ResponseInterface {}
 
-    #[PostMapping(path: 'delete')]
     public function delete(): ResponseInterface {}
 }

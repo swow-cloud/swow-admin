@@ -63,10 +63,10 @@ class Model extends BaseModel
     public static function betweenTime(Builder $model, string $field, array $createTime): void
     {
         $model->where(function (Builder $builder) use ($field, $createTime) {
-            if ($createTime['start'] > 0) {
+            if ($createTime['startDate'] > 0) {
                 $builder->where($field, '>=', $createTime['startDate']);
             }
-            if ($createTime['end'] > 0) {
+            if ($createTime['endDate'] > 0) {
                 $builder->where($field, '<', $createTime['endDate']);
             }
         });

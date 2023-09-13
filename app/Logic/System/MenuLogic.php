@@ -22,14 +22,14 @@ class MenuLogic
 
     public function add(array $data) {}
 
-    protected function makeMenuData(array $data)
+    protected function makeMenuData(array $data): array
     {
         if ((int) $data['parent_id'] === 0) {
             $data['level'] = '0';
             $data['parent_id'] = 0;
             $data['type'] = $data['type'] === SystemMenu::BUTTON ? SystemMenu::MENU : $data['type'];
         } else {
-            $parentMenu = $this->menuService->read((int) $data['parent_id']);
+            $parentMenu = SystemMenu::one((int) $data['parent_id']);
             $data['level'] = $parentMenu['level'] . ',' . $parentMenu['id'];
         }
         return $data;

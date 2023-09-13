@@ -17,9 +17,14 @@ use Hyperf\DbConnection\Model\Model as BaseModel;
 use function is_array;
 use function is_int;
 
-// todo : 简单的单个查询用Model类的方法
 class Model extends BaseModel
 {
+    public const PAGE_SIZE = 20;
+
+    public const PAGE_NAME = 'page';
+
+    public const PAGE_SIZE_NAME = 'pageSize';
+
     protected ?string $dateFormat = 'Y-m-d H:i:s';
 
     public static function findOne(array $condition, array $field = ['*'], bool $forUpdate = false): \Hyperf\Database\Model\Model
@@ -29,6 +34,11 @@ class Model extends BaseModel
             $query->lockForUpdate();
         }
         return $query->first($field);
+    }
+
+    public static function one(int $id, array $field = ['*']): \Hyperf\Database\Model\Model
+    {
+        return self::findOne(['id' => $id], $field);
     }
 
     public static function buildByCondition(array $condition): Builder

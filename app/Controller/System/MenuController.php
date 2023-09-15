@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace App\Controller\System;
 
 use App\Controller\AbstractController;
+use App\Logic\System\MenuLogic;
 use App\Middleware\Auth\AuthMiddleware;
 use App\Request\System\MenuRequest;
 use Hyperf\Codec\Json;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -23,9 +25,12 @@ use Hyperf\Validation\Annotation\Scene;
 use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: '/system/menu')]
-// #[Middleware(AuthMiddleware::class)]
+#[Middleware(AuthMiddleware::class)]
 class MenuController extends AbstractController
 {
+    #[Inject]
+    public MenuLogic $menuLogic;
+
     #[GetMapping(path: 'list')]
     public function list(): ResponseInterface
     {
@@ -1075,7 +1080,11 @@ class MenuController extends AbstractController
 
     #[PostMapping(path: 'add')]
     #[Scene(scene: 'add')]
-    public function add(MenuRequest $request): ResponseInterface {}
+    public function add(MenuRequest $request): ResponseInterface
+    {
+        $id = $this->menuLogic->add($request->all());
+        return $this->response->success(['id' => $id]);
+    }
 
     #[PostMapping(path: 'update')]
     #[Scene]

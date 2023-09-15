@@ -1,13 +1,13 @@
 {
   "name": "swow-cloud/swow-admin",
+  "description": "swow-admin",
+  "license": "MIT",
   "type": "project",
   "keywords": [
     "php",
     "swow",
     "admin"
   ],
-  "description": "swow-admin",
-  "license": "MIT",
   "require": {
     "php": ">=8.1",
     "ext-pcntl": "*",
@@ -17,27 +17,27 @@
     "casbin/casbin": "^3.21",
     "casbin/psr3-bridge": "^1.3",
     "hyperf/cache": "^3.0",
-    "hyperf/command": "3.0.*",
-    "hyperf/config": "3.0.*",
-    "hyperf/constants": "3.0.*",
-    "hyperf/contract": "3.0.*",
-    "hyperf/db-connection": "3.0.*",
-    "hyperf/di": "3.0.*",
-    "hyperf/dispatcher": "3.0.*",
+    "hyperf/command": "~3.0.0",
+    "hyperf/config": "~3.0.0",
+    "hyperf/constants": "~3.0.0",
+    "hyperf/contract": "~3.0.0",
+    "hyperf/db-connection": "~3.0.0",
+    "hyperf/di": "~3.0.0",
+    "hyperf/dispatcher": "~3.0.0",
     "hyperf/engine-swow": "^2.1",
-    "hyperf/event": "3.0.*",
-    "hyperf/exception-handler": "3.0.*",
-    "hyperf/framework": "3.0.*",
-    "hyperf/guzzle": "3.0.*",
-    "hyperf/http-server": "3.0.*",
-    "hyperf/logger": "3.0.*",
+    "hyperf/event": "~3.0.0",
+    "hyperf/exception-handler": "~3.0.0",
+    "hyperf/framework": "~3.0.0",
+    "hyperf/guzzle": "~3.0.0",
+    "hyperf/http-server": "~3.0.0",
+    "hyperf/logger": "~3.0.0",
     "hyperf/model-cache": "^3.0",
     "hyperf/phar": "^3.0",
-    "hyperf/process": "3.0.*",
+    "hyperf/process": "~3.0.0",
     "hyperf/rate-limit": "^3.0",
     "hyperf/redis": "^3.0",
     "hyperf/signal": "^3.0",
-    "hyperf/utils": "3.0.*",
+    "hyperf/utils": "~3.0.0",
     "hyperf/validation": "^3.0",
     "jetbrains/phpstorm-attributes": "^1.0",
     "phper666/jwt-auth": "^4.0",
@@ -45,23 +45,26 @@
     "swow-cloud/debugger": "^0.1.0"
   },
   "require-dev": {
+    "ergebnis/composer-normalize": "^2.37",
     "friendsofphp/php-cs-fixer": "^3.0",
-    "hyperf/devtool": "3.0.*",
-    "hyperf/testing": "3.0.*",
+    "hyperf/devtool": "~3.0.0",
+    "hyperf/testing": "~3.0.0",
     "mockery/mockery": "^1.0",
     "phpstan/phpstan": "^1.0",
     "symfony/var-dumper": "^6.2"
   },
   "suggest": {
-    "ext-openssl": "Required to use HTTPS.",
     "ext-json": "Required to use JSON.",
+    "ext-openssl": "Required to use HTTPS.",
     "ext-pdo": "Required to use MySQL Client.",
     "ext-pdo_mysql": "Required to use MySQL Client."
   },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "App\\": "app/",
       "Api\\": "api/",
+      "App\\": "app/",
       "CloudAdmin\\": "cloud-admin/"
     },
     "files": [
@@ -73,32 +76,31 @@
       "CloudAdmin\\Test\\": "test/"
     }
   },
-  "minimum-stability": "stable",
-  "prefer-stable": true,
   "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "ergebnis/composer-normalize": true
+    },
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true,
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
-    }
+    "sort-packages": true
   },
   "extra": [],
   "scripts": {
-    "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ],
     "pre-install-cmd": [
       "CloudAdmin\\Composer\\Platform::preInstallCmd"
     ],
     "post-autoload-dump": [
       "@php -r \"if(PHP_OS_FAMILY === 'Windows') shell_exec('del /f /s /q runtime\\container && rmdir runtime\\container'); else shell_exec('rm -rf runtime/container');\" "
     ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
     "analyse": "@php vendor/bin/phpstan analyse --memory-limit 512M -l 0 -c phpstan.neon",
     "cs-fix": "@php vendor/bin/php-cs-fixer fix $1",
-    "start": "bash bin/hyperf",
+    "rector": "rector process --clear-cache",
     "route": "@php bin/hyperf.php describe:routes",
-    "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always",
-    "rector": "rector process --clear-cache"
+    "start": "bash bin/hyperf",
+    "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always"
   }
 }

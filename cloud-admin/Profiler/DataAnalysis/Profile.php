@@ -305,7 +305,6 @@ class Profile
                 'id' => Str::uuid(),
                 'value' => $metrics[$metric],
             ];
-            // todo: 设计前端返回的色彩，根据类型渲染颜色
             if ($childName === 'main()') {
                 $current['type'] = 'main()';
             } elseif (str_contains($childName, '::')) {

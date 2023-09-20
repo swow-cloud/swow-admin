@@ -49,6 +49,7 @@ use function CloudAdmin\Utils\di;
 use function CloudAdmin\Utils\logger;
 use function count;
 use function ctype_print;
+use function env;
 use function explode;
 use function implode;
 use function in_array;
@@ -125,17 +126,20 @@ class WebSocketDebugger extends Debugger
 
                             try {
                                 $request = $connection->recvHttpRequest();
-                                if ($request->getHeader('authorization')) {
-                                    $auth = substr($request->getHeader('authorization')[0], 6);  // 去掉 "Basic " 前缀
-                                    $decoded = base64_decode($auth);  // 对 base64 编码的用户名和密码进行解码
-                                    [$username, $password] = explode(':', $decoded);
-                                    if ($username !== '123456' && $password !== '123456') {
+
+                                if (env('ENABLE_BASIC')) {
+                                    if ($request->getHeader('authorization')) {
+                                        $auth = substr($request->getHeader('authorization')[0], 6);
+                                        $decoded = base64_decode($auth);
+                                        [$username, $password] = explode(':', $decoded);
+                                        if ($username !== env('BASIC_USERNAME') && $password !== env('BASIC_PASSWORD')) {
+                                            $connection->error(Status::UNAUTHORIZED);
+                                            break;
+                                        }
+                                    } else {
                                         $connection->error(Status::UNAUTHORIZED);
                                         break;
                                     }
-                                } else {
-                                    $connection->error(Status::UNAUTHORIZED);
-                                    break;
                                 }
 
                                 switch ($request->getUri()->getPath()) {

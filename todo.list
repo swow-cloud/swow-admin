@@ -2,7 +2,7 @@
 2.登录(已完成)
 3.RBAC权限验证(进行中)
 4.phar(未开发)
-5.使用Box打包本项目
+5.使用Box打包本项目(待开发)
 6.研究SDB提供网页交互式功能(Ws,Tcp)(进行中)
-7.xhgui+xhprof
-8.page分页功能
+7.xhgui+xhprof(已完成)
+8.page分页功能(进行中)

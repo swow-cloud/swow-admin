@@ -43,6 +43,7 @@ use WeakMap;
 
 use function array_filter;
 use function array_shift;
+use function base64_decode;
 use function bin2hex;
 use function CloudAdmin\Utils\di;
 use function CloudAdmin\Utils\logger;
@@ -56,6 +57,7 @@ use function is_string;
 use function sleep;
 use function sprintf;
 use function strtolower;
+use function substr;
 use function Swow\Debug\var_dump_return;
 use function trim;
 use function usleep;
@@ -102,7 +104,7 @@ class WebSocketDebugger extends Debugger
             ->listen(self::$serverConfig->getBackLog());
         $options = null;
 
-        if (self::$sslConfig !== null) {
+        if (self::$sslConfig !== null && self::$sslConfig->getSsl()) {
             $options = self::$sslConfig->toArray();
             unset($options['ssl']);
         }
@@ -123,6 +125,18 @@ class WebSocketDebugger extends Debugger
 
                             try {
                                 $request = $connection->recvHttpRequest();
+                                if ($request->getHeader('authorization')) {
+                                    $auth = substr($request->getHeader('authorization')[0], 6);  // 去掉 "Basic " 前缀
+                                    $decoded = base64_decode($auth);  // 对 base64 编码的用户名和密码进行解码
+                                    [$username, $password] = explode(':', $decoded);
+                                    if ($username !== '123456' && $password !== '123456') {
+                                        $connection->error(Status::UNAUTHORIZED);
+                                        break;
+                                    }
+                                } else {
+                                    $connection->error(Status::UNAUTHORIZED);
+                                    break;
+                                }
 
                                 switch ($request->getUri()->getPath()) {
                                     case '/':

@@ -11,12 +11,19 @@ declare(strict_types=1);
 
 namespace App\Service\System;
 
+use App\Constants\Status;
 use App\Model\System\SystemMenu;
+use CloudAdmin\Vo\Collection;
 
 class MenuService
 {
     public function add(array $data = []): SystemMenu
     {
         return SystemMenu::create($data);
+    }
+
+    public function tree(): array
+    {
+        return Collection::tree(SystemMenu::buildByCondition(['status' => Status::ACTIVE, 'type' => SystemMenu::MENU])->get(['id', 'parent_id', 'id AS value', 'name AS label'])->toArray(), 'id', 'parent_id');
     }
 }

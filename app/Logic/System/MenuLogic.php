@@ -16,6 +16,7 @@ use App\Service\System\MenuService;
 use Hyperf\Di\Annotation\Inject;
 
 use function array_merge;
+use function array_values;
 
 class MenuLogic
 {
@@ -42,11 +43,16 @@ class MenuLogic
             ['name' => $model->name . '读取', 'code' => $model->code . ':get'],
         ];
         foreach ($buttonMenus as $buttonMenu) {
-            $this->add(array_merge([
+            $this->add(array_merge(
                 ['parent_id' => $model->id, 'type' => SystemMenu::BUTTON],
                 $buttonMenu,
-            ]));
+            ));
         }
+    }
+
+    public function treeMenu(): array
+    {
+        return array_values($this->menuService->tree());
     }
 
     protected function makeMenuData(array $data): array

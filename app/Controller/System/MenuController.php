@@ -31,6 +31,12 @@ class MenuController extends AbstractController
     #[Inject]
     public MenuLogic $menuLogic;
 
+    #[GetMapping(path: 'tree')]
+    public function tree(): ResponseInterface
+    {
+        return $this->response->success($this->menuLogic->treeMenu());
+    }
+
     #[GetMapping(path: 'list')]
     public function list(): ResponseInterface
     {

@@ -13,6 +13,7 @@
     "ext-pcntl": "*",
     "ext-posix": "*",
     "ext-redis": "*",
+    "aimeos/map": "^3.5",
     "bebat/console-color": "^1.0",
     "casbin/casbin": "^3.21",
     "casbin/psr3-bridge": "^1.3",

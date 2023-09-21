@@ -11,12 +11,22 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Vo;
 
-use Aimeos\Map;
-
 class Collection extends \Hyperf\Collection\Collection
 {
     public static function tree(array $data, string $idKey, string $parentKey, string $nestKey = 'children'): array
     {
-        return Map::from($data)->tree($idKey, $parentKey, $nestKey)->values()->toArray();
+        $trees = $refs = [];
+
+        foreach ($data as &$node) {
+            $node[$nestKey] = [];
+            $refs[$node[$idKey]] = &$node;
+
+            if ($node[$parentKey]) {
+                $refs[$node[$parentKey]][$nestKey][] = &$node;
+            } else {
+                $trees[] = &$node;
+            }
+        }
+        return $trees;
     }
 }

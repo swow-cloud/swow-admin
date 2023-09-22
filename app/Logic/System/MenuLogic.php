@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace App\Logic\System;
 
+use App\Constants\Status;
 use App\Model\System\SystemMenu;
 use App\Service\System\MenuService;
+use CloudAdmin\Vo\Collection;
 use Hyperf\Di\Annotation\Inject;
 
 use function array_merge;
@@ -31,6 +33,30 @@ class MenuLogic
             $this->generateCrudButton($meuModel);
         }
         return $meuModel->id;
+    }
+
+    public function list(): array
+    {
+        $selects = ['id', 'parent_id', 'name', 'code', 'icon', 'route', 'type', 'component', 'is_hidden'];
+        $menus = $this->menuService->list($selects, ['status' => Status::ACTIVE], ['id' => 'asc']);
+        foreach ($menus as &$menu) {
+            $menu = [
+                'meta' => [
+                    'icon' => $menu['icon'],
+                    'title' => $menu['name'],
+                    'isLink' => $menu['type'] === SystemMenu::LINK,
+                    'isHide' => $menu['is_hidden'] === Status::ACTIVE,
+                    'isAffix' => $menu['name'] === 'home',
+                    'isKeepAlive' => true,
+                ],
+                'path' => $menu['route'],
+                'name' => $menu['name'],
+                'component' => $menu['component'],
+                'id' => $menu['id'],
+                'parent_id' => $menu['parent_id'],
+            ];
+        }
+        return Collection::tree($menus, 'id', 'parent_id');
     }
 
     public function generateCrudButton(SystemMenu $model): void

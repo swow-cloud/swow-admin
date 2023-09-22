@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Trait;
 
-use CloudAdmin\Model\Model;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Model\Builder;
 
@@ -19,11 +18,9 @@ use function is_array;
 
 trait PaginateTrait
 {
-    public Model $model;
-
     public function getList(array|string $select, array $params, array $order = []): array
     {
-        $query = $this->model->buildByCondition($params);
+        $query = $this->buildByCondition($params);
         if ($select) {
             $query->select($select);
         }
@@ -34,13 +31,20 @@ trait PaginateTrait
         return $query->get()->toArray();
     }
 
-    public function getPageList(array $params, array $page = []): array
+    public function getPageList(array|string $select, array $params, array $order = [], array $page = []): array
     {
-        $paginate = $this->model->buildByCondition($params)->paginate(
-            $page[$this->model::PAGE_SIZE_NAME] ?? $this->model::PAGE_SIZE,
+        $query = $this->buildByCondition($params);
+        if ($select) {
+            $query->select($select);
+        }
+        if ($order) {
+            $query = $this->order($query, $order);
+        }
+        $paginate = $query->paginate(
+            $page[$this::PAGE_SIZE_NAME] ?? $this::PAGE_SIZE,
             ['*'],
-            $page[$this->model::PAGE_NAME],
-            $params[$this->model::PAGE_NAME] ?? 1
+            $page[$this::PAGE_NAME] ?? $this::PAGE_NAME,
+            $params[$this::PAGE_NAME] ?? 1
         );
         return $this->setPaginate($paginate, $params);
     }

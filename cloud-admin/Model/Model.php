@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Model;
 
+use CloudAdmin\Trait\PaginateTrait;
 use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Model\Model as BaseModel;
 
@@ -19,6 +20,8 @@ use function is_int;
 
 class Model extends BaseModel
 {
+    use PaginateTrait;
+
     public const PAGE_SIZE = 20;
 
     public const PAGE_NAME = 'page';

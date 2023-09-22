@@ -103,6 +103,7 @@
     "rector": "rector process --clear-cache",
     "route": "@php bin/hyperf.php describe:routes",
     "start": "bash bin/hyperf",
-    "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always"
+    "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always",
+    "dontdie": "@php vendor/bin/dontdie bash bin/hyperf"
   }
 }

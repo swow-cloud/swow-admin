@@ -14,6 +14,7 @@ namespace App\Logic\System;
 use App\Constants\Status;
 use App\Model\System\SystemMenu;
 use App\Service\System\MenuService;
+use CloudAdmin\Model\Model;
 use CloudAdmin\Vo\Collection;
 use Hyperf\Di\Annotation\Inject;
 
@@ -35,30 +36,23 @@ class MenuLogic
         return $meuModel->id;
     }
 
-    public function list(): array
+    public function list(array $params): array
     {
         $selects = ['id', 'parent_id', 'name', 'code', 'icon', 'route', 'type', 'component', 'is_hidden'];
         // 1.先查询父节点为0的菜单，根据父节点为0的菜单进行分页
-        $menus = $this->menuService->list($selects, ['status' => Status::ACTIVE, 'parent_id' => 0], ['id' => 'asc']);
+        $menus = $this->menuService->list($selects, ['status' => Status::ACTIVE, 'parent_id' => 0], ['id' => 'asc'], [
+            Model::PAGE_NAME => (int) $params[Model::PAGE_NAME],
+            Model::PAGE_SIZE_NAME => (int) $params[Model::PAGE_SIZE_NAME],
+        ]);
         // 2.查询子节点
-        foreach ($menus as &$menu) {
-            $menu = [
-                'meta' => [
-                    'icon' => $menu['icon'],
-                    'title' => $menu['name'],
-                    'isLink' => $menu['type'] === SystemMenu::LINK,
-                    'isHide' => $menu['is_hidden'] === Status::ACTIVE,
-                    'isAffix' => $menu['name'] === 'home',
-                    'isKeepAlive' => true,
-                ],
-                'path' => $menu['route'],
-                'name' => $menu['name'],
-                'component' => $menu['component'],
-                'id' => $menu['id'],
-                'parent_id' => $menu['parent_id'],
-            ];
+        /** @var SystemMenu $item */
+        $data = $this->fetchChildMenus($selects, $menus);
+        foreach ($data as &$val) {
+            $val = $this->formatMeta($val);
         }
-        return Collection::tree($menus, 'id', 'parent_id');
+        unset($val);
+        $menus['list'] = Collection::tree($data, 'id', 'parent_id');
+        return $menus;
     }
 
     public function generateCrudButton(SystemMenu $model): void
@@ -94,5 +88,34 @@ class MenuLogic
             $data['level'] = $parentMenu['level'] . ',' . $parentMenu['id'];
         }
         return $data;
+    }
+
+    private function fetchChildMenus(array $selects, array $menus): array
+    {
+        $data = [];
+        foreach ($menus['list'] as $item) {
+            $data[] = $item->toArray();
+            $data = array_merge($data, $this->menuService->getChildMenuWithLevel($selects, (string) $item['id']));
+        }
+        return $data;
+    }
+
+    private function formatMeta(array $val): array
+    {
+        return [
+            'meta' => [
+                'icon' => $val['icon'],
+                'title' => $val['name'],
+                'isLink' => $val['type'] === SystemMenu::LINK,
+                'isHide' => $val['is_hidden'] === Status::ACTIVE,
+                'isAffix' => $val['name'] === 'home',
+                'isKeepAlive' => true,
+            ],
+            'path' => $val['route'],
+            'name' => $val['name'],
+            'component' => $val['component'],
+            'id' => $val['id'],
+            'parent_id' => $val['parent_id'],
+        ];
     }
 }

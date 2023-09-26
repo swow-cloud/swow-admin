@@ -22,9 +22,9 @@ class Model extends BaseModel
 {
     use PaginateTrait;
 
-    public const PAGE_SIZE = 20;
+    public const PAGE_SIZE = 10;
 
-    public const PAGE_NAME = 'page';
+    public const PAGE_NAME = 'pageNum';
 
     public const PAGE_SIZE_NAME = 'pageSize';
 

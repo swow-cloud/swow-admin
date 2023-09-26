@@ -31,6 +31,9 @@ trait PaginateTrait
         return $query->get()->toArray();
     }
 
+    /**
+     * @return array{items: array, pageInfo: array}
+     */
     public function getPageList(array|string $select, array $params, array $order = [], array $page = []): array
     {
         $query = $this->buildByCondition($params);
@@ -43,21 +46,22 @@ trait PaginateTrait
         $paginate = $query->paginate(
             $page[$this::PAGE_SIZE_NAME] ?? $this::PAGE_SIZE,
             ['*'],
-            $page[$this::PAGE_NAME] ?? $this::PAGE_NAME,
-            $params[$this::PAGE_NAME] ?? 1
+            $this::PAGE_NAME,
+            $page[$this::PAGE_NAME] ?? 1
         );
         return $this->setPaginate($paginate, $params);
     }
 
+    /**
+     * @return array{list: array, total: int, currentPage: int, totalPage: int}
+     */
     public function setPaginate(LengthAwarePaginatorInterface $paginator, array $params = []): array
     {
         return [
-            'items' => $paginator->items(),
-            'pageInfo' => [
-                'total' => $paginator->total(),
-                'currentPage' => $paginator->currentPage(),
-                'totalPage' => $paginator->lastPage(),
-            ],
+            'list' => $paginator->items(),
+            'total' => $paginator->total(),
+            'pageNum' => $paginator->currentPage(),
+            'pageSize' => $paginator->perPage(),
         ];
     }
 

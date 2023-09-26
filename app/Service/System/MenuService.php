@@ -29,10 +29,15 @@ class MenuService
         return Collection::tree(SystemMenu::buildByCondition(['status' => Status::ACTIVE, 'type' => SystemMenu::MENU])->get(['id', 'parent_id', 'id AS value', 'name AS label'])->toArray(), 'id', 'parent_id');
     }
 
-    // todo 待处理分页问题
-    public function list(array|string $selects, array $params, array $order = []): array
+    public function list(array|string $selects, array $params, array $order = [], array $page = []): array
     {
         $model = make(SystemMenu::class);
-        return $model->getPageList($selects, $params, $order);
+        return $model->getPageList($selects, $params, $order, $page);
+    }
+
+    public function getChildMenuWithLevel(array|string $selects, string $level = '0'): array
+    {
+        $model = make(SystemMenu::class);
+        return $model->buildByCondition(['status' => Status::ACTIVE, 'type' => SystemMenu::MENU])->where('level', 'like', '%' . $level . '%')->get($selects)->toArray();
     }
 }

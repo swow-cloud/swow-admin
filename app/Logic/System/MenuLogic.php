@@ -38,7 +38,9 @@ class MenuLogic
     public function list(): array
     {
         $selects = ['id', 'parent_id', 'name', 'code', 'icon', 'route', 'type', 'component', 'is_hidden'];
-        $menus = $this->menuService->list($selects, ['status' => Status::ACTIVE], ['id' => 'asc']);
+        // 1.先查询父节点为0的菜单，根据父节点为0的菜单进行分页
+        $menus = $this->menuService->list($selects, ['status' => Status::ACTIVE, 'parent_id' => 0], ['id' => 'asc']);
+        // 2.查询子节点
         foreach ($menus as &$menu) {
             $menu = [
                 'meta' => [

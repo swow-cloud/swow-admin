@@ -29,7 +29,7 @@ class MenuService
         return Collection::tree(SystemMenu::buildByCondition(['status' => Status::ACTIVE, 'type' => SystemMenu::MENU])->get(['id', 'parent_id', 'id AS value', 'name AS label'])->toArray(), 'id', 'parent_id');
     }
 
-    //todo 待处理分页问题
+    // todo 待处理分页问题
     public function list(array|string $selects, array $params, array $order = []): array
     {
         $model = make(SystemMenu::class);

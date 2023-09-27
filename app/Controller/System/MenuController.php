@@ -24,7 +24,7 @@ use Hyperf\Validation\Annotation\Scene;
 use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: '/system/menu')]
-// #[Middleware(AuthMiddleware::class)]
+#[Middleware(AuthMiddleware::class)]
 class MenuController extends AbstractController
 {
     #[Inject]

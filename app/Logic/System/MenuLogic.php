@@ -39,11 +39,13 @@ class MenuLogic
     public function list(array $params): array
     {
         $selects = ['id', 'parent_id', 'name', 'code', 'icon', 'route', 'type', 'component', 'is_hidden'];
-        // 1.先查询父节点为0的菜单，根据父节点为0的菜单进行分页
-        $menus = $this->menuService->list($selects, ['status' => Status::ACTIVE, 'parent_id' => 0], ['id' => 'asc'], [
+        $page = [
             Model::PAGE_NAME => (int) $params[Model::PAGE_NAME],
             Model::PAGE_SIZE_NAME => (int) $params[Model::PAGE_SIZE_NAME],
-        ]);
+        ];
+        unset($params[Model::PAGE_NAME], $params[Model::PAGE_SIZE_NAME]);
+        // 1.先查询父节点为0的菜单，根据父节点为0的菜单进行分页
+        $menus = $this->menuService->list($selects, array_merge(['status' => Status::ACTIVE, 'parent_id' => 0], $params), ['id' => 'asc'], $page);
         // 2.查询子节点
         /** @var SystemMenu $item */
         $data = $this->fetchChildMenus($selects, $menus);

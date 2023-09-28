@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace App\Logic\System;
 
+use App\Constants\ErrorCode;
 use App\Constants\Status;
+use App\Exception\BusinessException;
 use App\Model\System\SystemMenu;
 use App\Service\System\MenuService;
 use CloudAdmin\Model\Model;
@@ -34,6 +36,14 @@ class MenuLogic
             $this->generateCrudButton($meuModel);
         }
         return $meuModel->id;
+    }
+
+    public function update(array $data): int
+    {
+        if ($this->menuService->update($data)) {
+            return $data['id'];
+        }
+        throw new BusinessException(ErrorCode::SERVER_ERROR, '修改失败,请稍候再试!');
     }
 
     public function list(array $params): array

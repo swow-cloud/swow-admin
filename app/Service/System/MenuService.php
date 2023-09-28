@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace App\Service\System;
 
+use App\Constants\ErrorCode;
 use App\Constants\Status;
+use App\Exception\BusinessException;
 use App\Model\System\SystemMenu;
 use CloudAdmin\Vo\Collection;
 
@@ -39,5 +41,14 @@ class MenuService
     {
         $model = make(SystemMenu::class);
         return $model->buildByCondition(['status' => Status::ACTIVE, 'type' => SystemMenu::MENU])->where('level', 'like', '%' . $level . '%')->get($selects)->toArray();
+    }
+
+    public function update(array $data): bool
+    {
+        $model = SystemMenu::find($data['id']);
+        if (! $model) {
+            throw new BusinessException(ErrorCode::NOT_FOUND);
+        }
+        return $model->update($data);
     }
 }

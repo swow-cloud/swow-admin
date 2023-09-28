@@ -26,6 +26,7 @@ class MenuRequest extends FormRequest
     public function updateRules(): array
     {
         return [
+            'id' => 'required',
             'name' => 'required|max:30',
             'code' => 'required|min:3|max:50',
         ];

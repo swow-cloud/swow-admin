@@ -51,9 +51,16 @@ class MenuController extends AbstractController
     }
 
     #[PostMapping(path: 'update')]
-    #[Scene]
-    public function update(): ResponseInterface {}
+    #[Scene(scene: 'update')]
+    public function update(MenuRequest $request): ResponseInterface
+    {
+        $id = $this->menuLogic->update($request->all());
+        return $this->response->success(['id' => $id]);
+    }
 
     #[PostMapping(path: 'delete')]
-    public function delete(): ResponseInterface {}
+    public function delete(): ResponseInterface
+    {
+        return $this->response->success([]);
+    }
 }

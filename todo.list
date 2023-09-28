@@ -5,4 +5,5 @@
 5.使用Box打包本项目(待开发)
 6.研究SDB提供网页交互式功能(Ws,Tcp)(进行中)
 7.xhgui+xhprof(已完成)
-8.page分页功能(进行中)
+8.page分页功能(已完成)
+9.调试swow-debug的能力需要在编译swow的时候开启debug模式

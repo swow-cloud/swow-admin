@@ -19,6 +19,8 @@ use function is_null;
 
 class BusinessException extends ServerException
 {
+    public bool $errMsgIsFromErrorCode = false;
+
     protected ErrorCodeInterface $errorCode;
 
     public function __construct(ErrorCodeInterface $code, string $message = null, Throwable $previous = null)
@@ -27,6 +29,7 @@ class BusinessException extends ServerException
 
         if (is_null($message)) {
             $message = $code->getMessage();
+            $this->errMsgIsFromErrorCode = true;
         }
 
         parent::__construct($message, $code->value, $previous);

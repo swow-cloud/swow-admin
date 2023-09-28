@@ -132,6 +132,9 @@ class BusinessExceptionHandler extends ExceptionHandler
                 // todo 是否阻止冒泡
                 $this->stopPropagation();
                 $this->logger->warning(formatThrowable($throwable));
+                if ($throwable->errMsgIsFromErrorCode) {
+                    return $this->response->fail($throwable->getMessage());
+                }
                 return $this->response->fail($throwable->getErrorCode());
             case $throwable instanceof CircularDependencyException:
                 $this->logger->error($throwable->getMessage());

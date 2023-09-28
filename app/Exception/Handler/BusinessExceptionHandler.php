@@ -125,11 +125,9 @@ class BusinessExceptionHandler extends ExceptionHandler
     {
         switch (true) {
             case $throwable instanceof HttpException:
-                // todo 是否阻止冒泡
                 $this->stopPropagation();
                 return $this->response->handleException($throwable);
             case $throwable instanceof BusinessException:
-                // todo 是否阻止冒泡
                 $this->stopPropagation();
                 $this->logger->warning(formatThrowable($throwable));
                 if ($throwable->errMsgIsFromErrorCode) {

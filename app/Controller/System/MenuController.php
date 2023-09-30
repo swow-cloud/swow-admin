@@ -39,7 +39,8 @@ class MenuController extends AbstractController
     #[GetMapping(path: 'list')]
     public function list(): ResponseInterface
     {
-        return $this->response->success($this->menuLogic->list($this->request->all()));
+        $params = $this->request->all();
+        return $this->response->success($this->menuLogic->list($params));
     }
 
     #[PostMapping(path: 'add')]

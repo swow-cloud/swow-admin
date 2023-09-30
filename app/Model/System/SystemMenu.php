@@ -24,7 +24,7 @@ use CloudAdmin\Model\Model;
  * @property string $route 路由地址
  * @property string $component 组件路径
  * @property string $redirect 跳转地址
- * @property int $is_hidden 是否隐藏 (1是 0否)
+ * @property int $is_display 是否隐藏 (1是 0否)
  * @property string $type 菜单类型, (M菜单 B按钮 L链接 I iframe)
  * @property int $status 状态 (1正常 0停用)
  * @property int $sort 排序
@@ -53,10 +53,10 @@ class SystemMenu extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected array $fillable = ['id', 'parent_id', 'level', 'name', 'code', 'icon', 'route', 'component', 'redirect', 'is_hidden', 'type', 'status', 'sort', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'remark'];
+    protected array $fillable = ['id', 'parent_id', 'level', 'name', 'code', 'icon', 'route', 'component', 'redirect', 'is_display', 'type', 'status', 'sort', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'remark'];
 
     /**
      * The attributes that should be cast to native types.
      */
-    protected array $casts = ['id' => 'integer', 'parent_id' => 'integer', 'is_hidden' => 'integer', 'status' => 'integer', 'sort' => 'integer', 'created_by' => 'integer', 'updated_by' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected array $casts = ['id' => 'integer', 'parent_id' => 'integer', 'is_display' => 'integer', 'status' => 'integer', 'sort' => 'integer', 'created_by' => 'integer', 'updated_by' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

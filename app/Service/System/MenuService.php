@@ -43,7 +43,7 @@ class MenuService
         return $model->buildByCondition(['status' => Status::ACTIVE, 'type' => SystemMenu::MENU])->where('level', 'like', '%' . $level . '%')->get($selects)->toArray();
     }
 
-    public function update(array $data): bool
+    public function update(int $id, array $data): bool
     {
         $model = SystemMenu::find($data['id']);
         if (! $model) {

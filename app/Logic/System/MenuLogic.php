@@ -40,8 +40,11 @@ class MenuLogic
 
     public function update(array $data): int
     {
-        if ($this->menuService->update($data)) {
-            return $data['id'];
+        $id = $data['id'];
+        unset($data['id']);
+        $menuData = $this->makeMenuData($data);
+        if ($this->menuService->update($id, $menuData)) {
+            return $id;
         }
         throw new BusinessException(ErrorCode::SERVER_ERROR, '修改失败,请稍候再试!');
     }

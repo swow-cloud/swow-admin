@@ -52,7 +52,7 @@ class MenuLogic
     public function list(array $params): array
     {
         $params = $this->filterParams($params);
-        $selects = ['id', 'parent_id', 'name', 'code', 'icon', 'route', 'type', 'component', 'is_display'];
+        $selects = ['id', 'parent_id', 'name', 'code', 'icon', 'route', 'type', 'component', 'is_display', 'redirect', 'sort', 'status', 'remark'];
         $page = [
             Model::PAGE_NAME => (int) $params[Model::PAGE_NAME],
             Model::PAGE_SIZE_NAME => (int) $params[Model::PAGE_SIZE_NAME],
@@ -132,6 +132,14 @@ class MenuLogic
             'component' => $val['component'],
             'id' => $val['id'],
             'parent_id' => $val['parent_id'],
+            'redirect' => $val['redirect'],
+            'sort' => $val['sort'],
+            'status' => $val['status'],
+            'remark' => $val['remark'],
+            'icon' => $val['icon'],
+            'name' => $val['name'],
+            'is_display' => $val['is_display'],
+            'type' => $val['type'],
         ];
     }
 

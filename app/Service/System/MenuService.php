@@ -45,7 +45,7 @@ class MenuService
 
     public function update(int $id, array $data): bool
     {
-        $model = SystemMenu::find($data['id']);
+        $model = SystemMenu::find($id);
         if (! $model) {
             throw new BusinessException(ErrorCode::NOT_FOUND);
         }

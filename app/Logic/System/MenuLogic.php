@@ -32,7 +32,7 @@ class MenuLogic
     {
         $menuData = $this->makeMenuData($data);
         $meuModel = $this->menuService->add($menuData);
-        if ($data['type'] === SystemMenu::MENU && (int) $data['crud'] === 1) {
+        if ($data['type'] === SystemMenu::MENU && (int) $data['crud'] ?? 0 === 1) {
             $this->generateCrudButton($meuModel);
         }
         return $meuModel->id;

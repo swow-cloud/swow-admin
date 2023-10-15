@@ -130,7 +130,7 @@ class Server extends Psr7Server implements ServerInterface
                         $connection->close();
                     }
                 });
-            } catch (SocketException|CoroutineException $exception) {
+            } catch (CoroutineException|SocketException $exception) {
                 if (in_array(
                     $exception->getCode(),
                     [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM],

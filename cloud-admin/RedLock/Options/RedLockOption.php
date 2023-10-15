@@ -16,9 +16,9 @@ class RedLockOption
     /**
      * 单位ms.
      */
-    public int|float $singleNodesTimeout = 10 * 1000;
+    public float|int $singleNodesTimeout = 10 * 1000;
 
-    public int|float $expireDuration = 10 * 1000;
+    public float|int $expireDuration = 10 * 1000;
 
     /**
      * @return $this

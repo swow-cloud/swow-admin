@@ -36,7 +36,7 @@ class Redis
                 ['nx', 'ex' => $expireSeconds],
             );
         } catch (
-            NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e
+            ContainerExceptionInterface|NotFoundExceptionInterface|RedisException $e
         ) {
         }
 
@@ -48,7 +48,7 @@ class Redis
         try {
             return $this->getRedisCon()->eval($src, $keysAndArgs, $keyCount);
         } catch (
-            NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e
+            ContainerExceptionInterface|NotFoundExceptionInterface|RedisException $e
         ) {
         }
 

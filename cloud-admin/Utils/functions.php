@@ -71,7 +71,7 @@ if (! function_exists('redisClient')) {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    function redisClient(string $poolName = 'default'): RedisProxy|Redis
+    function redisClient(string $poolName = 'default'): Redis|RedisProxy
     {
         return di()->get(RedisFactory::class)->get($poolName);
     }

@@ -35,7 +35,7 @@ class SwowSocketHandler extends AbstractProcessingHandler
     protected bool $useLocking;
 
     public function __construct(
-        int|string|Level $level = Level::Debug,
+        int|Level|string $level = Level::Debug,
         bool $bubble = true,
         bool $useLocking = false,
     ) {

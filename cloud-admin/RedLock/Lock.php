@@ -39,7 +39,7 @@ class Lock implements LockInterface
         $this->stopDog = new Channel();
     }
 
-    public function lock(): Exception|bool|null
+    public function lock(): null|bool|Exception
     {
         $error = null;
         \Swow\defer(function () use (&$error) {

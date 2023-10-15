@@ -629,7 +629,7 @@ class WebSocketDebugger extends Debugger
                         $connection->close();
                     }
                 });
-            } catch (SocketException|CoroutineException|Throwable $exception) {
+            } catch (CoroutineException|SocketException|Throwable $exception) {
                 if (in_array(
                     $exception->getCode(),
                     [Errno::EMFILE, Errno::ENFILE, Errno::ENOMEM],

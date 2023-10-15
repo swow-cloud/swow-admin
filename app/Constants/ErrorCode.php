@@ -64,7 +64,7 @@ enum ErrorCode: int implements ErrorCodeInterface
         return $this->getReflectedAttribute(HttpCode::class, 'code');
     }
 
-    private function getReflectedAttribute(string $class, string $property): string|int
+    private function getReflectedAttribute(string $class, string $property): int|string
     {
         $reflection = new ReflectionClass($this);
         $reflection = $reflection->getReflectionConstant($this->name);

@@ -89,7 +89,7 @@ class SmsLogic
             if (! redisClient()->setex(sprintf(self::CACHE_KEY_FORMAT, $phone), self::CACHE_EXPIRATION_TIME, $verifyCode)) {
                 throw new BusinessException(ErrorCode::SERVER_ERROR);
             }
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface|RedisException $e) {
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface|RedisException $e) {
             throw new BusinessException(ErrorCode::SERVER_ERROR);
         }
     }

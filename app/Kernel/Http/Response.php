@@ -48,7 +48,7 @@ class Response
         ]);
     }
 
-    public function fail(ErrorCodeInterface|string|Exception $error): PsrResponseInterface
+    public function fail(ErrorCodeInterface|Exception|string $error): PsrResponseInterface
     {
         $code = self::ERROR;
         if ($error instanceof ErrorCodeInterface) {

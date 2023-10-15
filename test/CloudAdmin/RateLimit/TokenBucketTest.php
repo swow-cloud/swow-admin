@@ -24,7 +24,7 @@ class TokenBucketTest extends TestCase
     public function testBucket()
     {
         $bucket = new TokenBucket(100, 100);
-        for ($i = 0; $i < 1000; ++$i ) {
+        for ($i = 0; $i < 1000; ++$i) {
             Coroutine::run(function () use ($bucket) {
                 $bucket->acquireToken();
                 $this->assertTrue(true);

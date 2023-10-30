@@ -98,6 +98,8 @@ return (new PhpCsFixer\Config())
             ->exclude('swow-examples')
             ->exclude('MineAdmin')
             ->exclude('ssl')
+            ->exclude('http2/src/HPack/huffman-codes.php')
+            ->exclude('http2/src/HPack/huffman-lookup.php')
             ->in(__DIR__)
     )
     ->setUsingCache(false);

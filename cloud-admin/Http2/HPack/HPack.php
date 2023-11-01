@@ -563,8 +563,7 @@ final class HPack
         return $output;
     }
 
-    /** Called via bindTo(), see end of file */
-    public static function init(): void /* : void */
+    public static function from(int $maxSize = self::DEFAULT_MAX_SIZE): self
     {
         self::$huffmanLookup = self::huffmanLookupInit();
         self::$huffmanCodes = self::huffmanCodesInit();
@@ -577,6 +576,7 @@ final class HPack
 
             self::$indexMap[$name] = $index + 1;
         }
+        return new self($maxSize);
     }
 
     // (micro-)optimized decode
@@ -594,11 +594,11 @@ final class HPack
             $len = self::HUFFMAN_CODE_LENGTHS[$chr];
 
             for ($bit = 0; $bit < 8; ++$bit) {
-                $offlen = $len + $bit;
+                $currentPosition = $len + $bit;
                 $next = $bit;
 
-                for ($byte = ($offlen - 1) >> 3; $byte > 0; --$byte) {
-                    $cur = str_pad(decbin(($bits >> ($byte * 8 - ((0x30 - $offlen) & 7))) & 0xFF), 8, '0', STR_PAD_LEFT);
+                for ($byte = ($currentPosition - 1) >> 3; $byte > 0; --$byte) {
+                    $cur = str_pad(decbin(($bits >> ($byte * 8 - ((0x30 - $currentPosition) & 7))) & 0xFF), 8, '0', STR_PAD_LEFT);
                     if (($encodingAccess[$next][$cur][0] ?? 0) !== 0) {
                         $next = $encodingAccess[$next][$cur][0];
                     } else {
@@ -608,15 +608,15 @@ final class HPack
                 }
 
                 $key = str_pad(
-                    decbin($bits & ((1 << ((($offlen - 1) & 7) + 1)) - 1)),
-                    (($offlen - 1) & 7) + 1,
+                    decbin($bits & ((1 << ((($currentPosition - 1) & 7) + 1)) - 1)),
+                    (($currentPosition - 1) & 7) + 1,
                     '0',
                     STR_PAD_LEFT
                 );
                 $encodingAccess[$next][$key] = [null, $chr > 0xFF ? '' : chr($chr)];
 
-                if ($offlen & 7) {
-                    $terminals[$offlen & 7][] = [$key, $next];
+                if ($currentPosition & 7) {
+                    $terminals[$currentPosition & 7][] = [$key, $next];
                 } else {
                     $encodingAccess[$next][$key][0] = 0;
                 }
@@ -642,8 +642,7 @@ final class HPack
             foreach ($terminals[$off] as [$key, $next]) {
                 foreach ($encodingAccess[$next] as $k => $v) {
                     if (strlen((string)$k) !== 1) {
-                        //todo TypeError: bindec(): Argument #1 ($binary_string) must be of type string, int given in
-                        $encodingAccess[$next][$memoize[$k] ?? $memoize[$k] = chr(bindec($k))] = $v;
+                        $encodingAccess[$next][$memoize[$k] ?? $memoize[$k] = chr(bindec((string)$k))] = $v;
                         unset($encodingAccess[$next][$k]);
                     }
                 }
@@ -744,6 +743,3 @@ final class HPack
     }
 }
 
-(function () {
-    static::init();
-})->bindTo(null, HPack::class)();

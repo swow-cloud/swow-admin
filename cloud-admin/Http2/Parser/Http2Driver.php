@@ -124,7 +124,7 @@ final class Http2Driver
 
     private array $streamUrl;
 
-    public function __construct(Http2Connection $connection, callable $onStreamData, callable $onRequest, callable $onWriteBody, array $streamUrl, HPack $hPack)
+    public function __construct(Http2Connection $connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, ?array $streamUrl, HPack $hPack)
     {
         $this->http2Connection = $connection;
         $this->remainingStreams = Options::getConcurrentStreamLimit();
@@ -268,7 +268,7 @@ final class Http2Driver
 
     public function writeFrame(string $data, int $type, int $flags, int $stream = 0): void
     {
-        $this->http2Connection->connection->send(Http2Driver . phpsubstr(pack('NccN', strlen($data), $type, $flags, $stream), 1) . $data);
+        $this->http2Connection->connection->send(substr(pack('NccN', strlen($data), $type, $flags, $stream), 1) . $data);
     }
 
     public function handlePing(string $data): void
@@ -659,16 +659,16 @@ final class Http2Driver
 
     private function sendPushPromise(Request $request, int $streamId, array $push): array
     {
-        $pushHseaders = array_merge(array_intersect_key($request->header(), self::PUSH_PROMISE_INTERSECT), $push['header']);
+        $mergedHeaders = array_merge(array_intersect_key($request->header(), self::PUSH_PROMISE_INTERSECT), $push['header']);
         $id = $this->localStreamId += 2;
         // $this->remoteStreamId = \max($id, $this->remoteStreamId);
-        $headers = array_merge(['scheme' => 'https', 'host' => '', 'port' => 443, 'path' => '/', 'query' => '', 'method' => 'GET'], $push['uri'], $pushHseaders);
+        $headers = array_merge(['scheme' => 'https', 'host' => '', 'port' => 443, 'path' => '/', 'query' => '', 'method' => 'GET'], $push['uri'], $mergedHeaders);
         $request = new Request($this->http2Connection, $this->http2Connection, $headers);
         $this->streams[$id] = new Http2Stream(0, $this->initialWindowSize, Http2Stream::RESERVED | Http2Stream::REMOTE_CLOSED);
         $this->streamIdRequestMap[$id] = $request;
-        foreach ($pushHseaders as $k => $v) {
+        foreach ($mergedHeaders as $k => $v) {
             if (is_scalar($v)) {
-                $pushHseaders[$k] = [$v];
+                $mergedHeaders[$k] = [$v];
             }
         }
         $headers = array_merge([
@@ -676,8 +676,8 @@ final class Http2Driver
             ':scheme' => [$headers['scheme']],
             ':path' => [$headers['path']],
             ':method' => [$headers['method']],
-        ], $pushHseaders);
-        $headers = Http2Driver . phppack('N', $id) . $this->encodeHeaders($headers);
+        ], $mergedHeaders);
+        $headers = pack('N', $id) . $this->encodeHeaders($headers);
         if (strlen($headers) >= $this->maxFrameSize) {
             $split = str_split($headers, $this->maxFrameSize);
             $headers = array_shift($split);

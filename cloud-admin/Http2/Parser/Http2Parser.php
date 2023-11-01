@@ -181,8 +181,8 @@ final class Http2Parser
     public function __construct(Http2Connection $connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, array $streamUrl)
     {
         $this->http2Connection = $connection;
-        $this->HPack = new HPack();
-        $this->driver = new Http2Driver($connection,$onStreamData,$onRequest,$onWriteBody,$streamUrl,$this->HPack);
+        $this->HPack = HPack::from();
+        $this->driver = new Http2Driver($connection, $onStreamData, $onRequest, $onWriteBody, $streamUrl, $this->HPack);
     }
 
     /**
@@ -192,18 +192,18 @@ final class Http2Parser
     public function parse($data, ServerConnection $connection): void
     {
         $this->dataBuffer .= $data;
-        if (! $this->handsFlag) {
+        if (!$this->handsFlag) {
             if (strpos($this->dataBuffer, 'HTTP/1.')) {  // 初略判断http1 //h2c升级握手升级部分
                 if ($connection->getType() == 'ssl') {
                     $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");
                     return;
                 }
                 $header_end_pos = strpos($this->dataBuffer, "\r\n\r\n");
-                if (! $header_end_pos) {
+                if (!$header_end_pos) {
                     $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");
                     return;
                 }
-                if (! preg_match("/HTTP2-Settings: *(.*?)\r\n/i", $this->dataBuffer, $match)) {
+                if (!preg_match("/HTTP2-Settings: *(.*?)\r\n/i", $this->dataBuffer, $match)) {
                     $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");
                     return;
                 }

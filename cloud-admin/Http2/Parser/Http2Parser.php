@@ -28,9 +28,13 @@ use CloudAdmin\Http2\Frame\RstStreamFrame;
 use CloudAdmin\Http2\Frame\SettingsFrame;
 use CloudAdmin\Http2\Frame\WindowUpdateFrame;
 use CloudAdmin\Http2\HPack\HPack;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Swow\Log;
 use Swow\Psr7\Server\ServerConnection;
 use function base64_decode;
+use function CloudAdmin\Utils\logger;
 use function pack;
 use function preg_match;
 use function strlen;
@@ -194,12 +198,12 @@ final class Http2Parser
         $this->dataBuffer .= $data;
         if (!$this->handsFlag) {
             if (strpos($this->dataBuffer, 'HTTP/1.')) {  // 初略判断http1 //h2c升级握手升级部分
-                if ($connection->getType() == 'ssl') {
+                if ($connection->getTypeName() === 'ssl') {
                     $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");
                     return;
                 }
-                $header_end_pos = strpos($this->dataBuffer, "\r\n\r\n");
-                if (!$header_end_pos) {
+                $headerEndPos = strpos($this->dataBuffer, "\r\n\r\n");
+                if (!$headerEndPos) {
                     $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");
                     return;
                 }
@@ -210,7 +214,7 @@ final class Http2Parser
                 $f = new SettingsFrame();
                 $f->parseBody(base64_decode(strtr($match[1], '-_', '+/'), true));
                 $this->parseSettings($f);
-                $this->upgradeRequest = new \Hyperf\HttpServer\Request($this->dataBuffer);
+                $this->upgradeRequest = $connection->recvHttpRequest();
                 $handshake_message = "HTTP/1.1 101 Switching Protocols\r\n"
                     . "Connection: Upgrade\r\n"
                     . "Upgrade: h2c\r\n\r\n";
@@ -550,10 +554,12 @@ final class Http2Parser
         self::DebugLog($action . ' ' . Frame::FRAMES[$frameType] . ' flags = ' . $flags . ', stream = ' . $streamId . ', length = ' . $frameLength . "   " . $action1);
     }
 
+
     public static function DebugLog(string $msg): void
     {
-        if (Options::isInDebugMode()) {
-            fwrite(\STDOUT, $msg . "\r\n");
+        try {
+            logger()->debug($msg . PHP_EOL);
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
         }
     }
 

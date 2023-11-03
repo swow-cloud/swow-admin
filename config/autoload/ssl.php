@@ -14,5 +14,6 @@ return [
     'certificate_key' => \Hyperf\Support\env('CERTIFICATE_KEY'),
     'verify_peer' => false,
     'verify_peer_name' => false,
+    'alpn_protocols' => 'h2',
     'allow_self_signed' => true,
 ];

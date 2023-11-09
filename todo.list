@@ -8,3 +8,4 @@
 8.page分页功能(已完成)
 9.调试swow-debug的能力需要在编译swow的时候开启debug模式
 10.htt2+grpc服务
+11.swow-trace日志

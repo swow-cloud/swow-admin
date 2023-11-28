@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace CloudAdmin\Http2\HPack;
 
 use CloudAdmin\Http2\Exception\HPackException;
+
 use function array_column;
 use function array_pop;
 use function array_unshift;
@@ -29,6 +30,7 @@ use function str_pad;
 use function str_repeat;
 use function strlen;
 use function substr;
+
 use const FILTER_VALIDATE_BOOLEAN;
 use const PHP_SAPI;
 
@@ -278,7 +280,7 @@ final class HPack
         $lookup = 0;
         $lengths = self::$huffmanLengths;
         $length = strlen($input);
-        $out = str_repeat("\0", (int)floor($length / 5 * 8 + 1)); // max length
+        $out = str_repeat("\0", (int) floor($length / 5 * 8 + 1)); // max length
 
         // Fail if EOS symbol is found.
         if (str_contains($input, "\x3f\xff\xff\xff")) {
@@ -344,7 +346,7 @@ final class HPack
 
         if ($bitCount & 7) {
             // Note: |= can't be used with strings in PHP
-            $out[$byte - 1] = $out[$byte - 1] | \chr(0xFF >> ($bitCount & 7));
+            $out[$byte - 1] = $out[$byte - 1] | chr(0xFF >> ($bitCount & 7));
         }
 
         return $i ? substr($out, 0, $byte) : '';
@@ -405,14 +407,14 @@ final class HPack
                         }
 
                         $index -= 0x81 + self::LAST_INDEX;
-                        if (!isset($this->headers[$index])) {
+                        if (! isset($this->headers[$index])) {
                             return null;
                         }
 
                         [$name, $value] = $headers[] = $this->headers[$index];
                     }
                 } elseif (($index & 0x60) !== 0x20) { // (($index & 0x40) || !($index & 0x20)): bit 4: never index is ignored
-                    $dynamic = (bool)($index & 0x40);
+                    $dynamic = (bool) ($index & 0x40);
 
                     if ($index & ($dynamic ? 0x3F : 0x0F)) { // separate length
                         if ($dynamic) {
@@ -434,7 +436,7 @@ final class HPack
 
                         if ($index <= self::LAST_INDEX) {
                             $header = self::TABLE[$index - 1];
-                        } elseif (!isset($this->headers[$index - 1 - self::LAST_INDEX])) {
+                        } elseif (! isset($this->headers[$index - 1 - self::LAST_INDEX])) {
                             return null;
                         } else {
                             $header = $this->headers[$index - 1 - self::LAST_INDEX];
@@ -641,8 +643,8 @@ final class HPack
         for ($off = 7; $off > 0; --$off) {
             foreach ($terminals[$off] as [$key, $next]) {
                 foreach ($encodingAccess[$next] as $k => $v) {
-                    if (strlen((string)$k) !== 1) {
-                        $encodingAccess[$next][$memoize[$k] ?? $memoize[$k] = chr(bindec((string)$k))] = $v;
+                    if (strlen((string) $k) !== 1) {
+                        $encodingAccess[$next][$memoize[$k] ?? $memoize[$k] = chr(bindec((string) $k))] = $v;
                         unset($encodingAccess[$next][$k]);
                     }
                 }
@@ -698,7 +700,7 @@ final class HPack
 
     private static function decodeDynamicInteger(string $input, int &$off): int
     {
-        if (!isset($input[$off])) {
+        if (! isset($input[$off])) {
             throw new HPackException('Invalid input data, too short for dynamic integer');
         }
 
@@ -707,7 +709,7 @@ final class HPack
         $i = 0;
 
         while ($c & 0x80) {
-            if (!isset($input[$off])) {
+            if (! isset($input[$off])) {
                 return -0x80;
             }
 
@@ -742,4 +744,3 @@ final class HPack
         return ($prefix | "\x7f") . self::encodeDynamicInteger(strlen($value) - 0x7F) . $value;
     }
 }
-

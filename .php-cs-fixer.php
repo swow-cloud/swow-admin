@@ -101,6 +101,7 @@ return (new PhpCsFixer\Config())
             ->exclude('http2')
             ->exclude('http2/src/HPack/huffman-codes.php')
             ->exclude('http2/src/HPack/huffman-lookup.php')
+            ->exclude('cloud-admin/Http2')
             ->in(__DIR__)
     )
     ->setUsingCache(false);

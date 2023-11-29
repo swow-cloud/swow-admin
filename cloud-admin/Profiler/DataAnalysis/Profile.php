@@ -25,19 +25,19 @@ use function str_contains;
 use function uasort;
 use function usort;
 
-class Profile
+final class Profile
 {
     public const NO_PARENT = '__top__';
 
-    protected array $collapsed;
+    private array $collapsed;
 
-    protected array $indexed;
+    private array $indexed;
 
-    protected array $visited;
+    private array $visited;
 
-    protected array $keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
+    private array $keys = ['ct', 'wt', 'cpu', 'mu', 'pmu'];
 
-    protected array $exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
+    private array $exclusiveKeys = ['ewt', 'ecpu', 'emu', 'epmu'];
 
     private array $nodes;
 
@@ -201,7 +201,7 @@ class Profile
      * @param array $b the second set of profile data
      * @return array merged profile data
      */
-    protected function _sumKeys(array $a, array $b): array
+    private function _sumKeys(array $a, array $b): array
     {
         foreach ($this->keys as $key) {
             if (! isset($a[$key])) {
@@ -219,7 +219,7 @@ class Profile
      *                       parents for
      * @return array List of parents
      */
-    protected function _getParents(string $symbol): array
+    private function _getParents(string $symbol): array
     {
         $parents = [];
         $current = $this->collapsed[$symbol];
@@ -240,7 +240,7 @@ class Profile
      *                             function that represents less than
      * @return array an array of child methods
      */
-    protected function _getChildren(string $symbol, string $metric = null, float|int $threshold = 0): array
+    private function _getChildren(string $symbol, string $metric = null, float|int $threshold = 0): array
     {
         $children = [];
         if (! isset($this->indexed[$symbol])) {
@@ -272,7 +272,7 @@ class Profile
      *
      * @param string $metric the metric to get a max value for
      */
-    protected function _maxValue(string $metric): int
+    private function _maxValue(string $metric): int
     {
         return array_reduce(
             $this->collapsed,
@@ -286,7 +286,7 @@ class Profile
         );
     }
 
-    protected function _flamegraphData($parentName, $main, $metric, $threshold): array
+    private function _flamegraphData($parentName, $main, $metric, $threshold): array
     {
         $result = [];
         // Leaves don't have children, and don't have links/nodes to add.

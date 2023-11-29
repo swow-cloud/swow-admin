@@ -17,7 +17,7 @@ use Throwable;
 
 use function is_null;
 
-class BusinessException extends ServerException
+final class BusinessException extends ServerException
 {
     public bool $errMsgIsFromErrorCode = false;
 

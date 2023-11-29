@@ -18,7 +18,7 @@ use Swow\Socket;
  *
  * Represents the configuration for a server.
  */
-class ServerConfig
+final class ServerConfig
 {
     final public function __construct(
         public string $host,

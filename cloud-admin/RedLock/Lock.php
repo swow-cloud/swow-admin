@@ -25,7 +25,7 @@ use function sprintf;
 use function time;
 use function usleep;
 
-class Lock implements LockInterface
+final class Lock implements LockInterface
 {
     public Channel $stopDog;
 
@@ -166,7 +166,7 @@ class Lock implements LockInterface
         }
     }
 
-    protected function tryLock(): bool
+    private function tryLock(): bool
     {
         $reply = $this
             ->redis
@@ -183,12 +183,12 @@ class Lock implements LockInterface
         return true;
     }
 
-    protected function getLockKey(): string
+    private function getLockKey(): string
     {
         return LockOption::$redisLockKeyPrefix . $this->key;
     }
 
-    protected function isRetryableErr($exception): bool
+    private function isRetryableErr($exception): bool
     {
         return $exception instanceof ErrLockException;
     }

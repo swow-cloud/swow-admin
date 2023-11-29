@@ -23,7 +23,7 @@ use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: '/profile')]
 #[Middleware(middleware: AuthMiddleware::class)]
-class ProfileController extends AbstractController
+final class ProfileController extends AbstractController
 {
     #[Inject]
     protected ProfileService $profileService;

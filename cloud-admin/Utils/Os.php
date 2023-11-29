@@ -13,7 +13,7 @@ namespace CloudAdmin\Utils;
 
 use function posix_getpid;
 
-class Os
+final class Os
 {
     public static function getProcessId(): int
     {

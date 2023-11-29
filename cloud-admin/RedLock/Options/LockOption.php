@@ -13,7 +13,7 @@ namespace CloudAdmin\RedLock\Options;
 
 use CloudAdmin\RedLock\Consts;
 
-class LockOption
+final class LockOption
 {
     public static string $redisLockKeyPrefix = 'REDIS_LOCK_PREFIX_';
 

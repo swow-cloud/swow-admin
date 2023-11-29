@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock\Options;
 
-class RedLockOption
+final class RedLockOption
 {
     /**
      * 单位ms.

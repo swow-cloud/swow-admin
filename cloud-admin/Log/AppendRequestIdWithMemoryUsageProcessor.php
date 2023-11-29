@@ -21,7 +21,7 @@ use function memory_get_usage;
 use function round;
 use function uniqid;
 
-class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterface
+final class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterface
 {
     public const REQUEST_ID = 'log.request.id';
 
@@ -45,7 +45,7 @@ class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterface
         return $record;
     }
 
-    protected function formatBytes(int $bytes): int|string
+    private function formatBytes(int $bytes): int|string
     {
         if (! $this->useFormatting) {
             return $bytes;

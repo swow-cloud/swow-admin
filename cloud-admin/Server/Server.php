@@ -29,7 +29,7 @@ use Throwable;
 use function in_array;
 use function sleep;
 
-class Server extends Psr7Server implements ServerInterface
+final class Server extends Psr7Server implements ServerInterface
 {
     public ?string $host = null;
 

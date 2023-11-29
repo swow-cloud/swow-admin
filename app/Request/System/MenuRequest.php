@@ -13,7 +13,7 @@ namespace App\Request\System;
 
 use CloudAdmin\Validation\Request\FormRequest;
 
-class MenuRequest extends FormRequest
+final class MenuRequest extends FormRequest
 {
     public function addRules(): array
     {

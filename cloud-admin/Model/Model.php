@@ -32,7 +32,7 @@ class Model extends BaseModel
 
     public static function findOne(array $condition, array $field = ['*'], bool $forUpdate = false): \Hyperf\Database\Model\Model
     {
-        $query = static::buildByCondition($condition);
+        $query = self::buildByCondition($condition);
         if ($forUpdate) {
             $query->lockForUpdate();
         }
@@ -46,7 +46,7 @@ class Model extends BaseModel
 
     public static function buildByCondition(array $condition): Builder
     {
-        $query = static::query();
+        $query = self::query();
         foreach ($condition as $key => $value) {
             if (is_int($key)) {
                 $query->where($condition);
@@ -63,13 +63,13 @@ class Model extends BaseModel
 
     public static function updateCondition(array $condition, array $data): int
     {
-        $query = static::buildByCondition($condition);
+        $query = self::buildByCondition($condition);
         return $query->update($data);
     }
 
     public static function countCondition(array $condition): int
     {
-        $query = static::buildByCondition($condition);
+        $query = self::buildByCondition($condition);
         return $query->count();
     }
 

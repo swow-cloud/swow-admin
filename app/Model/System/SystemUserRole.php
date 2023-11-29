@@ -17,7 +17,7 @@ use CloudAdmin\Model\Model;
  * @property int $user_id 用户主键
  * @property int $role_id 角色主键
  */
-class SystemUserRole extends Model
+final class SystemUserRole extends Model
 {
     /**
      * The table associated with the model.

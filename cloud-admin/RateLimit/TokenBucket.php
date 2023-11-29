@@ -19,7 +19,7 @@ use function microtime;
 use function min;
 use function sleep;
 
-class TokenBucket
+final class TokenBucket
 {
     private int $capacity;
 

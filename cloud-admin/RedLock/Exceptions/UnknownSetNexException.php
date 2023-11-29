@@ -13,4 +13,4 @@ namespace CloudAdmin\RedLock\Exceptions;
 
 use Hyperf\Engine\Exception\RuntimeException;
 
-class UnknownSetNexException extends RuntimeException {}
+final class UnknownSetNexException extends RuntimeException {}

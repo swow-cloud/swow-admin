@@ -22,13 +22,13 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
-class Response
+final class Response
 {
     public const OK = 200;
 
     public const ERROR = 500;
 
-    protected ResponseInterface $response;
+    private ResponseInterface $response;
 
     /**
      * @throws ContainerExceptionInterface

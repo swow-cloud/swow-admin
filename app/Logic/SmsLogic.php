@@ -23,7 +23,7 @@ use RedisException;
 use function CloudAdmin\Utils\redisClient;
 use function sprintf;
 
-class SmsLogic
+final class SmsLogic
 {
     private const CACHE_KEY_FORMAT = 'verifyCode-%s';
 

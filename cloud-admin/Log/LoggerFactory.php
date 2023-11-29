@@ -17,7 +17,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 
-class LoggerFactory
+final class LoggerFactory
 {
     /**
      * @return LoggerInterface|void

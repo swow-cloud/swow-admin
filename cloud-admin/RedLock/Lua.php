@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock;
 
-class Lua
+final class Lua
 {
     // 判断是否拥有分布式锁的归属权，是则删除
     final public const LUA_CHECK_AND_DELETE_DISTRIBUTION_LOCK = <<<'LUA'

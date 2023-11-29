@@ -20,19 +20,19 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Swow\Coroutine;
 
-class SwowServerStopHandler implements SignalHandlerInterface
+final class SwowServerStopHandler implements SignalHandlerInterface
 {
-    protected ContainerInterface $container;
+    private ContainerInterface $container;
 
     /**
      * @var ConfigInterface|mixed
      */
-    protected ConfigInterface $config;
+    private ConfigInterface $config;
 
     /**
      * @var mixed|StdoutLoggerInterface
      */
-    protected StdoutLoggerInterface $stdoutLogger;
+    private StdoutLoggerInterface $stdoutLogger;
 
     /**
      * @throws ContainerExceptionInterface

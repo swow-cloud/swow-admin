@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock\Options;
 
-class SingleNodeConfig
+final class SingleNodeConfig
 {
     /**
      * @var array{array{poolName:string}}

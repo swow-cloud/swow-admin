@@ -27,7 +27,7 @@ use CloudAdmin\Model\Model;
  * @property string $deleted_at 删除时间
  * @property string $remark 备注
  */
-class SystemRole extends Model
+final class SystemRole extends Model
 {
     /**
      * The table associated with the model.

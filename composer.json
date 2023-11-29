@@ -42,6 +42,7 @@
     "hyperf/utils": "~3.0.0",
     "hyperf/validation": "^3.0",
     "jetbrains/phpstorm-attributes": "^1.0",
+    "php-tui/php-tui": "^0.0.2",
     "phper666/jwt-auth": "^4.0",
     "ramsey/uuid": "^4.7",
     "swow-cloud/debugger": "^0.1.0",

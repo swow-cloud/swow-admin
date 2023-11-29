@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedisLock;
 
-class Lua
+final class Lua
 {
     final public const LOCK = <<<'LUA'
                 local key = KEYS[1]

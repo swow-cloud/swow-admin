@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-class UserLoggedInEvent
+final class UserLoggedInEvent
 {
     public int $userId;
 

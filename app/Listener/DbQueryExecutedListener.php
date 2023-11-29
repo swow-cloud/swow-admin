@@ -25,7 +25,7 @@ use function strpos;
 use function substr_replace;
 
 #[Listener]
-class DbQueryExecutedListener implements ListenerInterface
+final class DbQueryExecutedListener implements ListenerInterface
 {
     private LoggerInterface $logger;
 

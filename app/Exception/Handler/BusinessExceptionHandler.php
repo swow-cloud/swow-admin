@@ -101,7 +101,7 @@ CloudAdmin\Utils\formatThrowable;
  * This class handles business exceptions and transforms them into appropriate HTTP responses.
  * It extends the ExceptionHandler class provided by the Hyperf framework.
  */
-class BusinessExceptionHandler extends ExceptionHandler
+final class BusinessExceptionHandler extends ExceptionHandler
 {
     protected Response $response;
 

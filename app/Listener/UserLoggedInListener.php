@@ -23,10 +23,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use function CloudAdmin\Utils\ip;
 use function sprintf;
 
-class UserLoggedInListener implements ListenerInterface
+final class UserLoggedInListener implements ListenerInterface
 {
     #[Inject]
-    protected LoggerFactory $loggerFactory;
+    private LoggerFactory $loggerFactory;
 
     public function __construct() {}
 

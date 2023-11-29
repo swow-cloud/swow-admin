@@ -20,9 +20,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class Coroutine
+final class Coroutine
 {
-    protected LoggerInterface $logger;
+    private LoggerInterface $logger;
 
     public function __construct(protected ContainerInterface $container)
     {

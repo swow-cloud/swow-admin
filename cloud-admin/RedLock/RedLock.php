@@ -22,7 +22,7 @@ use function count;
 use function sprintf;
 use function time;
 
-class RedLock
+final class RedLock
 {
     /**
      * @param array<int,Lock> $locks

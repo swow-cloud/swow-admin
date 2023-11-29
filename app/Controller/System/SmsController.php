@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseInterface;
 use function CloudAdmin\Utils\di;
 
 #[Controller(prefix: 'system/sms')]
-class SmsController extends AbstractController
+final class SmsController extends AbstractController
 {
     #[Inject]
     public SmsLogic $smsLogic;

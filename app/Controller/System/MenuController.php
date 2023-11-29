@@ -25,7 +25,7 @@ use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: '/system/menu')]
 #[Middleware(AuthMiddleware::class)]
-class MenuController extends AbstractController
+final class MenuController extends AbstractController
 {
     #[Inject]
     public MenuLogic $menuLogic;

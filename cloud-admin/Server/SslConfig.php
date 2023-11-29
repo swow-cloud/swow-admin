@@ -31,12 +31,12 @@ use function substr;
  * @method null|bool|string getVerifyPeerName()
  * @method bool getAllowSelfSigned()
  */
-class SslConfig implements Arrayable
+final class SslConfig implements Arrayable
 {
     /**
      * @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool}
      */
-    protected array $config = [];
+    private array $config = [];
 
     public function __construct(array $config = [])
     {
@@ -98,7 +98,7 @@ class SslConfig implements Arrayable
     /**
      * @return $this
      */
-    protected function set(mixed $name, mixed $value): self
+    private function set(mixed $name, mixed $value): self
     {
         $this->config[$name] = $value;
         return $this;

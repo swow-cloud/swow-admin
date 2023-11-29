@@ -19,7 +19,7 @@ use Hyperf\Codec\Json;
 
 use function date;
 
-class ProfileService
+final class ProfileService
 {
     /**
      * @return array{wt: array|mixed, mu: array|mixed}

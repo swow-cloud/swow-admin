@@ -15,7 +15,7 @@ use function explode;
 use function intval;
 use function preg_match;
 
-class CatDebugLog
+final class CatDebugLog
 {
     public const LOG_LINE_PATTERN = '/^\[\s*(.*?)\s*]\s*(.*?)\((.*?)\): <(.*?)> (.*?) in (.*?):(\d+)$/';
 

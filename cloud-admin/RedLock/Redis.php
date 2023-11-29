@@ -19,7 +19,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use RedisException;
 
-class Redis
+final class Redis
 {
     public function __construct(public string $pool = 'default') {}
 
@@ -59,7 +59,7 @@ class Redis
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getRedisCon(): RedisProxy
+    private function getRedisCon(): RedisProxy
     {
         $container = ApplicationContext::getContainer();
         return $container->get(RedisFactory::class)->get($this->pool);

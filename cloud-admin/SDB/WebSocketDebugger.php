@@ -69,7 +69,7 @@ use function usleep;
  * This class represents a WebSocket debugger that extends the base Debugger class.
  * It allows debugging of coroutines using a WebSocket connection.
  */
-class WebSocketDebugger extends Debugger
+final class WebSocketDebugger extends Debugger
 {
     protected ?Server $socket = null;
 
@@ -93,7 +93,7 @@ class WebSocketDebugger extends Debugger
 
         self::$serverConfig = $serverConfig;
         self::$sslConfig = $sslConfig;
-        return static::getInstance()->run($keyword);
+        return self::getInstance()->run($keyword);
     }
 
     public function start(): void

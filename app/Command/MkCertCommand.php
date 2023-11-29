@@ -34,7 +34,7 @@ use function unlink;
  * Example usage: `php bin/hyperf.php mkcert:command -d example.com -c ./ssl/cert.pem -k ./ssl/key.pem`
  */
 #[Command]
-class MkCertCommand extends HyperfCommand
+final class MkCertCommand extends HyperfCommand
 {
     protected string $command = 'which mkcert';
 

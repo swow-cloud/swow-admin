@@ -27,13 +27,13 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Swow\Http\Status;
 
-class AuthMiddleware implements MiddlewareInterface
+final class AuthMiddleware implements MiddlewareInterface
 {
     #[Inject]
-    protected Response $response;
+    private Response $response;
 
     #[Inject]
-    protected JWT $jwt;
+    private JWT $jwt;
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -64,7 +64,7 @@ class AuthMiddleware implements MiddlewareInterface
         return $this->response->fail(ErrorCode::UNAUTHORIZED);
     }
 
-    protected function setUserContextWithToken(string $token): void
+    private function setUserContextWithToken(string $token): void
     {
         if ($claims = $this->jwt->getClaimsByToken($token)) {
             Context::set('user', UserService::get($claims['uid']));

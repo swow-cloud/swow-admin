@@ -31,7 +31,7 @@ use function uniqid;
  * @internal
  * @coversNothing
  */
-class ExampleTest extends HttpTestCase
+final class ExampleTest extends HttpTestCase
 {
     public function testExample()
     {

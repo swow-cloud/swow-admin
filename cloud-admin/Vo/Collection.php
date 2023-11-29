@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Vo;
 
-class Collection extends \Hyperf\Collection\Collection
+final class Collection extends \Hyperf\Collection\Collection
 {
     public static function tree(array $data, string $idKey, string $parentKey, string $nestKey = 'children'): array
     {

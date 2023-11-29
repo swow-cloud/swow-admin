@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Constants;
 
-class Status
+final class Status
 {
     public const ACTIVE = 1;
 

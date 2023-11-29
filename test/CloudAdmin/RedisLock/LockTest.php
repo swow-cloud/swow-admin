@@ -29,7 +29,7 @@ use function sprintf;
  * @internal
  * @coversNothing
  */
-class LockTest extends TestCase
+final class LockTest extends TestCase
 {
     public function testNonblockingLock()
     {

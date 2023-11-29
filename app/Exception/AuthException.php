@@ -15,7 +15,7 @@ use Hyperf\HttpMessage\Exception\HttpException;
 use Swow\Http\Status;
 use Throwable;
 
-class AuthException extends HttpException
+final class AuthException extends HttpException
 {
     public function __construct(int $code = Status::UNAUTHORIZED, string $message = null, ?Throwable $previous = null)
     {

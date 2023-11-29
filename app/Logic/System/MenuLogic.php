@@ -23,7 +23,7 @@ use Hyperf\Di\Annotation\Inject;
 use function array_merge;
 use function array_values;
 
-class MenuLogic
+final class MenuLogic
 {
     #[Inject]
     public MenuService $menuService;
@@ -93,7 +93,7 @@ class MenuLogic
         return array_values($this->menuService->tree());
     }
 
-    protected function makeMenuData(array $data): array
+    private function makeMenuData(array $data): array
     {
         if ((int) $data['parent_id'] === 0) {
             $data['level'] = '0';

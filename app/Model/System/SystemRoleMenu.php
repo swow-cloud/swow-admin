@@ -17,7 +17,7 @@ use CloudAdmin\Model\Model;
  * @property int $role_id 角色主键
  * @property int $menu_id 菜单主键
  */
-class SystemRoleMenu extends Model
+final class SystemRoleMenu extends Model
 {
     /**
      * The table associated with the model.

@@ -21,8 +21,8 @@ return [
             ArrayShape::class,
         ],
         'class_map' => [
-            //            Server::class => BASE_PATH . '/cloud-admin/Server/Server.php',
-            Server::class => BASE_PATH . '/cloud-admin/Http2/Server/Server.php',
+            Server::class => BASE_PATH . '/cloud-admin/Server/Server.php',
+            //            Server::class => BASE_PATH . '/cloud-admin/Http2/Server/Server.php',
         ],
     ],
 ];

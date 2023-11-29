@@ -18,16 +18,16 @@ use Phper666\JWTAuth\JWT;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 
-class UserLogic
+final class UserLogic
 {
     #[Inject]
-    protected UserService $userService;
+    private UserService $userService;
 
     #[Inject]
-    protected EventDispatcherInterface $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
     #[Inject]
-    protected JWT $JWT;
+    private JWT $JWT;
 
     /**
      * @throws InvalidArgumentException

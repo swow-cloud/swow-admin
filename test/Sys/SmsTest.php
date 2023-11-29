@@ -21,7 +21,7 @@ use function strlen;
  * @internal
  * @coversNothing
  */
-class SmsTest extends HttpTestCase
+final class SmsTest extends HttpTestCase
 {
     public function testGetSmsVerifyCode()
     {

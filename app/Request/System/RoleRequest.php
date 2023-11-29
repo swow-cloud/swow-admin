@@ -13,4 +13,4 @@ namespace App\Request\System;
 
 use CloudAdmin\Validation\Request\FormRequest;
 
-class RoleRequest extends FormRequest {}
+final class RoleRequest extends FormRequest {}

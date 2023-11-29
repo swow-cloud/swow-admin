@@ -30,7 +30,7 @@ use CloudAdmin\Model\Model;
  * @property string $request_ip
  * @property string $response
  */
-class Monitor extends Model
+final class Monitor extends Model
 {
     public bool $timestamps = false;
 

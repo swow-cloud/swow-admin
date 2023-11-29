@@ -25,7 +25,7 @@ use function microtime;
 use function sprintf;
 use function usleep;
 
-class WatchDog implements WatchDogInterface
+final class WatchDog implements WatchDogInterface
 {
     /**
      * @throws Throwable

@@ -13,4 +13,4 @@ namespace CloudAdmin\HttpMessage;
 
 use Swow\Psr7\Message\BufferStream;
 
-class SwowStream extends BufferStream {}
+final class SwowStream extends BufferStream {}

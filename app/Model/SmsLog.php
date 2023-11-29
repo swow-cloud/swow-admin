@@ -21,7 +21,7 @@ use CloudAdmin\Model\Model;
  * @property string $create_time
  * @property string $update_time
  */
-class SmsLog extends Model
+final class SmsLog extends Model
 {
     /**
      * The table associated with the model.

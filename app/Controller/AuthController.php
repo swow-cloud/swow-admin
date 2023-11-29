@@ -33,7 +33,7 @@ use function CloudAdmin\Utils\logger;
 use function sprintf;
 
 #[Controller(prefix: '/auth')]
-class AuthController extends AbstractController
+final class AuthController extends AbstractController
 {
     #[Inject]
     public UserLogic $userLogic;

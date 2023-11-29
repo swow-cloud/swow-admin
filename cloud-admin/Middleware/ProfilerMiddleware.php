@@ -31,7 +31,7 @@ use function microtime;
 use function xhprof_disable;
 use function xhprof_enable;
 
-class ProfilerMiddleware implements MiddlewareInterface
+final class ProfilerMiddleware implements MiddlewareInterface
 {
     public function __construct(protected readonly ContainerInterface $container, protected readonly ConfigInterface $config) {}
 
@@ -53,7 +53,7 @@ class ProfilerMiddleware implements MiddlewareInterface
         return $response;
     }
 
-    protected function logAndSave(string $startTime, ?ServerRequestInterface $request, ?ResponseInterface $response): bool
+    private function logAndSave(string $startTime, ?ServerRequestInterface $request, ?ResponseInterface $response): bool
     {
         $times = explode(' ', $startTime);
         $monitor = new Monitor();
@@ -76,7 +76,7 @@ class ProfilerMiddleware implements MiddlewareInterface
         return $monitor->save();
     }
 
-    protected function enable()
+    private function enable()
     {
         return $this->config->get('profiler.enable') ?? false;
     }

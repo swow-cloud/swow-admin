@@ -21,7 +21,7 @@ use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: '/system/role')]
 #[Middleware(middleware: AuthMiddleware::class)]
-class RoleController extends AbstractController
+final class RoleController extends AbstractController
 {
     #[GetMapping(path: 'list')]
     public function list(): ResponseInterface {}

@@ -13,4 +13,4 @@ namespace App\Request\System;
 
 use CloudAdmin\Validation\Request\FormRequest;
 
-class UserRequest extends FormRequest {}
+final class UserRequest extends FormRequest {}

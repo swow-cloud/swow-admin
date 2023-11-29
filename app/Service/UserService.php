@@ -17,7 +17,7 @@ use App\Constants\Status;
 use App\Exception\BusinessException;
 use App\Model\System\SystemUser;
 
-class UserService
+final class UserService
 {
     /**
      * @throws BusinessException

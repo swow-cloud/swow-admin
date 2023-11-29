@@ -19,7 +19,7 @@ use Throwable;
 
 use function sprintf;
 
-class AppExceptionHandler extends ExceptionHandler
+final class AppExceptionHandler extends ExceptionHandler
 {
     public function __construct(protected StdoutLoggerInterface $logger) {}
 

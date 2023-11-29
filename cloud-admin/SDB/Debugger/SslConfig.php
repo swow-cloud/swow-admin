@@ -15,7 +15,7 @@ use RuntimeException;
 
 use function file_exists;
 
-class SslConfig
+final class SslConfig
 {
     final public function __construct(
         public bool $ssl,

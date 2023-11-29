@@ -14,7 +14,7 @@ namespace CloudAdmin\RedLock\Exceptions;
 use CloudAdmin\RedLock\Consts;
 use RuntimeException;
 
-class ErrLockException extends RuntimeException
+final class ErrLockException extends RuntimeException
 {
     protected $message = Consts::ERR_LOCK_ACQUIRED_BY_OTHERS;
 }

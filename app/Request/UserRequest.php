@@ -13,7 +13,7 @@ namespace App\Request;
 
 use CloudAdmin\Validation\Request\FormRequest;
 
-class UserRequest extends FormRequest
+final class UserRequest extends FormRequest
 {
     public function authorize(): bool
     {

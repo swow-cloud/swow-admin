@@ -18,7 +18,7 @@ use Hyperf\Validation\ValidationException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-class FormValidateExceptionHandler extends ExceptionHandler
+final class FormValidateExceptionHandler extends ExceptionHandler
 {
     #[Inject]
     public Response $response;

@@ -20,7 +20,7 @@ use Carbon\Carbon;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 
-class SmsService
+final class SmsService
 {
     /**
      * Sends a verification code via SMS to the specified phone number.
@@ -60,7 +60,7 @@ class SmsService
      * @param string $code the verification code
      * @return SmsLog the newly created SMS log
      */
-    protected function createSmsLog(string $phone, string $code): SmsLog
+    private function createSmsLog(string $phone, string $code): SmsLog
     {
         $smsLog = new SmsLog();
         $smsLog->phone = $phone;

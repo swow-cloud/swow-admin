@@ -32,7 +32,7 @@ use function is_string;
 /**
  * @see  \Hyperf\Devtool\Describe\RoutesCommand
  */
-class Route
+final class Route
 {
     public function __construct(
         private readonly ContainerInterface $container,
@@ -55,7 +55,7 @@ class Route
         return array_slice($rows, 0, count($rows) - 1);
     }
 
-    protected function analyzeRouter(
+    private function analyzeRouter(
         string $server,
         RouteCollector $router,
         ?string $path,
@@ -88,7 +88,7 @@ class Route
         return $data;
     }
 
-    protected function analyzeHandler(
+    private function analyzeHandler(
         array &$data,
         string $serverName,
         string $method,

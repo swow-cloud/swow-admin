@@ -19,7 +19,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 use Psr\Http\Message\ResponseInterface;
 
 #[Controller(prefix: 'system/user')]
-class UserController extends AbstractController
+final class UserController extends AbstractController
 {
     #[Inject]
     public UserLogic $userLogic;

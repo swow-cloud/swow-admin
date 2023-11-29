@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock;
 
-class Consts
+final class Consts
 {
     // 默认的分布式锁过期时间
     public const DEFAULT_LOCK_EXPIRE_SECONDS = 30;

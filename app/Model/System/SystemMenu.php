@@ -35,7 +35,7 @@ use CloudAdmin\Model\Model;
  * @property string $deleted_at 删除时间
  * @property string $remark 备注
  */
-class SystemMenu extends Model
+final class SystemMenu extends Model
 {
     public const LINK = 'L';
 

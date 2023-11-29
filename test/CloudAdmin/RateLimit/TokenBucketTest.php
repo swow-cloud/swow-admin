@@ -19,7 +19,7 @@ use Swow\Coroutine;
  * @internal
  * @coversNothing
  */
-class TokenBucketTest extends TestCase
+final class TokenBucketTest extends TestCase
 {
     public function testBucket()
     {

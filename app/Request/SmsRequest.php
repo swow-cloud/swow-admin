@@ -13,7 +13,7 @@ namespace App\Request;
 
 use CloudAdmin\Validation\Request\FormRequest;
 
-class SmsRequest extends FormRequest
+final class SmsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

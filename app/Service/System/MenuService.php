@@ -19,7 +19,7 @@ use CloudAdmin\Vo\Collection;
 
 use function make;
 
-class MenuService
+final class MenuService
 {
     public function add(array $data = []): SystemMenu
     {

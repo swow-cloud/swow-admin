@@ -16,7 +16,7 @@ use Exception;
 use function random_int;
 use function strlen;
 
-class Code
+final class Code
 {
     public static function generateSmsVerifyCode(int $length = 6): string
     {

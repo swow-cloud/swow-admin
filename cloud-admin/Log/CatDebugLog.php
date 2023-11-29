@@ -15,12 +15,12 @@ use function explode;
 use function intval;
 use function preg_match;
 
-class CatLog
+class CatDebugLog
 {
     public const LOG_LINE_PATTERN = '/^\[\s*(.*?)\s*]\s*(.*?)\((.*?)\): <(.*?)> (.*?) in (.*?):(\d+)$/';
 
     /**
-     * Parse a single log line.
+     * @phpstan-return  array<string, mixed>|null
      */
     public function parseSingleLogLine(string $logLine): ?array
     {
@@ -39,7 +39,9 @@ class CatLog
     }
 
     /**
-     * Parse debug logs.
+     * Parses a debug log and returns an array of parsed log entries.
+     *
+     * @phpstan-return array<int, array<string, mixed>>
      */
     public function parseDebugLog(string $logContent): array
     {

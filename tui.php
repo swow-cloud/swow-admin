@@ -65,6 +65,7 @@ while (true) {
     if ($i > 100) {
         break;
     }
+    $display->clear();
     $display->draw(
         GridWidget::default()
             ->direction(Direction::Horizontal)

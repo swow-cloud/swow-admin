@@ -22,13 +22,15 @@ use function strtolower;
 use function substr;
 
 /**
- * @method SslConfig setCertificate(string $cert)
- * @method SslConfig setCertificateKey(string $key)
- * @method SslConfig setVerifyPeer(bool $bool)
- * @method SslConfig setVerifyPeerName(null|bool|string $name)
- * @method SslConfig setAllowSelfSigned(bool $bool)
+ * @method Ssl setCertificate(string $cert)
+ * @method Ssl setCertificateKey(string $key)
+ * @method Ssl setVerifyPeer(bool $bool)
+ * @method Ssl setVerifyPeerName(null|bool|string $name)
+ * @method Ssl setAllowSelfSigned(bool $bool)
  * @method string getCertificate()
  * @method string getCertificateKey()
+ * @method string getAlpnProtocols()
+ * @method Ssl setAlpnProtocols(string $protocols)
  * @method bool getVerifyPeer()
  * @method null|bool|string getVerifyPeerName()
  * @method bool getAllowSelfSigned()
@@ -36,7 +38,7 @@ use function substr;
 class Ssl implements Arrayable
 {
     public function __construct(/**
-     * @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool}
+     * @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool,alpn_protocols:string}
      */
     protected array $config = [])
     {
@@ -75,7 +77,6 @@ class Ssl implements Arrayable
     public function __call(mixed $name, mixed $arguments)
     {
         $prefix = strtolower(substr((string) $name, 0, 3));
-
         if (in_array(
             $prefix,
             ['set', 'get'],
@@ -99,6 +100,7 @@ class Ssl implements Arrayable
      */
     protected function set(mixed $name, mixed $value): self
     {
+        dump($name,$value);
         $this->config[$name] = $value;
         return $this;
     }

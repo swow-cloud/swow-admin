@@ -21,18 +21,14 @@ final class BusinessException extends ServerException
 {
     public bool $errMsgIsFromErrorCode = false;
 
-    protected ErrorCodeInterface $errorCode;
-
-    public function __construct(ErrorCodeInterface $code, string $message = null, Throwable $previous = null)
+    public function __construct(protected ErrorCodeInterface $errorCode, string $message = null, Throwable $previous = null)
     {
-        $this->errorCode = $code;
-
         if (is_null($message)) {
-            $message = $code->getMessage();
+            $message = $errorCode->getMessage();
             $this->errMsgIsFromErrorCode = true;
         }
 
-        parent::__construct($message, $code->value, $previous);
+        parent::__construct($message, $errorCode->value, $previous);
     }
 
     public function getHttpCode(): int

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Http2\Parser;
 
+use Exception;
 use CloudAdmin\Http2\Exception\ClientException;
 use CloudAdmin\Http2\Exception\Http2ConnectionException;
 use CloudAdmin\Http2\Exception\Http2StreamException;
@@ -178,15 +179,12 @@ final class Http2Parser
 
     protected ServerRequestInterface $upgradeRequest;
 
-    protected Http2Connection $http2Connection;
-
     protected HPack $HPack;
 
-    public function __construct(Http2Connection $connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, array $streamUrl)
+    public function __construct(protected Http2Connection $http2Connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, array $streamUrl)
     {
-        $this->http2Connection = $connection;
         $this->HPack = HPack::from();
-        $this->driver = new Http2Driver($connection, $onStreamData, $onRequest, $onWriteBody, $streamUrl, $this->HPack);
+        $this->driver = new Http2Driver($http2Connection, $onStreamData, $onRequest, $onWriteBody, $streamUrl, $this->HPack);
     }
 
     /**
@@ -299,7 +297,7 @@ final class Http2Parser
         } catch (Http2ConnectionException $exception) {
             self::Log((string)$exception);
             $this->driver->handleConnectionException($exception);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             self::Log((string)$exception);
             $this->driver->handleConnectionException(new Http2ConnectionException("PROTOCOL_ERROR", self::PROTOCOL_ERROR));
         }
@@ -559,7 +557,7 @@ final class Http2Parser
     {
         try {
             logger()->debug($msg . PHP_EOL);
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface) {
         }
     }
 

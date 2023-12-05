@@ -21,13 +21,13 @@ use Psr\SimpleCache\InvalidArgumentException;
 final class UserLogic
 {
     #[Inject]
-    private UserService $userService;
+    private readonly UserService $userService;
 
     #[Inject]
-    private EventDispatcherInterface $eventDispatcher;
+    private readonly EventDispatcherInterface $eventDispatcher;
 
     #[Inject]
-    private JWT $JWT;
+    private readonly JWT $JWT;
 
     /**
      * @throws InvalidArgumentException

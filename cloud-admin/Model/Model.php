@@ -22,11 +22,11 @@ class Model extends BaseModel
 {
     use PaginateTrait;
 
-    public const PAGE_SIZE = 10;
+    final public const PAGE_SIZE = 10;
 
-    public const PAGE_NAME = 'pageNum';
+    final public const PAGE_NAME = 'pageNum';
 
-    public const PAGE_SIZE_NAME = 'pageSize';
+    final public const PAGE_SIZE_NAME = 'pageSize';
 
     protected ?string $dateFormat = 'Y-m-d H:i:s';
 

@@ -21,24 +21,18 @@ use function sleep;
 
 final class TokenBucket
 {
-    private int $capacity;
-
-    private int $tokenRate;
-
     private int $tokens;
 
     private float $lastTime;
 
-    private SplQueue $queue;
+    private readonly SplQueue $queue;
 
     private bool $tickerRunning;
 
-    private Channel $channel;
+    private readonly Channel $channel;
 
-    public function __construct(int $capacity, int $tokenRate)
+    public function __construct(private readonly int $capacity, private int $tokenRate)
     {
-        $this->capacity = $capacity;
-        $this->tokenRate = $tokenRate;
         $this->tokens = $capacity;
         $this->lastTime = microtime(true);
         $this->queue = new SplQueue();

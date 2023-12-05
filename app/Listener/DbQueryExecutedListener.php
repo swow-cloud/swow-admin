@@ -27,7 +27,7 @@ use function substr_replace;
 #[Listener]
 final class DbQueryExecutedListener implements ListenerInterface
 {
-    private LoggerInterface $logger;
+    private readonly LoggerInterface $logger;
 
     public function __construct(ContainerInterface $container)
     {

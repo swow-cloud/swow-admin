@@ -31,18 +31,9 @@ use function trim;
 class Request
 {
     /**
-     * @var string
-     */
-    protected mixed $rawBody = null;
-
-    /**
      * Request $header.
      */
     protected array $header;
-
-    protected int $streamId = 0;
-
-    protected ServerConnection $client;
 
     /**
      * 里面是body解析出来的数据.
@@ -52,17 +43,14 @@ class Request
     /**
      * Request constructor.
      */
-    public function __construct(mixed $streamId, mixed $client, mixed $header, string $body = '')
+    public function __construct(protected int $streamId, protected ServerConnection $client, mixed $header, protected mixed $rawBody = '')
     {
-        $this->streamId = $streamId;
-        $this->client = $client;
         foreach ($header as $key => $value) {
             if (is_array($value)) {
                 $header[$key] = $value[0] ?? '';
             }
         }
         $this->header = $header;
-        $this->rawBody = $body;
     }
 
     public function appendData($_body): void
@@ -178,7 +166,7 @@ class Request
             return;
         }
         if (preg_match('/\bjson\b/i', $content_type)) {
-            $this->data['post'] = (array) json_decode($this->rawBody, true);
+            $this->data['post'] = (array) json_decode($this->rawBody, true, 512, JSON_THROW_ON_ERROR);
         } else {
             parse_str($this->rawBody, $this->data['post']);
         }

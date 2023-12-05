@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Signal;
 
+use function Hyperf\Support\env;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Process\ProcessManager;
@@ -22,25 +23,22 @@ use Swow\Coroutine;
 
 final class SwowServerStopHandler implements SignalHandlerInterface
 {
-    private ContainerInterface $container;
-
     /**
      * @var ConfigInterface|mixed
      */
-    private ConfigInterface $config;
+    private readonly ConfigInterface $config;
 
     /**
      * @var mixed|StdoutLoggerInterface
      */
-    private StdoutLoggerInterface $stdoutLogger;
+    private readonly StdoutLoggerInterface $stdoutLogger;
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(private readonly ContainerInterface $container)
     {
-        $this->container = $container;
         $this->config = $container->get(ConfigInterface::class);
         $this->stdoutLogger = $container->get(StdoutLoggerInterface::class);
     }
@@ -59,7 +57,7 @@ final class SwowServerStopHandler implements SignalHandlerInterface
         $this->stdoutLogger->critical('Server shutdown');
         Coroutine::killAll();
 
-        if (\Hyperf\Support\env('APP_DEBUG')) {
+        if (env('APP_DEBUG')) {
             foreach (Coroutine::getAll() as $coroutine) {
                 if ($coroutine->isAlive()) {
                     $coroutine->kill();

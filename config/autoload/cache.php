@@ -1,6 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
+use Hyperf\Cache\Driver\RedisDriver;
+use Hyperf\Codec\Packer\PhpSerializerPacker;
 /**
  * This file is part of Cloud-Admin project.
  *
@@ -10,8 +13,8 @@ declare(strict_types=1);
  */
 return [
     'default' => [
-        'driver' => Hyperf\Cache\Driver\RedisDriver::class,
-        'packer' => Hyperf\Codec\Packer\PhpSerializerPacker::class,
+        'driver' => RedisDriver::class,
+        'packer' => PhpSerializerPacker::class,
         'prefix' => 'c:',
     ],
 ];

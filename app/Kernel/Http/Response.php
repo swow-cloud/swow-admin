@@ -28,7 +28,7 @@ final class Response
 
     public const ERROR = 500;
 
-    private ResponseInterface $response;
+    private readonly ResponseInterface $response;
 
     /**
      * @throws ContainerExceptionInterface

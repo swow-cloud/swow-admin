@@ -35,14 +35,11 @@ use function substr;
  */
 class Ssl implements Arrayable
 {
-    /**
+    public function __construct(/**
      * @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool}
      */
-    protected array $config = [];
-
-    public function __construct(array $config = [])
+    protected array $config = [])
     {
-        $this->config = $config;
         $this
             ->setCertificate($this->config['certificate'] ?? '')
             ->setCertificateKey($config['certificate_key'] ?? '')
@@ -77,13 +74,13 @@ class Ssl implements Arrayable
      */
     public function __call(mixed $name, mixed $arguments)
     {
-        $prefix = strtolower(substr($name, 0, 3));
+        $prefix = strtolower(substr((string) $name, 0, 3));
 
         if (in_array(
             $prefix,
             ['set', 'get'],
         )) {
-            $propertyName = strtolower(substr($name, 3));
+            $propertyName = strtolower(substr((string) $name, 3));
             return $prefix === 'set'
                 ? $this->set($propertyName, ...$arguments)
                 : $this->__get($propertyName);

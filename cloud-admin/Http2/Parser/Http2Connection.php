@@ -15,13 +15,10 @@ use Swow\Psr7\Server\ServerConnection;
 
 final class Http2Connection
 {
-    public ServerConnection $connection;
-
     private int $expirationTime = 0;
 
-    public function __construct(ServerConnection $connection)
+    public function __construct(public ServerConnection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function getRemoteAddress(): string

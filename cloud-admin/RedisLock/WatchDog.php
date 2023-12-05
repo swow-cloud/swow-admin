@@ -57,7 +57,7 @@ final class WatchDog implements WatchDogInterface
 
             try {
                 HyperfCoroutine::getContextFor();
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 $logger->debug(
                     sprintf(
                         'coroutine[%s] cleanup watch dog after request completed',

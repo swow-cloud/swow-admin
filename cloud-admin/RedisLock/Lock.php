@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedisLock;
 
+use function Hyperf\Support\make;
 use CloudAdmin\Interfaces\RedisLockInterface;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
@@ -38,8 +39,6 @@ final class Lock implements RedisLockInterface
      */
     private string $value = '';
 
-    private Redis|RedisProxy $redis;
-
     /**
      * the lock key.
      */
@@ -50,12 +49,10 @@ final class Lock implements RedisLockInterface
      */
     private int $ttl;
 
-    private ContainerInterface $container;
-
     /**
      * @var mixed|StdoutLoggerInterface
      */
-    private StdoutLoggerInterface $logger;
+    private readonly StdoutLoggerInterface $logger;
 
     /**
      * redis lock config.
@@ -66,12 +63,8 @@ final class Lock implements RedisLockInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(ContainerInterface $container, Redis|RedisProxy $redis)
+    public function __construct(private readonly ContainerInterface $container, private readonly Redis|RedisProxy $redis)
     {
-        /* @noinspection UnusedConstructorDependenciesInspection */
-        $this->container = $container;
-        $this->redis = $redis;
-
         if (! $this->container->has(StdoutLoggerInterface::class)) {
             throw new InvalidArgumentException('StdoutLogger not found#');
         }
@@ -221,7 +214,7 @@ final class Lock implements RedisLockInterface
                         ),
                     );
                 SwowCo::create(function () {
-                    $watchdog = \Hyperf\Support\make(WatchDog::class);
+                    $watchdog = make(WatchDog::class);
                     $watchdog->sentinel($this, $this->config['watchDogTime'] ?? 60);
                 });
             }

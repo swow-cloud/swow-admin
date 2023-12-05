@@ -26,7 +26,7 @@ use function sprintf;
 final class UserLoggedInListener implements ListenerInterface
 {
     #[Inject]
-    private LoggerFactory $loggerFactory;
+    private readonly LoggerFactory $loggerFactory;
 
     public function __construct() {}
 

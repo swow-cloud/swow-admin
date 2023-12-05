@@ -25,7 +25,7 @@ final class Options
 
     public static function getBodySizeLimit(): int
     {
-        return 13107200;
+        return 13_107_200;
     }
 
     public static function getHeaderSizeLimit(): int

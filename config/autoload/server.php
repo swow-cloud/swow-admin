@@ -8,11 +8,13 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+use Hyperf\Server\SwowServer;
+use Hyperf\HttpServer\Server;
 use Hyperf\Server\Event;
 use Hyperf\Server\ServerInterface;
 
 return [
-    'type' => Hyperf\Server\SwowServer::class,
+    'type' => SwowServer::class,
     'servers' => [
         [
             'name' => 'http',
@@ -20,7 +22,7 @@ return [
             'host' => '0.0.0.0',
             'port' => 9501,
             'callbacks' => [
-                Event::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
+                Event::ON_REQUEST => [Server::class, 'onRequest'],
             ],
         ],
     ],

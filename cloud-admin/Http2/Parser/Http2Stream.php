@@ -29,18 +29,9 @@ final class Http2Stream
     /** 已经收到的最大数据长度  @var int Bytes received on the stream. */
     public int $received = 0;
 
-    /** 服务端数据流上面的窗口大小 @var int */
-    public int $serverWindow;
-
-    /** @var int 当前流客户端还剩余的串口大小 */
-    public int $clientWindow;
-
     public mixed $pendingResponse;
 
     public string $buffer = '';
-
-    /** 客户端的流状态  @var int */
-    public int $state;
 
     /** @var int Integer between 1 and 256 */
     public int $weight = 0;
@@ -48,13 +39,13 @@ final class Http2Stream
     public int $dependency = 0;
 
     /** 预期还需要接收的长度 @var int|null */
-    public ?int $expectedLength;
+    public ?int $expectedLength = null;
 
-    public function __construct(int $serverSize, int $clientSize, int $state = self::OPEN)
+    public function __construct(/** 服务端数据流上面的窗口大小 @var int */
+    public int $serverWindow, /** @var int 当前流客户端还剩余的串口大小 */
+    public int $clientWindow, /** 客户端的流状态  @var int */
+    public int $state = self::OPEN)
     {
-        $this->serverWindow = $serverSize;
-        $this->maxBodySize = $serverSize;
-        $this->clientWindow = $clientSize;
-        $this->state = $state;
+        $this->maxBodySize = $serverWindow;
     }
 }

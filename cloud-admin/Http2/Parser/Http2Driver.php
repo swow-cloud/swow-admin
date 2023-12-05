@@ -68,8 +68,6 @@ final class Http2Driver
     /** @var string 64-bit for ping. */
     private string $counter = 'zxxzxxxx';
 
-    private Http2Connection $http2Connection;
-
     /** @var int 整个链服务端接剩余窗口 */
     private int $serverWindow = self::DEFAULT_WINDOW_SIZE;
 
@@ -109,8 +107,6 @@ final class Http2Driver
     /** @var int 客户端ping服务端的次数 */
     private int $pinged = 0;
 
-    private HPack $hPack;
-
     /** @var callable */
     private $onRequest;
 
@@ -122,18 +118,13 @@ final class Http2Driver
      */
     private $onWriteBody;
 
-    private array $streamUrl;
-
-    public function __construct(Http2Connection $connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, ?array $streamUrl, HPack $hPack)
+    public function __construct(private readonly Http2Connection $http2Connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, private readonly array $streamUrl, private readonly HPack $hPack)
     {
-        $this->http2Connection = $connection;
         $this->remainingStreams = Options::getConcurrentStreamLimit();
         $this->allowsPush = Options::isPushEnabled();
         $this->onRequest = $onRequest;
         $this->onStreamData = $onStreamData;
         $this->onWriteBody = $onWriteBody;
-        $this->hPack = $hPack;
-        $this->streamUrl = $streamUrl;
     }
 
     public function stop(): void
@@ -165,7 +156,7 @@ final class Http2Driver
             }
         } catch (ClientException $exception) {
             $error = $exception->getCode() ?? Http2Parser::CANCEL;
-            $error = $error ?? Http2Parser::INTERNAL_ERROR;
+            $error ??= Http2Parser::INTERNAL_ERROR;
             $this->writeFrame(pack('N', $error), Http2Parser::RST_STREAM, Http2Parser::NO_FLAG, $id);
             $this->releaseStream($id, $exception ?? new ClientException('Stream error', $error));
         } finally {
@@ -186,7 +177,7 @@ final class Http2Driver
             }
         }
         $body = $response->getBody();
-        if (strlen($body)) {
+        if (strlen((string) $body)) {
             $this->writeData($body, $id);
         }
         if (! isset($this->streams[$id])) {
@@ -223,7 +214,7 @@ final class Http2Driver
         }
         $headers = array_merge([':status' => $status], $response->getHeaders());
         unset($headers['connection'], $headers['keep-alive'], $headers['transfer-encoding']);
-        $headers['date'] = [$this->formatDateHeader()];
+        $headers['date'] = [self::formatDateHeader()];
         $trailers = $response->getTrailers();
         // if (empty($trailers)) {
         //    $headers["content-length"] = [strlen($response->getBody())];
@@ -295,7 +286,7 @@ final class Http2Driver
             return;
         }
         $stream = $this->streams[$streamId];
-        if ($stream->clientWindow + $windowSize > 2147483647) {
+        if ($stream->clientWindow + $windowSize > 2_147_483_647) {
             throw new Http2StreamException('Current window size plus new window exceeds maximum size', $streamId, Http2Parser::FLOW_CONTROL_ERROR);
         }
         $stream->clientWindow += $windowSize;
@@ -310,7 +301,7 @@ final class Http2Driver
     public static function formatDateHeader(?int $timestamp = null): string
     {
         static $cachedTimestamp, $cachedFormattedDate;
-        $timestamp = $timestamp ?? time();
+        $timestamp ??= time();
         if ($cachedTimestamp === $timestamp) {
             return $cachedFormattedDate;
         }
@@ -323,7 +314,7 @@ final class Http2Driver
      */
     public function handleConnectionWindowIncrement(int $windowSize): void
     {
-        if ($this->clientWindow + $windowSize > 2147483647) {
+        if ($this->clientWindow + $windowSize > 2_147_483_647) {
             throw new Http2ConnectionException('Current window size plus new window exceeds maximum size', Http2Parser::FLOW_CONTROL_ERROR);
         }
         $this->clientWindow += $windowSize;
@@ -362,7 +353,7 @@ final class Http2Driver
         if (! isset($pseudo[':method'], $pseudo[':path'], $pseudo[':scheme'], $pseudo[':authority'])
             || isset($headers['connection'])
             || $pseudo[':path'] === ''
-            || (isset($headers['te']) && implode($headers['te']) !== 'trailers')
+            || (isset($headers['te']) && implode('', $headers['te']) !== 'trailers')
         ) {
             throw new Http2StreamException('Invalid header values', $streamId, Http2Parser::PROTOCOL_ERROR);
         }
@@ -371,17 +362,17 @@ final class Http2Driver
         $scheme = $pseudo[':scheme'];
         $host = $pseudo[':authority'];
         $query = null;
-        if (! preg_match('#^([A-Z\\d\\.\\-]+|\\[[\\d:]+\\])(?::([1-9]\\d*))?$#i', $host, $matches)) {
+        if (! preg_match('#^([A-Z\\d\\.\\-]+|\\[[\\d:]+\\])(?::([1-9]\\d*))?$#i', (string) $host, $matches)) {
             throw new Http2StreamException('Invalid authority (host) name', $streamId, Http2Parser::PROTOCOL_ERROR);
         }
         $host = $matches[1];
         $port = isset($matches[2]) ? (int) $matches[2] : $this->http2Connect->getPort();
-        if ($position = strpos($target, '#')) {
-            $target = substr($target, 0, $position);
+        if ($position = strpos((string) $target, '#')) {
+            $target = substr((string) $target, 0, $position);
         }
-        if ($position = strpos($target, '?')) {
-            $query = substr($target, $position + 1);
-            $target = substr($target, 0, $position);
+        if ($position = strpos((string) $target, '?')) {
+            $query = substr((string) $target, $position + 1);
+            $target = substr((string) $target, 0, $position);
         }
         $headers = array_merge($headers, ['scheme' => $scheme, 'host' => $host, 'port' => $port, 'path' => $target, 'query' => $query, 'method' => $method]);
         $this->pinged = 0;
@@ -401,7 +392,7 @@ final class Http2Driver
                 throw new Http2StreamException('Received multiple content-length headers', $streamId, Http2Parser::PROTOCOL_ERROR);
             }
             $contentLength = $headers['content-length'][0];
-            if (! preg_match('/^0|[1-9][0-9]*$/', $contentLength)) {
+            if (! preg_match('/^0|[1-9][0-9]*$/', (string) $contentLength)) {
                 throw new Http2StreamException('Invalid content-length header value', $streamId, Http2Parser::PROTOCOL_ERROR);
             }
             $stream->expectedLength = (int) $contentLength;
@@ -527,7 +518,7 @@ final class Http2Driver
     /**
      * @throws Http2ConnectionException
      */
-    public function handlePushPromise(int $streamId, int $pushId, array $pseudo, array $headers): void
+    public function handlePushPromise(int $streamId, int $pushId, array $pseudo, array $headers): never
     {
         throw new Http2ConnectionException('Client should not send push promise frames', Http2Parser::PROTOCOL_ERROR);
     }
@@ -574,7 +565,7 @@ final class Http2Driver
         foreach ($settings as $key => $value) {
             switch ($key) {
                 case Http2Parser::INITIAL_WINDOW_SIZE:
-                    if ($value > 2147483647) {
+                    if ($value > 2_147_483_647) {
                         throw new Http2ConnectionException('Invalid window size', Http2Parser::FLOW_CONTROL_ERROR);
                     }
                     $priorWindowSize = $this->initialWindowSize;  // 上次设置的的的大小
@@ -634,10 +625,7 @@ final class Http2Driver
     }
 
     // http1.1升级h2c
-
     /**
-     * @param Http2Connection $connection
-     * @param ServerRequestInterface $request
      * @throws Http2StreamException
      */
     public function upgrade(Http2Connection $connection, ServerRequestInterface $request): void
@@ -775,7 +763,7 @@ final class Http2Driver
     private function shutdown(?int $lastId = null, ?Throwable $reason = null): void
     {
         $code = $reason ? $reason->getCode() : Http2Parser::GRACEFUL_SHUTDOWN;
-        $lastId = $lastId ?? ($id ?? 0);
+        $lastId ??= $id ?? 0;
         $this->writeFrame(pack('NN', $lastId, $code), Http2Parser::GOAWAY, Http2Parser::NO_FLAG);
         if (! empty($this->streams)) {
             if (empty($reason)) {

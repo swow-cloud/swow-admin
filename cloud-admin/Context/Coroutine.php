@@ -22,7 +22,7 @@ use Throwable;
 
 final class Coroutine
 {
-    private LoggerInterface $logger;
+    private readonly LoggerInterface $logger;
 
     public function __construct(protected ContainerInterface $container)
     {

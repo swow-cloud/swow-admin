@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Log;
 
+use BeBat\ConsoleColor\Style\Color;
 use BeBat\ConsoleColor\Style;
 use Hyperf\Codec\Json;
 use JetBrains\PhpStorm\ArrayShape;
@@ -32,18 +33,15 @@ final class SwowSocketHandler extends AbstractProcessingHandler
 
     protected Style $style;
 
-    protected bool $useLocking;
-
     public function __construct(
         int|Level|string $level = Level::Debug,
         bool $bubble = true,
-        bool $useLocking = false,
+        protected bool $useLocking = false,
     ) {
         parent::__construct($level, $bubble);
         $this->output = new Socket(Socket::TYPE_STDOUT);
         $this->buffer = new Buffer(0);
         $this->style = new Style();
-        $this->useLocking = $useLocking;
     }
 
     protected function write(LogRecord $record): void
@@ -53,15 +51,15 @@ final class SwowSocketHandler extends AbstractProcessingHandler
         $this->buffer->clear();
     }
 
-    protected function getColorFromLevel(string $level = LogLevel::DEBUG): Style\Color
+    protected function getColorFromLevel(string $level = LogLevel::DEBUG): Color
     {
         return match ($level) {
             LogLevel::EMERGENCY,
             LogLevel::ALERT,
-            LogLevel::CRITICAL => Style\Color::Red,
-            LogLevel::ERROR => Style\Color::Yellow,
-            LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => Style\Color::Green,
-            default => Style\Color::Default,
+            LogLevel::CRITICAL => Color::Red,
+            LogLevel::ERROR => Color::Yellow,
+            LogLevel::WARNING, LogLevel::INFO, LogLevel::NOTICE => Color::Green,
+            default => Color::Default,
         };
     }
 
@@ -104,12 +102,12 @@ final class SwowSocketHandler extends AbstractProcessingHandler
     protected function toPsrLogRecordColor(): array
     {
         return [
-            'datetime' => Style\Color::Cyan,
-            'channel' => Style\Color::BrightWhite,
-            'level_name' => Style\Color::BrightBlue,
-            'message' => Style\Color::Green,
-            'context' => Style\Color::Magenta,
-            'extra' => Style\Color::Yellow,
+            'datetime' => Color::Cyan,
+            'channel' => Color::BrightWhite,
+            'level_name' => Color::BrightBlue,
+            'message' => Color::Green,
+            'context' => Color::Magenta,
+            'extra' => Color::Yellow,
         ];
     }
 }

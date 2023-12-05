@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+
+use function Hyperf\Support\env;
 /**
  * This file is part of Cloud-Admin project.
  *
@@ -30,7 +32,7 @@ return [
         //        ],
     ],
 
-    'login_type' => \Hyperf\Support\env('JWT_LOGIN_TYPE', 'mpop'), //  登录方式，sso为单点登录，同一个用户只能登录一个端，mpop为多点登录
+    'login_type' => env('JWT_LOGIN_TYPE', 'mpop'), //  登录方式，sso为单点登录，同一个用户只能登录一个端，mpop为多点登录
 
     /*
      * 单点登录自定义数据中必须存在uid的键值，这个key你可以自行定义，只要自定义数据中存在该键即可
@@ -40,7 +42,7 @@ return [
     /*
      * 只能用于Hmac包下的加密非对称算法，其它的都会使用公私钥
      */
-    'secret' => \Hyperf\Support\env('JWT_SECRET', 'cloud-admin'),
+    'secret' => env('JWT_SECRET', 'cloud-admin'),
 
     /*
      * JWT 权限keys
@@ -48,22 +50,22 @@ return [
      * 非对称算法: RS256, RS384 & RS512 / ES256, ES384 & ES512 使用下面的公钥私钥，需要自己去生成.
      */
     'keys' => [
-        'public' => \Hyperf\Support\env('JWT_PUBLIC_KEY'), // 公钥，例如：'file:///path/to/public/key'
-        'private' => \Hyperf\Support\env('JWT_PRIVATE_KEY'), // 私钥，例如：'file:///path/to/private/key'
+        'public' => env('JWT_PUBLIC_KEY'), // 公钥，例如：'file:///path/to/public/key'
+        'private' => env('JWT_PRIVATE_KEY'), // 私钥，例如：'file:///path/to/private/key'
 
         /*
          * 你的私钥的密码。不需要密码可以不用设置
          */
-        'passphrase' => \Hyperf\Support\env('JWT_PASSPHRASE'),
+        'passphrase' => env('JWT_PASSPHRASE'),
     ],
 
-    'ttl' => \Hyperf\Support\env('JWT_TTL', 7200), // token过期时间，单位为秒
+    'ttl' => env('JWT_TTL', 7200), // token过期时间，单位为秒
 
     /*
      * 支持的对称算法：HS256、HS384、HS512
      * 支持的非对称算法：RS256、RS384、RS512、ES256、ES384、ES512
      */
-    'alg' => \Hyperf\Support\env('JWT_ALG', 'HS256'), // jwt的hearder加密算法
+    'alg' => env('JWT_ALG', 'HS256'), // jwt的hearder加密算法
 
     /*
      * jwt使用到的缓存前缀
@@ -74,12 +76,12 @@ return [
     /*
      * 是否开启黑名单，单点登录和多点登录的注销、刷新使原token失效，必须要开启黑名单，目前黑名单缓存只支持hyperf缓存驱动
      */
-    'blacklist_enabled' => \Hyperf\Support\env('JWT_BLACKLIST_ENABLED', true),
+    'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
 
     /*
      * 黑名单的宽限时间 单位为：秒，注意：如果使用单点登录，该宽限时间无效
      */
-    'blacklist_grace_period' => \Hyperf\Support\env('JWT_BLACKLIST_GRACE_PERIOD', 0),
+    'blacklist_grace_period' => env('JWT_BLACKLIST_GRACE_PERIOD', 0),
 
     /*
      * 签发者

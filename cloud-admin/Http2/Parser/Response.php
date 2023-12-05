@@ -46,28 +46,22 @@ class Response
      */
     protected array $header;
 
-    /**
-     * Http status.
-     */
-    protected int $status;
-
-    /**
-     * Http body.
-     */
-    protected string $body;
-
     protected array $trailers = [];
 
     /**
      * Response constructor.
      */
-    public function __construct(int $status = 200, array $headers = [], string $body = '')
+    public function __construct(/**
+     * Http status.
+     */
+    protected int $status = 200, array $headers = [], /**
+     * Http body.
+     */
+    protected string $body = '')
     {
-        $this->status = $status;
         foreach ($headers as $k => $v) {
             $this->header[strtolower($k)] = [$v];
         }
-        $this->body = $body;
     }
 
     /**
@@ -153,7 +147,7 @@ class Response
             $this->body = '<h3>404 Not Found</h3>';
             return;
         }
-        $file_info = pathinfo($file);
+        $file_info = pathinfo((string) $file);
         $extension = $file_info['extension'] ?? '';
         $base_name = $file_info['basename'] ?? 'unknown';
         if (! isset($headers['content-type'])) {

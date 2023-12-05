@@ -41,11 +41,11 @@ class PingFrame extends Frame
      */
     public function serializeBody(): string
     {
-        if (strlen($this->opaqueData) > 8) {
+        if (strlen((string) $this->opaqueData) > 8) {
             throw new InvalidFrameException('PING frame may not have more than 8 bytes of data', Http2Parser::PROTOCOL_ERROR);
         }
         $data = $this->opaqueData;
-        return str_pad($data, 8, "\x00", STR_PAD_RIGHT);
+        return str_pad((string) $data, 8, "\x00", STR_PAD_RIGHT);
     }
 
     /**

@@ -53,56 +53,8 @@ $display->draw(
                             world has been <fg=red>conceptualized</> differently in different fields. Some
                             conceptions see the world as unique while others talk of a
                             plurality of <bg=green>worlds</>.
-                            EOT
-                        )
+                            EOT)
                     )
                 ),
         )
 );
-$i = 0;
-while (true) {
-    $i++;
-    if ($i > 100) {
-        break;
-    }
-    $display->clear();
-    $display->draw(
-        GridWidget::default()
-            ->direction(Direction::Horizontal)
-            ->constraints(
-                Constraint::percentage(50),
-                Constraint::percentage(50)
-            )
-            ->widgets(
-                BlockWidget::default()
-                    ->titles(Title::fromString('Left'))
-                    ->padding(Padding::all(2))
-                    ->borders(Borders::ALL)
-                    ->borderType(BorderType::Rounded)
-                    ->widget(
-                        CanvasWidget::fromIntBounds(-180, 180, -90, 90)
-                            ->draw(
-                                MapShape::default()->resolution(MapResolution::High)
-                            ),
-                    ),
-                BlockWidget::default()
-                    ->titles(Title::fromString('Right'))
-                    ->padding(Padding::all(2))
-                    ->borders(Borders::ALL)
-                    ->borderType(BorderType::Rounded)
-                    ->widget(
-                        ParagraphWidget::fromText(
-                            Text::parse(<<<'EOT'
-                            The <fg=green>world</> is the totality of <options=bold>entities</>,
-                            the whole of reality, or everything that is.[1] The nature of the
-                            world has been <fg=red>conceptualized</> differently in different fields. Some
-                            conceptions see the world as unique while others talk of a
-                            plurality of <bg=green>worlds</>.
-                            EOT
-                            )
-                        )
-                    ),
-            )
-    );
-    sleep(3);
-}

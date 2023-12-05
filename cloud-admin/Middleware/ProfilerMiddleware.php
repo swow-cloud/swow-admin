@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Middleware;
 
+use function Hyperf\Coroutine\defer;
+use function Hyperf\Support\env;
 use App\Model\Monitor;
 use Hyperf\Codec\Json;
 use Hyperf\Context\Context;
@@ -40,10 +42,10 @@ final class ProfilerMiddleware implements MiddlewareInterface
         $time = microtime();
         if ($this->enable()) {
             xhprof_enable($this->config->get('profiler.options.flags'));
-            \Hyperf\Coroutine\defer(function () use ($time, $request) {
+            defer(function () use ($time, $request) {
                 try {
                     $this->logAndSave($time, $request, Context::get(ResponseInterface::class));
-                } catch (Throwable $throwable) {
+                } catch (Throwable) {
                     // todo: not here
                 }
             });
@@ -58,10 +60,10 @@ final class ProfilerMiddleware implements MiddlewareInterface
         $times = explode(' ', $startTime);
         $monitor = new Monitor();
         $monitor->request_url = $request->getUri()->getPath();
-        $monitor->app_name = \Hyperf\Support\env('APP_NAME');
+        $monitor->app_name = env('APP_NAME');
         $monitor->request_body = Json::encode($this->container->get(Request::class)->all());
         $monitor->request_time = $times[1];
-        $monitor->request_time_micro = $times[0] * 1000000;
+        $monitor->request_time_micro = $times[0] * 1_000_000;
         $monitor->type = $request->getMethod();
         $monitor->request_ip = ip($request);
         $profiler = xhprof_disable();

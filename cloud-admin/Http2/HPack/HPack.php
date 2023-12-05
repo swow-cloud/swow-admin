@@ -244,18 +244,16 @@ final class HPack
 
     private const DEFAULT_MAX_SIZE = 4096;
 
-    private static $huffmanLookup;
+    private static ?array $huffmanLookup = null;
 
-    private static $huffmanCodes;
+    private static ?array $huffmanCodes = null;
 
-    private static $huffmanLengths;
+    private static ?array $huffmanLengths = null;
 
     private static array $indexMap = [];
 
     /** @var string[][] */
     private array $headers = [];
-
-    private int $hardMaxSize = self::DEFAULT_MAX_SIZE;
 
     /** @var int Max table size. */
     private int $currentMaxSize = self::DEFAULT_MAX_SIZE;
@@ -264,11 +262,10 @@ final class HPack
     private int $size = 0;
 
     /**
-     * @param int $maxSize upper limit on table size
+     * @param int $hardMaxSize upper limit on table size
      */
-    public function __construct(int $maxSize = self::DEFAULT_MAX_SIZE)
+    public function __construct(private int $hardMaxSize = self::DEFAULT_MAX_SIZE)
     {
-        $this->hardMaxSize = $maxSize;
     }
 
     /**
@@ -531,7 +528,7 @@ final class HPack
                     return null;
                 }
             }
-        } catch (HPackException $e) {
+        } catch (HPackException) {
             return null;
         }
 

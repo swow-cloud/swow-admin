@@ -3,6 +3,8 @@
 /** @noinspection PhpComposerExtensionStubsInspection */
 
 declare(strict_types=1);
+
+use function Hyperf\Support\env;
 /**
  * This file is part of Cloud-Admin project.
  *
@@ -11,7 +13,7 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 return [
-    'enable' => \Hyperf\Support\env('ENABLE_PROFILER', false),
+    'enable' => env('ENABLE_PROFILER', false),
     'options' => [
         'flags' => XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY,
     ],

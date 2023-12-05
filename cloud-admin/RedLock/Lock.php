@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock;
 
+use function Swow\defer;
 use CloudAdmin\Interfaces\LockInterface;
 use CloudAdmin\RedLock\Exceptions\ErrLockException;
 use CloudAdmin\RedLock\Exceptions\RuntimeException;
@@ -42,7 +43,7 @@ final class Lock implements LockInterface
     public function lock(): null|bool|Exception
     {
         $error = null;
-        \Swow\defer(function () use (&$error) {
+        defer(function () use (&$error) {
             if ($error === null) {
                 // 加锁成功的情况下，会启动看门狗
                 // 关于该锁本身是不可重入的，所以不会出现同一把锁下看门狗重复启动的情况
@@ -74,7 +75,7 @@ final class Lock implements LockInterface
      */
     public function unlock(): bool
     {
-        \Swow\defer(function () {
+        defer(function () {
             if ($this->stopDog->isAvailable()) {
                 $this->stopDog->close();
             }
@@ -130,7 +131,7 @@ final class Lock implements LockInterface
         }
 
         Coroutine::create(function () {
-            \Swow\defer(function () {
+            defer(function () {
                 $this->runningDog = 0;
             });
             $this->runWatchDog();
@@ -149,7 +150,7 @@ final class Lock implements LockInterface
                 if (! $this->stopDog->isAvailable()) {
                     $isStop = true;
                 }
-            } catch (Throwable $exception) {
+            } catch (Throwable) {
             }
         }
     }

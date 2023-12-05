@@ -11,25 +11,23 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Http2\Frame;
 
+use Stringable;
 use ReflectionClass;
 
-class Flag
+class Flag implements Stringable
 {
-    public const END_STREAM = 0x01;
+    final public const END_STREAM = 0x01;
 
-    public const ACK = 0x01;
+    final public const ACK = 0x01;
 
-    public const END_HEADERS = 0x04;
+    final public const END_HEADERS = 0x04;
 
-    public const PADDED = 0x08;
+    final public const PADDED = 0x08;
 
-    public const PRIORITY = 0x20;
+    final public const PRIORITY = 0x20;
 
-    protected int $bit;
-
-    public function __construct($bit)
+    public function __construct(protected int $bit)
     {
-        $this->bit = $bit;
     }
 
     public function __toString(): string

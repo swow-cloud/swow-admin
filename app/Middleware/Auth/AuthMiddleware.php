@@ -30,10 +30,10 @@ use Swow\Http\Status;
 final class AuthMiddleware implements MiddlewareInterface
 {
     #[Inject]
-    private Response $response;
+    private readonly Response $response;
 
     #[Inject]
-    private JWT $jwt;
+    private readonly JWT $jwt;
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

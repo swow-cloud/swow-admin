@@ -76,7 +76,7 @@ enum ErrorCode: int implements ErrorCodeInterface
 
         try {
             $translator = ApplicationContext::getContainer()->get(TranslatorInterface::class);
-            $key = sprintf('enums.%s.%s', __CLASS__, $attributes[0]->newInstance()->{$property});
+            $key = sprintf('enums.%s.%s', self::class, $attributes[0]->newInstance()->{$property});
             $result = $translator->trans($key);
 
             return $key === $result ? $attributes[0]->newInstance()->{$property} : $result;

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\SDB;
 
+use function Hyperf\Support\make;
 use CloudAdmin\SDB\Business\Route;
 use CloudAdmin\SDB\Debugger\ServerConfig;
 use CloudAdmin\SDB\Debugger\SslConfig;
@@ -75,7 +76,7 @@ final class WebSocketDebugger extends Debugger
 
     protected static ServerConfig $serverConfig;
 
-    protected static ?SslConfig $sslConfig;
+    protected static ?SslConfig $sslConfig = null;
 
     final public function __construct()
     {
@@ -586,7 +587,7 @@ final class WebSocketDebugger extends Debugger
                                                                     );
                                                                     break;
                                                                 case 'route':
-                                                                    $route = \Hyperf\Support\make(Route::class);
+                                                                    $route = make(Route::class);
                                                                     $this->out(Json::encode($route->getRoute()));
                                                                     break;
                                                                 case 'ping':

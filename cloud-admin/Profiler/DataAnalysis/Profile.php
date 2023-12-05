@@ -70,7 +70,7 @@ final class Profile
 
     public function splitName($name): array
     {
-        $a = explode('==>', $name);
+        $a = explode('==>', (string) $name);
         return isset($a[1]) ? $a : [null, $a[0]];
     }
 
@@ -87,9 +87,7 @@ final class Profile
                 'epmu' => $val['pmu'] - $val['epmu'],
             ];
         }
-        usort($arr, function ($a, $b) {
-            return $a['ewt'] > $b['ewt'] ? -1 : 1;
-        });
+        usort($arr, fn($a, $b) => $a['ewt'] > $b['ewt'] ? -1 : 1);
         return $arr;
     }
 
@@ -155,12 +153,7 @@ final class Profile
      */
     public function sort(string $dimension, array $data): array
     {
-        $sorter = function ($a, $b) use ($dimension) {
-            if ($a[$dimension] == $b[$dimension]) {
-                return 0;
-            }
-            return $a[$dimension] > $b[$dimension] ? -1 : 1;
-        };
+        $sorter = fn($a, $b) => $b[$dimension] <=> $a[$dimension];
         uasort($data, $sorter);
         return $data;
     }
@@ -307,7 +300,7 @@ final class Profile
             ];
             if ($childName === 'main()') {
                 $current['type'] = 'main()';
-            } elseif (str_contains($childName, '::')) {
+            } elseif (str_contains((string) $childName, '::')) {
                 $current['type'] = 'class';
             } else {
                 $current['type'] = 'function';
@@ -328,7 +321,7 @@ final class Profile
             // If the current function has more children,
             // walk that call subgraph.
             if (isset($this->indexed[$childName]) && ! $revisit) {
-                $grandChildren = $this->_flamegraphData($childName, $main, $metric, $threshold, $index);
+                $grandChildren = $this->_flamegraphData($childName, $main, $metric, $threshold);
                 if (! empty($grandChildren)) {
                     $current['children'] = $grandChildren;
                 }

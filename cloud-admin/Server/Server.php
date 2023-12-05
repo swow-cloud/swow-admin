@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Hyperf\Engine\Http;
 
+use function Hyperf\Config\config;
 use CloudAdmin\Server\SslConfig;
 use Hyperf\Engine\Contract\Http\ServerInterface;
 use Hyperf\Engine\Coroutine;
@@ -49,7 +50,7 @@ final class Server extends Psr7Server implements ServerInterface
         parent::__construct();
 
         /** @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool} $config */
-        $config = \Hyperf\Config\config('ssl');
+        $config = config('ssl');
 
         if ($config['enable'] ?? false) {
             if (! Extension::isBuiltWith('ssl')) {

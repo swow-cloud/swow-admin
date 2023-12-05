@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
+use function Hyperf\Support\env;
 use CloudAdmin\HttpMessage\SwowStream;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
@@ -29,7 +30,7 @@ final class AppExceptionHandler extends ExceptionHandler
             sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile())
         );
         $this->logger->error($throwable->getTraceAsString());
-        if (\Hyperf\Support\env('APP_DEBUG')) {
+        if (env('APP_DEBUG')) {
             return $response->withHeader('Server', 'SwowAdmin')->withStatus(500)->withBody(
                 new SwowStream($throwable->getTraceAsString())
             );

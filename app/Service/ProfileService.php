@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use function Hyperf\Support\make;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Model\Monitor;
@@ -35,7 +36,7 @@ final class ProfileService
             throw new BusinessException(ErrorCode::NOT_FOUND);
         }
         $list = Json::decode($model->profile);
-        $profileData = \Hyperf\Support\make(Profile::class, [$list]);
+        $profileData = make(Profile::class, [$list]);
         $data['wt'] = $profileData->getFlameGraph('wt', 0)['data'];
         $data['mu'] = $profileData->getFlameGraph('mu', 0)['data'];
         return $data;
@@ -69,7 +70,7 @@ final class ProfileService
         $model = $model->first();
         $profile = Json::decode($model->profile, true);
         $data['sql'] = '';
-        $ProfileData = \Hyperf\Support\make(Profile::class, [$profile]);
+        $ProfileData = make(Profile::class, [$profile]);
         $data['funcList'] = $ProfileData->getProfileBySort();
         $data['base'] = [
             'url' => $model->url,

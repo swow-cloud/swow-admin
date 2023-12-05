@@ -13,13 +13,7 @@ namespace App\Event;
 
 final class UserLoggedInEvent
 {
-    public int $userId;
-
-    public string $username;
-
-    public function __construct(int $userId, string $username)
+    public function __construct(public int $userId, public string $username)
     {
-        $this->userId = $userId;
-        $this->username = $username;
     }
 }

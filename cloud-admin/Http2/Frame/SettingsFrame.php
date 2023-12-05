@@ -22,17 +22,17 @@ use function unpack;
 
 class SettingsFrame extends Frame
 {
-    public const HEADER_TABLE_SIZE = 0x01;
+    final public const HEADER_TABLE_SIZE = 0x01;
 
-    public const ENABLE_PUSH = 0x02;
+    final public const ENABLE_PUSH = 0x02;
 
-    public const MAX_CONCURRENT_STREAMS = 0x03;
+    final public const MAX_CONCURRENT_STREAMS = 0x03;
 
-    public const INITIAL_WINDOW_SIZE = 0x04;
+    final public const INITIAL_WINDOW_SIZE = 0x04;
 
-    public const MAX_FRAME_SIZE = 0x05;
+    final public const MAX_FRAME_SIZE = 0x05;
 
-    public const MAX_HEADER_LIST_SIZE = 0x06;
+    final public const MAX_HEADER_LIST_SIZE = 0x06;
 
     protected array $definedFlags = [Flag::ACK];
 
@@ -49,7 +49,7 @@ class SettingsFrame extends Frame
     public function __construct(array $options = [])
     {
         parent::__construct($options);
-        $options['settings'] = $options['settings'] ?? [];
+        $options['settings'] ??= [];
         if ($options['settings'] && $this->flags->hasFlag(Flag::ACK)) {
             throw new InvalidFrameException('Settings must be empty if ACK flag is set', Http2Parser::PROTOCOL_ERROR);
         }

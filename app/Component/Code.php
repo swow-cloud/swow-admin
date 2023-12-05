@@ -25,7 +25,7 @@ final class Code
         for ($i = 0; $i < $length; ++$i) {
             try {
                 $randomChar = $charList[random_int(0, strlen($charList) - 1)];
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
             $code .= $randomChar;
         }

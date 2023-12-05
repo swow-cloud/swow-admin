@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+
+use function Hyperf\Support\env;
 /**
  * This file is part of Cloud-Admin project.
  *
@@ -9,9 +11,9 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 return [
-    'enable' => \Hyperf\Support\env('ENABLE_SSL', false),
-    'certificate' => \Hyperf\Support\env('CERTIFICATE'),
-    'certificate_key' => \Hyperf\Support\env('CERTIFICATE_KEY'),
+    'enable' => env('ENABLE_SSL', false),
+    'certificate' => env('CERTIFICATE'),
+    'certificate_key' => env('CERTIFICATE_KEY'),
     'verify_peer' => false,
     'verify_peer_name' => false,
     'alpn_protocols' => 'h2',

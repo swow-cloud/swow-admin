@@ -74,7 +74,7 @@ class DataFrame extends Frame implements PaddingInterface
     public function flowControlledLength(): int
     {
         $padding_len = ($this->paddingLength) ? $this->paddingLength + 1 : 0;
-        return strlen($this->data) + $padding_len;
+        return strlen((string) $this->data) + $padding_len;
     }
 
     public function getData(): int|string

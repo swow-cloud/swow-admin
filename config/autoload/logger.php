@@ -8,11 +8,14 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Formatter\LineFormatter;
+use function Hyperf\Support\env;
 use CloudAdmin\Log\AppendRequestIdWithMemoryUsageProcessor;
 use CloudAdmin\Log\SwowSocketHandler;
 use Monolog\Level;
 
-if (\Hyperf\Support\env('APP_DEBUG') === true) {
+if (env('APP_DEBUG') === true) {
     $handler = SwowSocketHandler::class;
     $constructor = [
         'level' => Level::Debug,
@@ -20,7 +23,7 @@ if (\Hyperf\Support\env('APP_DEBUG') === true) {
         'useLocking' => true,
     ];
 } else {
-    $handler = Monolog\Handler\RotatingFileHandler::class;
+    $handler = RotatingFileHandler::class;
     $constructor = [
         'filename' => BASE_PATH . '/runtime/logs/cloud.log',
         'maxFiles' => 10,
@@ -35,7 +38,7 @@ return [
             'constructor' => $constructor,
         ],
         'formatter' => [
-            'class' => Monolog\Formatter\LineFormatter::class,
+            'class' => LineFormatter::class,
             'constructor' => [
                 'format' => "%datetime% [%channel%.%level_name%]: %message% %context% %extra%\n",
                 'dateFormat' => 'Y-m-d H:i:s',
@@ -50,7 +53,7 @@ return [
     ],
     'sql' => [
         'handler' => [
-            'class' => Monolog\Handler\RotatingFileHandler::class,
+            'class' => RotatingFileHandler::class,
             'constructor' => [
                 'filename' => BASE_PATH . '/runtime/logs/sql.log',
                 'maxFiles' => 10,
@@ -58,7 +61,7 @@ return [
             ],
         ],
         'formatter' => [
-            'class' => Monolog\Formatter\LineFormatter::class,
+            'class' => LineFormatter::class,
             'constructor' => [
                 'format' => null,
                 'dateFormat' => 'Y-m-d H:i:s',

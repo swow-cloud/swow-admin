@@ -87,7 +87,7 @@ final class Profile
                 'epmu' => $val['pmu'] - $val['epmu'],
             ];
         }
-        usort($arr, fn($a, $b) => $a['ewt'] > $b['ewt'] ? -1 : 1);
+        usort($arr, fn ($a, $b) => $a['ewt'] > $b['ewt'] ? -1 : 1);
         return $arr;
     }
 
@@ -153,7 +153,7 @@ final class Profile
      */
     public function sort(string $dimension, array $data): array
     {
-        $sorter = fn($a, $b) => $b[$dimension] <=> $a[$dimension];
+        $sorter = fn ($a, $b) => $b[$dimension] <=> $a[$dimension];
         uasort($data, $sorter);
         return $data;
     }

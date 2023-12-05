@@ -8,9 +8,9 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler;
-use Hyperf\Command\Listener\FailToHandleListener;
 use App\Listener\UserLoggedInListener;
+use Hyperf\Command\Listener\FailToHandleListener;
+use Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler;
 
 return [
     ErrorExceptionHandler::class,

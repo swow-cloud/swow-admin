@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedisLock;
 
-use function Hyperf\Support\make;
 use CloudAdmin\Interfaces\RedisLockInterface;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
@@ -28,6 +27,7 @@ use Swow\Coroutine;
 use Throwable;
 
 use function CloudAdmin\Utils\formatThrowable;
+use function Hyperf\Support\make;
 use function max;
 use function sprintf;
 use function usleep;

@@ -13,7 +13,5 @@ namespace App\Event;
 
 final class UserLoggedInEvent
 {
-    public function __construct(public int $userId, public string $username)
-    {
-    }
+    public function __construct(public int $userId, public string $username) {}
 }

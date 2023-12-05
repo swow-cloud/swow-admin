@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
-use function Hyperf\Support\env;
 use CloudAdmin\HttpMessage\SwowStream;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
+use function Hyperf\Support\env;
 use function sprintf;
 
 final class AppExceptionHandler extends ExceptionHandler

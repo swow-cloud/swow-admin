@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Log;
 
-use BeBat\ConsoleColor\Style\Color;
 use BeBat\ConsoleColor\Style;
+use BeBat\ConsoleColor\Style\Color;
 use Hyperf\Codec\Json;
 use JetBrains\PhpStorm\ArrayShape;
 use Monolog\Handler\AbstractProcessingHandler;

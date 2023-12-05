@@ -1,7 +1,13 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Renaming\Rector\FuncCall\RenameFunctionRector;
@@ -14,12 +20,12 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
         __DIR__ . '/app',
         __DIR__ . '/config',
-        __DIR__ . '/cloud-admin'
+        __DIR__ . '/cloud-admin',
     ]);
 
-     $rectorConfig->sets([
-         LevelSetList::UP_TO_PHP_81,
-     ]);
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_81,
+    ]);
     // register a single rule
     // $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
 

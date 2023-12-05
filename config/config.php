@@ -8,9 +8,10 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use function Hyperf\Support\env;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Psr\Log\LogLevel;
+
+use function Hyperf\Support\env;
 
 return [
     'app_name' => env('APP_NAME', 'skeleton'),

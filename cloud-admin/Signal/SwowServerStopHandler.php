@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Signal;
 
-use function Hyperf\Support\env;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Process\ProcessManager;
@@ -20,6 +19,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Swow\Coroutine;
+
+use function Hyperf\Support\env;
 
 final class SwowServerStopHandler implements SignalHandlerInterface
 {

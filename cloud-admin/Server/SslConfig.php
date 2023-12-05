@@ -36,8 +36,8 @@ final class SslConfig implements Arrayable
     public function __construct(/**
      * @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool}
      */
-    private array $config = [])
-    {
+        private array $config = []
+    ) {
         $this
             ->setCertificate($this->config['certificate'] ?? '')
             ->setCertificateKey($config['certificate_key'] ?? '')

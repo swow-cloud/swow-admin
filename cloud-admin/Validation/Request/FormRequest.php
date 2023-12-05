@@ -18,7 +18,7 @@ use function call_user_func_array;
 use function is_array;
 use function sprintf;
 
-class FormRequest extends HyperfRequest
+final class FormRequest extends HyperfRequest
 {
     public function authorize(): bool
     {

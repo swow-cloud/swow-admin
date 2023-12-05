@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Middleware;
 
-use function Hyperf\Coroutine\defer;
-use function Hyperf\Support\env;
 use App\Model\Monitor;
 use Hyperf\Codec\Json;
 use Hyperf\Context\Context;
@@ -29,6 +27,8 @@ use Throwable;
 
 use function CloudAdmin\Utils\ip;
 use function explode;
+use function Hyperf\Coroutine\defer;
+use function Hyperf\Support\env;
 use function microtime;
 use function xhprof_disable;
 use function xhprof_enable;

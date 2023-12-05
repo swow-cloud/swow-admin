@@ -8,12 +8,13 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Formatter\LineFormatter;
-use function Hyperf\Support\env;
 use CloudAdmin\Log\AppendRequestIdWithMemoryUsageProcessor;
 use CloudAdmin\Log\SwowSocketHandler;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Level;
+
+use function Hyperf\Support\env;
 
 if (env('APP_DEBUG') === true) {
     $handler = SwowSocketHandler::class;

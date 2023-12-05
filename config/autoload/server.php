@@ -8,10 +8,10 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use Hyperf\Server\SwowServer;
 use Hyperf\HttpServer\Server;
 use Hyperf\Server\Event;
 use Hyperf\Server\ServerInterface;
+use Hyperf\Server\SwowServer;
 
 return [
     'type' => SwowServer::class,

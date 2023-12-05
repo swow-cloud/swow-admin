@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use function Hyperf\Support\make;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Model\Monitor;
@@ -19,6 +18,7 @@ use CloudAdmin\Profiler\DataAnalysis\Profile;
 use Hyperf\Codec\Json;
 
 use function date;
+use function Hyperf\Support\make;
 
 final class ProfileService
 {

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace CloudAdmin\RedLock;
 
-use function Swow\defer;
 use CloudAdmin\Interfaces\LockInterface;
 use CloudAdmin\RedLock\Exceptions\ErrLockException;
 use CloudAdmin\RedLock\Exceptions\RuntimeException;
@@ -23,6 +22,7 @@ use Throwable;
 
 use function sleep;
 use function sprintf;
+use function Swow\defer;
 use function time;
 use function usleep;
 

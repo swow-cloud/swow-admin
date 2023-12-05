@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Hyperf\Engine\Http;
 
-use function Hyperf\Config\config;
 use CloudAdmin\Server\SslConfig;
 use Hyperf\Engine\Contract\Http\ServerInterface;
 use Hyperf\Engine\Coroutine;
@@ -27,6 +26,7 @@ use Swow\Socket;
 use Swow\SocketException;
 use Throwable;
 
+use function Hyperf\Config\config;
 use function in_array;
 use function sleep;
 

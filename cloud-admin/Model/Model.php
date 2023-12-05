@@ -18,7 +18,7 @@ use Hyperf\DbConnection\Model\Model as BaseModel;
 use function is_array;
 use function is_int;
 
-class Model extends BaseModel
+final class Model extends BaseModel
 {
     use PaginateTrait;
 

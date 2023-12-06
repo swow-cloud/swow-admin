@@ -100,7 +100,6 @@ class Ssl implements Arrayable
      */
     protected function set(mixed $name, mixed $value): self
     {
-        dump($name,$value);
         $this->config[$name] = $value;
         return $this;
     }

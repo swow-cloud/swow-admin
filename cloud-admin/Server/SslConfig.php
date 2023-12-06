@@ -38,12 +38,12 @@ final class SslConfig implements Arrayable
      */
         private array $config = []
     ) {
-//        $this
-//            ->setCertificate($this->config['certificate'] ?? '')
-//            ->setCertificateKey($config['certificate_key'] ?? '')
-//            ->setVerifyPeer($this->config['verify_peer'] ?? false)
-//            ->setVerifyPeerName($this->config['verify_peer_name'] ?? false)
-//            ->setAllowSelfSigned($this->config['allow_self_signed'] ?? false);
+        //        $this
+        //            ->setCertificate($this->config['certificate'] ?? '')
+        //            ->setCertificateKey($config['certificate_key'] ?? '')
+        //            ->setVerifyPeer($this->config['verify_peer'] ?? false)
+        //            ->setVerifyPeerName($this->config['verify_peer_name'] ?? false)
+        //            ->setAllowSelfSigned($this->config['allow_self_signed'] ?? false);
     }
 
     /**

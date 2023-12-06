@@ -16,6 +16,6 @@ return [
     'certificate_key' => env('CERTIFICATE_KEY'),
     'verify_peer' => false,
     'verify_peer_name' => false,
-    'alpn_protocols' => 'h2,http/1.1',
+    'alpn_protocols' => "h2",
     'allow_self_signed' => true,
 ];

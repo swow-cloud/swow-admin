@@ -181,7 +181,7 @@ final class Http2Parser
 
     protected HPack $HPack;
 
-    public function __construct(protected Http2Connection $http2Connection, ?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody, array $streamUrl)
+    public function __construct(protected Http2Connection $http2Connection, array $streamUrl ,?callable $onStreamData, ?callable $onRequest, ?callable $onWriteBody)
     {
         $this->HPack = HPack::from();
         $this->driver = new Http2Driver($http2Connection, $onStreamData, $onRequest, $onWriteBody, $streamUrl, $this->HPack);

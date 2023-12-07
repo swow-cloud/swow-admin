@@ -90,7 +90,11 @@ final class Lock implements RedisLockInterface
      */
     public function tryLock(string $key, int $ttl = 3): bool
     {
-        $this->value = Uuid::uuid4()->toString();
+        // 生成锁值，保证锁的唯一性
+        if ($this->value === '') {
+            $this->value = Uuid::uuid4()->toString();
+        }
+
         return $this->doLock($key, $ttl);
     }
 
@@ -112,6 +116,15 @@ final class Lock implements RedisLockInterface
             $lock = $this->doLock($key, $ttl);
 
             if ($lock) {
+                $this
+                    ->logger
+                    ->debug(
+                        sprintf(
+                            'Lock acquired successfully, attempts: %s,Key: %s',
+                            $retryTimes,
+                            $key,
+                        ),
+                    );
                 break;
             }
 
@@ -192,6 +205,10 @@ final class Lock implements RedisLockInterface
      */
     private function doLock(string $key, int $ttl): bool
     {
+        if (! $this->value) {
+            $this->value = Uuid::uuid4()->toString();
+        }
+
         $this->ttl = $ttl;
         $this->key = $key;
 

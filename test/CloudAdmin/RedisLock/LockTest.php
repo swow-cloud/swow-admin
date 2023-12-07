@@ -24,6 +24,7 @@ use Throwable;
 use function CloudAdmin\Utils\di;
 use function sleep;
 use function sprintf;
+use function var_dump;
 
 /**
  * @internal
@@ -102,12 +103,28 @@ final class LockTest extends TestCase
         $key = '110';
         Coroutine::create(function () use ($redis1, $key) {
             $lock = new \CloudAdmin\RedisLock\Lock(di(), $redis1);
-            $this->assertTrue($lock->lock($key, 10), '加锁成功1');
-            sleep(5);
+            $ret1 = $lock->lock($key);
+            var_dump($ret1);
+            echo PHP_EOL;
+            sleep(2);
+            $this->assertTrue($ret1, '加锁成功1');
         });
         Coroutine::create(function () use ($redis2, $key) {
             $lock = new \CloudAdmin\RedisLock\Lock(di(), $redis2);
-            $this->assertTrue($lock->lock($key), '加锁成功2');
+            $ret2 = $lock->lock($key);
+            var_dump($ret2);
+            echo PHP_EOL;
+            sleep(2);
+            $this->assertTrue($ret2, '加锁成功2');
         });
+        Coroutine::create(function () use ($redis2, $key) {
+            $lock = new \CloudAdmin\RedisLock\Lock(di(), $redis2);
+            $ret2 = $lock->lock($key);
+            var_dump($ret2);
+            echo PHP_EOL;
+            sleep(2);
+            $this->assertTrue($ret2, '加锁成功2');
+        });
+        sleep(5);
     }
 }

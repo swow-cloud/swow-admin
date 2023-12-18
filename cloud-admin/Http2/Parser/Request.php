@@ -43,7 +43,7 @@ class Request
     /**
      * Request constructor.
      */
-    public function __construct(protected int $streamId, protected ServerConnection $client, mixed $header, protected mixed $rawBody = '')
+    public function __construct(protected int $streamId, protected Http2Connection $client, mixed $header, protected mixed $rawBody = '')
     {
         foreach ($header as $key => $value) {
             if (is_array($value)) {

@@ -1,8 +1,19 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
 
 namespace CloudAdmin\Lru;
+
+use function array_key_exists;
+use function array_shift;
+use function count;
 
 final class LRUMemoizer
 {
@@ -18,8 +29,7 @@ final class LRUMemoizer
      */
     public function __construct(
         private readonly int $capacity = self::CAPACITY_DEFAULT,
-    ) {
-    }
+    ) {}
 
     /**
      * @template T
@@ -28,7 +38,7 @@ final class LRUMemoizer
      */
     public function get(string $key, callable $factory): mixed
     {
-        if (\array_key_exists($key, $this->itemsByKey)) {
+        if (array_key_exists($key, $this->itemsByKey)) {
             /** @var T */
             $value = $this->itemsByKey[$key];
             unset($this->itemsByKey[$key]);
@@ -40,7 +50,7 @@ final class LRUMemoizer
         $value = $factory();
         $this->itemsByKey[$key] = $value;
 
-        if (\count($this->itemsByKey) > $this->capacity) {
+        if (count($this->itemsByKey) > $this->capacity) {
             array_shift($this->itemsByKey);
         }
 

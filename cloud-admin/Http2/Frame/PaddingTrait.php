@@ -19,7 +19,7 @@ use function unpack;
 
 trait PaddingTrait
 {
-    protected int $paddingLength;
+    protected int $paddingLength = 0;
 
     public function __construct(array $options = [])
     {

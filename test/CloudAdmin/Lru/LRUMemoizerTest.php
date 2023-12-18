@@ -1,20 +1,25 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
+
 namespace CloudAdmin\Test\CloudAdmin\Lru;
 
 use CloudAdmin\Lru\LRUMemoizer;
 use PHPUnit\Framework\TestCase;
 
-class LRUMemoizerTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class LRUMemoizerTest extends TestCase
 {
-    /**
-     * @param callable(): mixed $factory
-     */
-    private static function viewMemoizedValue(LRUMemoizer $memoizer, string $key, callable $factory): mixed
-    {
-        return (clone $memoizer)->get($key, $factory);
-    }
-
     public function testItSavesValue(): void
     {
         $memoizer = new LRUMemoizer();
@@ -67,5 +72,13 @@ class LRUMemoizerTest extends TestCase
         self::assertSame($a, 'a1');
         self::assertSame($b, 'b2');
         self::assertSame($c, 'c1');
+    }
+
+    /**
+     * @param callable(): mixed $factory
+     */
+    private static function viewMemoizedValue(LRUMemoizer $memoizer, string $key, callable $factory): mixed
+    {
+        return (clone $memoizer)->get($key, $factory);
     }
 }

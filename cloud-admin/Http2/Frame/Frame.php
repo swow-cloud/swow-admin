@@ -130,18 +130,18 @@ abstract class Frame
      */
     public static function parseFrameHeader(string $header): Frame
     {
-        if (! $fields = @unpack('nlength8/Clength16/Ctype/Cflags/Nstream_id', $header)) {
+        if (! $fields = @unpack('nlength8/Clength16/Ctype/Cflags/NstreamId', $header)) {
             throw new InvalidFrameException('Invalid Frame Header', Http2Parser::PROTOCOL_ERROR);
         }
         $length = ($fields['length8'] << 8) + $fields['length16'];
         $type = $fields['type'];
         $flags = $fields['flags'];
-        $stream_id = $fields['streamId'];
+        $streamId = $fields['streamId'];
         if (! array_key_exists($type, static::FRAMES)) {
             throw new InvalidFrameException('Invalid Frame Header', Http2Parser::PROTOCOL_ERROR);
         }
-        $frame = '\frame\\' . static::FRAMES[$type];
-        $frame = new $frame(['streamId' => $stream_id, 'length' => $length]);
+        $frame = __NAMESPACE__ .'\\'. static::FRAMES[$type];
+        $frame = new $frame(['streamId' => $streamId, 'length' => $length]);
         $frame->parseFlags($flags);
 
         return $frame;

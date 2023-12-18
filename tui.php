@@ -20,9 +20,8 @@ use Swow\Sync\WaitReference;
 
 require 'vendor/autoload.php';
 
-
 $socket = new \Swow\Socket(Swow\Socket::TYPE_TCP);
-$server = stream_socket_server('tls://127.0.0.1:9501', context: stream_context_create([
+$server = \stream_socket_server('tls://127.0.0.1:9501', context: \stream_context_create([
     'ssl' => [
         'alpn_protocols' => 'h2,http/1.1',
         'local_cert' => __DIR__ . '/ssl/server.crt',
@@ -33,10 +32,10 @@ $server = stream_socket_server('tls://127.0.0.1:9501', context: stream_context_c
     ],
 ]));
 $wr = new WaitReference();
-Coroutine::run(static function () use ($server, $wr): void {
-    $conn = stream_socket_accept($server);
-    $payload = fread($conn, 1024);
-    if (str_contains($payload, 'PRI * HTTP/2.0')) {
+Coroutine::run(static function () use ($server): void {
+    $conn = \stream_socket_accept($server);
+    $payload = \fread($conn, 1024);
+    if (\str_contains($payload, 'PRI * HTTP/2.0')) {
         echo "ALPN uses HTTP/2.0\n";
     } else {
         echo "ALPN uses HTTP/1.1\n";
@@ -44,10 +43,10 @@ Coroutine::run(static function () use ($server, $wr): void {
 });
 
 $wr::wait($wr);
-//echo PHP_EOL;
-//$display = DisplayBuilder::default()->build();
-//$total = 10;
-//for ($done = 0; $done <= $total; ++$done) {
+// echo PHP_EOL;
+// $display = DisplayBuilder::default()->build();
+// $total = 10;
+// for ($done = 0; $done <= $total; ++$done) {
 //    // 重置光标位置
 //    echo "\r\033[K";
 //    $display->clear();
@@ -87,5 +86,5 @@ $wr::wait($wr);
 //
 //    // 等待一段时间以模拟进程
 //    \usleep(100000);
-//}
-//echo PHP_EOL;
+// }
+// echo PHP_EOL;

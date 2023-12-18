@@ -89,7 +89,7 @@ trait PriorityTrait
      */
     protected function parsePriorityData(string $data): int
     {
-        if ($unpack = @unpack('Ndepends_on/Cstream_weight', substr($data, 0, 5))) {
+        if ($unpack = @unpack('NdependsOn/CstreamWeight', substr($data, 0, 5))) {
             $this->dependsOn = $unpack['dependsOn'];
             $this->streamWeight = $unpack['streamWeight'];
             $this->exclusive = (bool) ($this->dependsOn & PriorityInterface::MASK);

@@ -175,7 +175,7 @@ final class Http2Parser
     /**
      * 是否http1.1升级成功
      */
-    protected bool $upgrade;
+    protected bool $upgrade = false;
 
     protected ServerRequestInterface $upgradeRequest;
 

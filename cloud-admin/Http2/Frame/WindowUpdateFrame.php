@@ -47,7 +47,7 @@ class WindowUpdateFrame extends Frame
      */
     public function parseBody(string $data): void
     {
-        if (! $unpack = @unpack('Nwindow_increment', $data)) {
+        if (! $unpack = @unpack('NwindowIncrement', $data)) {
             throw new InvalidFrameException('Invalid WINDOW_UPDATE body', Http2Parser::PROTOCOL_ERROR);
         }
         $this->windowIncrement = $unpack['windowIncrement'];

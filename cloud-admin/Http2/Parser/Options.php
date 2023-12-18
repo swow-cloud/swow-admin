@@ -50,6 +50,6 @@ final class Options
 
     public static function logFile(): string
     {
-        return './log/http2.log';
+        return BASE_PATH . '/runtime/logs/http2.log';
     }
 }

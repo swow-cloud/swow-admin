@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Http2\Parser;
 
-use Swow\Psr7\Server\ServerConnection;
 use function explode;
 use function file_put_contents;
 use function is_array;
@@ -78,8 +77,11 @@ class Request
      */
     public function post($name = null, $default = null): mixed
     {
-        if (! isset($this->data['post'])) {
-            $this->parsePost();
+        if (!isset($this->data['post'])) {
+            try {
+                $this->parsePost();
+            } catch (\JsonException $e) {
+            }
         }
         if ($name === null) {
             return $this->data['post'] ?? [];
@@ -93,7 +95,7 @@ class Request
      */
     public function file($name = null): mixed
     {
-        if (! isset($this->data['files'])) {
+        if (!isset($this->data['files'])) {
             $this->parsePost();
         }
         if ($name === null) {
@@ -104,7 +106,7 @@ class Request
 
     public function ip(): string
     {
-        return $this->client->getPeerAddress();
+        return $this->client->getLocalAddress();
     }
 
     public function host(): string
@@ -155,7 +157,7 @@ class Request
 
     protected function parsePost(): void
     {
-        if (! $this->rawBody) {
+        if (!$this->rawBody) {
             return;
         }
         $this->data['post'] = $this->data['files'] = [];
@@ -166,7 +168,7 @@ class Request
             return;
         }
         if (preg_match('/\bjson\b/i', $content_type)) {
-            $this->data['post'] = (array) json_decode($this->rawBody, true, 512, JSON_THROW_ON_ERROR);
+            $this->data['post'] = (array)json_decode($this->rawBody, true, 512, JSON_THROW_ON_ERROR);
         } else {
             parse_str($this->rawBody, $this->data['post']);
         }
@@ -202,15 +204,15 @@ class Request
                             $tmp_file = '';
                             $size = strlen($boundary_value);
                             $tmp_upload_dir = './temp/';
-                            if (! $tmp_upload_dir) {
+                            if (!$tmp_upload_dir) {
                                 $error = UPLOAD_ERR_NO_TMP_DIR;
                             } else {
                                 $tmp_file = tempnam($tmp_upload_dir, 'workerman.upload.');
-                                if ($tmp_file === false || ! file_put_contents($tmp_file, $boundary_value)) {
+                                if ($tmp_file === false || !file_put_contents($tmp_file, $boundary_value)) {
                                     $error = UPLOAD_ERR_CANT_WRITE;
                                 }
                             }
-                            if (! isset($files[$key])) {
+                            if (!isset($files[$key])) {
                                 $files[$key] = [];
                             }
                             // Parse upload files.
@@ -232,7 +234,7 @@ class Request
                         break;
                     case 'content-type':
                         // add file_type
-                        if (! isset($files[$key])) {
+                        if (!isset($files[$key])) {
                             $files[$key] = [];
                         }
                         $files[$key]['type'] = trim($header_value);

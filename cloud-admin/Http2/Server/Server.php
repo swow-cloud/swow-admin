@@ -15,6 +15,8 @@ namespace Hyperf\Engine\Http;
 use CloudAdmin\Http2\Config\Ssl;
 use CloudAdmin\Http2\Parser\Http2Connection;
 use CloudAdmin\Http2\Parser\Http2Parser;
+use CloudAdmin\Http2\Parser\Request;
+use CloudAdmin\Http2\Parser\Response;
 use Hyperf\Engine\Contract\Http\ServerInterface;
 use Hyperf\Engine\Coroutine;
 use Hyperf\Process\ProcessManager;
@@ -28,6 +30,7 @@ use Swow\Psr7\Server\Server as Psr7Server;
 use Swow\Socket;
 use Swow\SocketException;
 use Throwable;
+use function Hyperf\Support\make;
 use function in_array;
 use function sleep;
 
@@ -107,7 +110,12 @@ class Server extends Psr7Server implements ServerInterface
         if ($this->ssl) {
             $options = $this->sslConfig->toArray();
         }
-
+        $this->onRequest = function (Request $request, Http2Connection $connection) {
+            //todo 待适配 Swow的recvHttpRequest
+//            $handler = $this->handler;
+//            $handler($request, $connection->connection);
+            return new Response(200, ['A' => 'hello world'], "<h1>hello h2!<h1>");
+        };
         while (ProcessManager::isRunning()) {
             try {
                 $connection = $this->acceptConnection();
@@ -115,25 +123,19 @@ class Server extends Psr7Server implements ServerInterface
                 if ($options !== null) {
                     $connection->enableCrypto($options);
                 }
-
-                Coroutine::create(function () use ($connection) {
+                $client = make(Http2Connection::class,['connection' => $connection]);
+                $parser = new Http2Parser(
+                    $client,
+                    [],
+                    $this->onStreamData,
+                    $this->onRequest,
+                    $this->onWriteBody,
+                );
+                Coroutine::create(function () use ($connection,$parser) {
                     try {
                         while (true) {
                             $request = null;
-
                             try {
-                                //todo 调试htt2
-//                                $request = $connection->recvHttpRequest();
-                                $handler = $this->handler;
-                                $client = \Hyperf\Support\make(Http2Connection::class,['connection' => $connection]);
-                                $parser = new Http2Parser(
-                                    $client,
-                                    [],
-                                    $this->onStreamData,
-                                    $this->onRequest,
-                                    $this->onWriteBody,
-                                );
-//                                $handler($request, $connection);
                                 $parser->parse($connection->recvString(), $connection);
                             } catch (HttpProtocolException $exception) {
                                 $connection->error(

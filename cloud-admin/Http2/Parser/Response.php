@@ -113,7 +113,7 @@ class Response
         return $this->push;
     }
 
-    public function push(string $url, array $header = [])
+    public function push(string $url, array $header = []): void
     {
         $urlInfo = parse_url($url);
         if (is_array($urlInfo)) {

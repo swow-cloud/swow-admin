@@ -149,7 +149,7 @@ final class Http2Driver
                 return;
             }
             $this->sendBody($id, $response, $request);
-            if (! empty($pushStream)) {
+            if (!empty($pushStream)) {
                 foreach ($pushStream as $push) {// 发送推送帧
                     $this->send(...$push);
                 }
@@ -168,7 +168,7 @@ final class Http2Driver
 
     public function sendBody(int $id, Response $response, Request $request): void
     {
-        if (! in_array($request->path(), $this->streamUrl)) {
+        if (!in_array($request->path(), $this->streamUrl)) {
             if (is_callable($this->onWriteBody)) {
                 // 服务端流模式在此处不停的发送帧
                 $response->http2Driver = $this;
@@ -177,10 +177,10 @@ final class Http2Driver
             }
         }
         $body = $response->getBody();
-        if (strlen((string) $body)) {
+        if (strlen((string)$body)) {
             $this->writeData($body, $id);
         }
-        if (! isset($this->streams[$id])) {
+        if (!isset($this->streams[$id])) {
             return;
         }
         $trailers = $response->getTrailers();
@@ -249,7 +249,7 @@ final class Http2Driver
      */
     public function writeData(string $data, int $id): void
     {
-        if (! isset($this->streams[$id])) {
+        if (!isset($this->streams[$id])) {
             var_dump('The stream was closed');
             return;
         }
@@ -264,7 +264,7 @@ final class Http2Driver
 
     public function handlePing(string $data): void
     {
-        if (! $this->pinged) { // 没有ping过就更新
+        if (!$this->pinged) { // 没有ping过就更新
             $this->http2Connection->updateExpirationTime(
                 max($this->http2Connection->getExpirationTime(), time() + 5)
             );
@@ -282,7 +282,7 @@ final class Http2Driver
         if ($streamId > $this->remoteStreamId) {
             throw new Http2ConnectionException('Stream ID does not exist', Http2Parser::PROTOCOL_ERROR);
         }
-        if (! isset($this->streams[$streamId])) {
+        if (!isset($this->streams[$streamId])) {
             return;
         }
         $stream = $this->streams[$streamId];
@@ -329,7 +329,7 @@ final class Http2Driver
     public function handleHeaders(int $streamId, array $pseudo, array $headers, bool $ended): void
     {
         foreach ($pseudo as $name => $value) {
-            if (! isset(Http2Parser::KNOWN_REQUEST_PSEUDO_HEADERS[$name])) {
+            if (!isset(Http2Parser::KNOWN_REQUEST_PSEUDO_HEADERS[$name])) {
                 throw new Http2StreamException('Invalid pseudo header', $streamId, Http2Parser::PROTOCOL_ERROR);
             }
         }
@@ -339,7 +339,7 @@ final class Http2Driver
                 throw new Http2StreamException('Stream remote closed', $streamId, Http2Parser::STREAM_CLOSED);
             }
         } else {
-            if (! ($streamId & 1) || $this->remainingStreams-- <= 0 || $streamId <= $this->remoteStreamId) {
+            if (!($streamId & 1) || $this->remainingStreams-- <= 0 || $streamId <= $this->remoteStreamId) {
                 throw new Http2ConnectionException("Invalid stream ID {$streamId}", Http2Parser::PROTOCOL_ERROR);
             }
             $stream = $this->streams[$streamId] = new Http2Stream(Options::getBodySizeLimit(), $this->initialWindowSize);
@@ -350,7 +350,7 @@ final class Http2Driver
             throw new Http2StreamException('Stream already reserved', $streamId, Http2Parser::PROTOCOL_ERROR);
         }
         $stream->state |= Http2Stream::RESERVED;
-        if (! isset($pseudo[':method'], $pseudo[':path'], $pseudo[':scheme'], $pseudo[':authority'])
+        if (!isset($pseudo[':method'], $pseudo[':path'], $pseudo[':scheme'], $pseudo[':authority'])
             || isset($headers['connection'])
             || $pseudo[':path'] === ''
             || (isset($headers['te']) && implode('', $headers['te']) !== 'trailers')
@@ -362,17 +362,17 @@ final class Http2Driver
         $scheme = $pseudo[':scheme'];
         $host = $pseudo[':authority'];
         $query = null;
-        if (! preg_match('#^([A-Z\\d\\.\\-]+|\\[[\\d:]+\\])(?::([1-9]\\d*))?$#i', (string) $host, $matches)) {
+        if (!preg_match('#^([A-Z\\d\\.\\-]+|\\[[\\d:]+\\])(?::([1-9]\\d*))?$#i', (string)$host, $matches)) {
             throw new Http2StreamException('Invalid authority (host) name', $streamId, Http2Parser::PROTOCOL_ERROR);
         }
         $host = $matches[1];
-        $port = isset($matches[2]) ? (int) $matches[2] : $this->http2Connect->getPort();
-        if ($position = strpos((string) $target, '#')) {
-            $target = substr((string) $target, 0, $position);
+        $port = isset($matches[2]) ? (int)$matches[2] : $this->http2Connection->getPort();
+        if ($position = strpos((string)$target, '#')) {
+            $target = substr((string)$target, 0, $position);
         }
-        if ($position = strpos((string) $target, '?')) {
-            $query = substr((string) $target, $position + 1);
-            $target = substr((string) $target, 0, $position);
+        if ($position = strpos((string)$target, '?')) {
+            $query = substr((string)$target, $position + 1);
+            $target = substr((string)$target, 0, $position);
         }
         $headers = array_merge($headers, ['scheme' => $scheme, 'host' => $host, 'port' => $port, 'path' => $target, 'query' => $query, 'method' => $method]);
         $this->pinged = 0;
@@ -392,17 +392,17 @@ final class Http2Driver
                 throw new Http2StreamException('Received multiple content-length headers', $streamId, Http2Parser::PROTOCOL_ERROR);
             }
             $contentLength = $headers['content-length'][0];
-            if (! preg_match('/^0|[1-9][0-9]*$/', (string) $contentLength)) {
+            if (!preg_match('/^0|[1-9][0-9]*$/', (string)$contentLength)) {
                 throw new Http2StreamException('Invalid content-length header value', $streamId, Http2Parser::PROTOCOL_ERROR);
             }
-            $stream->expectedLength = (int) $contentLength;
+            $stream->expectedLength = (int)$contentLength;
         }
         $request = new Request($streamId, $this->http2Connection, $headers);
         $this->streamIdRequestMap[$streamId] = $request;
         // 如果是客户端流模式，这里应该给前端返回头响应
         if (in_array($request->path(), $this->streamUrl)) {
             if (is_callable($this->onRequest)) {
-                $response = ($this->onRequest)($request);
+                $response = ($this->onRequest)($request,$this->http2Connection);
             } else {
                 $response = new Response(200, ['content-type' => 'text/html'], '');
             }
@@ -425,7 +425,7 @@ final class Http2Driver
         if ($stream->state & Http2Stream::REMOTE_CLOSED) {
             throw new Http2StreamException('Stream remote closed', $streamId, Http2Parser::PROTOCOL_ERROR);
         }
-        if (! $length) {
+        if (!$length) {
             return;
         }
         $this->serverWindow -= $length;
@@ -457,7 +457,7 @@ final class Http2Driver
             $request->appendData($data);
         }
         if ($stream->serverWindow <= self::MINIMUM_WINDOW) {
-            if (! isset($this->streams[$streamId])) {
+            if (!isset($this->streams[$streamId])) {
                 return;
             }
             $stream = $this->streams[$streamId];
@@ -478,7 +478,7 @@ final class Http2Driver
      */
     public function handleStreamEnd(int $streamId): void
     {
-        if (! isset($this->streams[$streamId])) {
+        if (!isset($this->streams[$streamId])) {
             return;
         }
         $stream = $this->streams[$streamId];
@@ -488,16 +488,16 @@ final class Http2Driver
         }
         /** @var Request $request */
         $request = $this->streamIdRequestMap[$streamId];
-        if (! in_array($request->getMethod(), Options::getAllowedMethods())) {
+        if (!in_array($request->getMethod(), Options::getAllowedMethods())) {
             $response = new Response(405); // METHOD_NOT_ALLOWED
         } else {
-            $response = $this->streamIdResponseMap[$streamId];
-            if (! $response instanceof Response) {
+            $response = $this->streamIdResponseMap[$streamId] ?? null;
+            if (!$response instanceof Response) {
                 if (is_callable($this->onRequest)) {
-                    $response = ($this->onRequest)($request);
+                    $response = ($this->onRequest)($request,$this->http2Connection);
                 }
             }
-            if (! $response instanceof Response) {
+            if (!$response instanceof Response) {
                 $response = new Response(404, ['content-type' => 'text/html'], '');
             }
         }
@@ -529,7 +529,7 @@ final class Http2Driver
      */
     public function handlePriority(int $streamId, int $parentId, int $weight): void
     {
-        if (! isset($this->streams[$streamId])) {// 为将来的流设置优先级
+        if (!isset($this->streams[$streamId])) {// 为将来的流设置优先级
             // if ($streamId === 0 || !($streamId & 1) || $this->remainingStreams-- <= 0) {
             if ($streamId === 0 || $this->remainingStreams-- <= 0) {  // chrome居然发送了偶数帧过来
                 throw new Http2ConnectionException("Invalid stream ID {$streamId}", Http2Parser::PROTOCOL_ERROR);
@@ -625,6 +625,7 @@ final class Http2Driver
     }
 
     // http1.1升级h2c
+
     /**
      * @throws Http2StreamException
      */
@@ -651,7 +652,7 @@ final class Http2Driver
         $id = $this->localStreamId += 2;
         // $this->remoteStreamId = \max($id, $this->remoteStreamId);
         $headers = array_merge(['scheme' => 'https', 'host' => '', 'port' => 443, 'path' => '/', 'query' => '', 'method' => 'GET'], $push['uri'], $mergedHeaders);
-        $request = new Request($this->http2Connection, $this->http2Connection, $headers);
+        $request = new Request($streamId, $this->http2Connection, $headers);
         $this->streams[$id] = new Http2Stream(0, $this->initialWindowSize, Http2Stream::RESERVED | Http2Stream::REMOTE_CLOSED);
         $this->streamIdRequestMap[$id] = $request;
         foreach ($mergedHeaders as $k => $v) {
@@ -680,9 +681,9 @@ final class Http2Driver
         }
         $response = null;
         if (is_callable($this->onRequest)) {
-            $response = ($this->onRequest)($request);
+            $response = ($this->onRequest)($request,$this->http2Connection);
         }
-        if (! $response instanceof Response) {
+        if (!$response instanceof Response) {
             $response = new Response(404, ['content-type' => 'text/html'], '');
         }
         $this->streams[$id]->state |= Http2Stream::LOCAL_CLOSED;
@@ -703,7 +704,7 @@ final class Http2Driver
             if ($this->clientWindow <= 0) {
                 return;
             }
-            if (! strlen($stream->buffer) || $stream->clientWindow <= 0) {
+            if (!strlen($stream->buffer) || $stream->clientWindow <= 0) {
                 continue;
             }
             $this->writeBufferedData($id);
@@ -752,9 +753,9 @@ final class Http2Driver
     {
         $input = [];
         foreach ($headers as $field => $values) {
-            $values = (array) $values;
+            $values = (array)$values;
             foreach ($values as $value) {
-                $input[] = [(string) $field, (string) $value];
+                $input[] = [(string)$field, (string)$value];
             }
         }
         return $this->hPack->encode($input);
@@ -765,7 +766,7 @@ final class Http2Driver
         $code = $reason ? $reason->getCode() : Http2Parser::GRACEFUL_SHUTDOWN;
         $lastId ??= $id ?? 0;
         $this->writeFrame(pack('NN', $lastId, $code), Http2Parser::GOAWAY, Http2Parser::NO_FLAG);
-        if (! empty($this->streams)) {
+        if (!empty($this->streams)) {
             if (empty($reason)) {
                 $exception = new ClientException('', 0, $reason);
             } else {
@@ -783,7 +784,7 @@ final class Http2Driver
      */
     private function releaseStream(int $id, ClientException $exception = null): void
     {
-        if (! isset($this->streams[$id])) {
+        if (!isset($this->streams[$id])) {
             return;
         }
         unset($this->streams[$id]);

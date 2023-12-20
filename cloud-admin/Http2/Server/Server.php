@@ -111,7 +111,7 @@ class Server extends Psr7Server implements ServerInterface
             $options = $this->sslConfig->toArray();
         }
         $this->onRequest = function (Request $request, Http2Connection $connection) {
-            //todo 待适配 Swow的recvHttpRequest
+            //http2太难了 ，等作者实现吧
 //            $handler = $this->handler;
 //            $handler($request, $connection->connection);
             return new Response(200, ['A' => 'hello world'], "<h1>hello h2!<h1>");

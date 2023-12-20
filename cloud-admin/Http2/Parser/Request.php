@@ -27,7 +27,6 @@ use function trim;
 /**
  * 不准备支持cookie  session.
  */
-//todo 适配psr规范  PSR-7 PSR-15
 class Request
 {
     /**

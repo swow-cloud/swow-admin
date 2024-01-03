@@ -20,6 +20,14 @@ use Swow\Sync\WaitReference;
 
 require 'vendor/autoload.php';
 
+$greeting = 'Hello';
+
+$sayHello = serialize(static function (string $name) use ($greeting): void {
+    echo "{$greeting} {$name}!\n";
+});
+$sayHello = unserialize($sayHello);
+$sayHello(Swow::class);
+exit;
 $socket = new \Swow\Socket(Swow\Socket::TYPE_TCP);
 $server = \stream_socket_server('tls://127.0.0.1:9501', context: \stream_context_create([
     'ssl' => [

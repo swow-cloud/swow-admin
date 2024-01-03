@@ -5,12 +5,11 @@
 #
 
 parameters:
-  level: 6
+  level: 9
   paths:
        - ./app
        - ./config
        - ./cloud-admin
-       - ./collection
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     - '#Static call to instance method Hyperf\\HttpServer\\Router\\Router::[a-zA-Z0-9\\_]+\(\)#'

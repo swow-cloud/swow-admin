@@ -15,21 +15,33 @@ use CloudAdmin\Log\AppendRequestIdWithMemoryUsageProcessor;
 use Hyperf\Context\Context;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Engine\Coroutine as Co;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
 final class Coroutine
 {
+    /**
+     * @var LoggerInterface|StdoutLoggerInterface|mixed $logger
+     */
     private readonly LoggerInterface $logger;
 
+    /**
+     * @param ContainerInterface $container
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __construct(protected ContainerInterface $container)
     {
         $this->logger = $container->get(StdoutLoggerInterface::class);
     }
 
     /**
+     * @phpstan-return int
+     * @phpstan-param callable $callable
      * @return int Returns the coroutine ID of the coroutine just created.
      *             Returns -1 when coroutine create failed.
      */

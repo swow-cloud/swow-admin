@@ -18,7 +18,7 @@ interface WatchDogInterface
     /**
      * watchdog sentinel automatic renewal mechanism
      * Return true if the task completed successfully.
-     *
+     * @phpstan-return bool
      * @throws Throwable
      */
     public function sentinel(RedisLockInterface $lock, int $time = 60): bool;

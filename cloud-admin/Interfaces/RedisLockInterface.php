@@ -19,7 +19,7 @@ interface RedisLockInterface
      * get lock，This method will return fasle directly after the lock is failed.
      *
      * @param string $key lock unique identifier
-     *
+     * @phpstan-return bool
      * @throws Throwable
      */
     public function tryLock(string $key, int $ttl = 3): bool;
@@ -30,7 +30,7 @@ interface RedisLockInterface
      * @param string $key lock unique identifier
      *
      * @param int $retries number of retries
-     *
+     * @phpstan-return bool
      * @throws Throwable
      */
     public function lock(
@@ -42,26 +42,27 @@ interface RedisLockInterface
 
     /**
      * release lock.
-     *
+     * @phpstan-return bool
      * @throws Throwable
      */
     public function unLock(): bool;
 
     /**
      * get lock life ttl.
+     * @phpstan-return int
      */
     public function lockTtl(): int;
 
     /**
      * Let the lock last for N seconds, the default N is 3.
-     *
+     * @phpstan-return bool
      * @throws Throwable
      */
     public function keepAlive(int $ttl = 3): bool;
 
     /**
      * check if the lock is valid.
-     *
+     * @phpstan-return bool
      * @throws Throwable
      */
     public function isAlive(): bool;

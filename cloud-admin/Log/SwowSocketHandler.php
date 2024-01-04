@@ -44,6 +44,11 @@ final class SwowSocketHandler extends AbstractProcessingHandler
         $this->style = new Style();
     }
 
+    /**
+     * @param LogRecord $record
+     * @return void
+     * @phpstan-param LogRecord $record
+     */
     protected function write(LogRecord $record): void
     {
         $this->buffer->append($this->formatStdoutLogText($record));
@@ -51,6 +56,11 @@ final class SwowSocketHandler extends AbstractProcessingHandler
         $this->buffer->clear();
     }
 
+    /**
+     * @param string $level
+     * @return Color
+     * @phpstan-return Color
+     */
     protected function getColorFromLevel(string $level = LogLevel::DEBUG): Color
     {
         return match ($level) {
@@ -63,6 +73,12 @@ final class SwowSocketHandler extends AbstractProcessingHandler
         };
     }
 
+    /**
+     * @param LogRecord $record
+     * @return string
+     * @phpstan-param LogRecord $record
+     * @phpstan-return string
+     */
     protected function formatStdoutLogText(LogRecord $record): string
     {
         $message = '';
@@ -99,6 +115,9 @@ final class SwowSocketHandler extends AbstractProcessingHandler
         'datetime' => 'int',
         'extra' => 'int',
     ])]
+    /**
+     * @phpstan-return array<string, int>
+     */
     protected function toPsrLogRecordColor(): array
     {
         return [

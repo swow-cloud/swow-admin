@@ -18,6 +18,9 @@ use Swow\Http\Status;
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 final class HttpCode extends AbstractAnnotation
 {
-    /** @noinspection PhpMissingParentConstructorInspection */
+    /**
+     * @param int $code
+     * @phpstan-param int $code
+     */
     public function __construct(public readonly int $code = Status::OK) {}
 }

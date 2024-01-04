@@ -16,19 +16,20 @@ use PhpTui\Tui\Text\Title;
 use PhpTui\Tui\Widget\Borders;
 use PhpTui\Tui\Widget\Direction;
 use Swow\Coroutine;
+use Swow\Socket;
 use Swow\Sync\WaitReference;
 
 require 'vendor/autoload.php';
 
 $greeting = 'Hello';
 
-$sayHello = serialize(static function (string $name) use ($greeting): void {
+$sayHello = \serialize(static function (string $name) use ($greeting): void {
     echo "{$greeting} {$name}!\n";
 });
-$sayHello = unserialize($sayHello);
+$sayHello = \unserialize($sayHello);
 $sayHello(Swow::class);
 exit;
-$socket = new \Swow\Socket(Swow\Socket::TYPE_TCP);
+$socket = new Socket(Socket::TYPE_TCP);
 $server = \stream_socket_server('tls://127.0.0.1:9501', context: \stream_context_create([
     'ssl' => [
         'alpn_protocols' => 'h2,http/1.1',

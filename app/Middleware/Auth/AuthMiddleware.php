@@ -59,7 +59,6 @@ final class AuthMiddleware implements MiddlewareInterface
                 return $handler->handle($request);
             }
         } catch (JWTException|TokenValidException) {
-            return $this->response->fail(ErrorCode::UNAUTHORIZED);
         }
         return $this->response->fail(ErrorCode::UNAUTHORIZED);
     }

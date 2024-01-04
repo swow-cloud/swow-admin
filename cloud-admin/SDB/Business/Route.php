@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace CloudAdmin\SDB\Business;
 
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\Devtool\Describe\RoutesCommand;
 use Hyperf\HttpServer\MiddlewareManager;
 use Hyperf\HttpServer\Router\DispatcherFactory;
 use Hyperf\HttpServer\Router\Handler;
@@ -30,7 +31,7 @@ use function is_null;
 use function is_string;
 
 /**
- * @see  \Hyperf\Devtool\Describe\RoutesCommand
+ * @see  RoutesCommand
  */
 final class Route
 {

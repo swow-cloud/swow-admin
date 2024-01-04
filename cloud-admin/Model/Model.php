@@ -13,6 +13,7 @@ namespace CloudAdmin\Model;
 
 use CloudAdmin\Trait\PaginateTrait;
 use Hyperf\Database\Model\Builder;
+use Hyperf\Database\Model\Model as HyperfModel;
 use Hyperf\DbConnection\Model\Model as BaseModel;
 
 use function is_array;
@@ -30,7 +31,7 @@ class Model extends BaseModel
 
     protected ?string $dateFormat = 'Y-m-d H:i:s';
 
-    public static function findOne(array $condition, array $field = ['*'], bool $forUpdate = false): \Hyperf\Database\Model\Model
+    public static function findOne(array $condition, array $field = ['*'], bool $forUpdate = false): null|Builder|HyperfModel
     {
         $query = self::buildByCondition($condition);
         if ($forUpdate) {
@@ -39,7 +40,7 @@ class Model extends BaseModel
         return $query->first($field);
     }
 
-    public static function one(int $id, array $field = ['*']): \Hyperf\Database\Model\Model
+    public static function one(int $id, array $field = ['*']): null|Builder|HyperfModel
     {
         return self::findOne(['id' => $id], $field);
     }

@@ -41,6 +41,9 @@ final class TokenBucket
         $this->runTicker();
     }
 
+    /**
+     * @phpstan-return void
+     */
     public function acquireToken(): void
     {
         if ($this->tokens < 1) {

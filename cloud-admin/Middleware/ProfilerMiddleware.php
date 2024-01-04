@@ -18,7 +18,9 @@ use Hyperf\Codec\Json;
 use Hyperf\Context\Context;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpServer\Request;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -55,6 +57,10 @@ final class ProfilerMiddleware implements MiddlewareInterface
         return $response;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function logAndSave(string $startTime, ?ServerRequestInterface $request, ?ResponseInterface $response): bool
     {
         $times = explode(' ', $startTime);

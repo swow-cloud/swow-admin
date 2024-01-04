@@ -19,7 +19,6 @@ use Swow\Http\Status;
 final class HttpCode extends AbstractAnnotation
 {
     /**
-     * @param int $code
      * @phpstan-param int $code
      */
     public function __construct(public readonly int $code = Status::OK) {}

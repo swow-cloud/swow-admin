@@ -35,11 +35,18 @@ use function is_string;
  */
 final class Route
 {
+    /**
+     * @phpstan-param ContainerInterface $container
+     * @phpstan-param ConfigInterface $config
+     */
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly ConfigInterface $config,
     ) {}
 
+    /**
+     * @phpstan-return array<array-key, mixed>
+     */
     public function getRoute(): array
     {
         $factory = $this->container->get(DispatcherFactory::class);
@@ -56,6 +63,12 @@ final class Route
         return array_slice($rows, 0, count($rows) - 1);
     }
 
+    /**
+     * @phpstan-param string $server
+     * @phpstan-param RouteCollector $router
+     * @phpstan-param string|null $path
+     * @phpstan-return array<array-key, mixed>
+     */
     private function analyzeRouter(
         string $server,
         RouteCollector $router,
@@ -89,6 +102,12 @@ final class Route
         return $data;
     }
 
+    /**
+     * @phpstan-param string $server
+     * @phpstan-param RouteCollector $router
+     * @phpstan-param string|null $path
+     * @phpstan-return array<array-key, mixed>
+     */
     private function analyzeHandler(
         array &$data,
         string $serverName,

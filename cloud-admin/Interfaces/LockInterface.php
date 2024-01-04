@@ -14,14 +14,12 @@ namespace CloudAdmin\Interfaces;
 interface LockInterface
 {
     /**
-     * @return mixed
      * @phpstan-return mixed
      */
-    public function lock():mixed;
+    public function lock(): mixed;
 
     /**
-     * @return bool
      * @phpstan-return bool
      */
-    public function unlock():bool;
+    public function unlock(): bool;
 }

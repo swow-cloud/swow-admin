@@ -102,7 +102,7 @@
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
-    "analyse": "@php vendor/bin/phpstan analyse --memory-limit 512M -l 0 -c phpstan.neon",
+    "analyse": "@php vendor/bin/phpstan analyse --memory-limit 1024M -l 0 -c phpstan.neon",
     "cs-fix": "@php vendor/bin/php-cs-fixer fix $1",
     "rector": "rector process --clear-cache",
     "route": "@php bin/hyperf.php describe:routes",

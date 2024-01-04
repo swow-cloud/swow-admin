@@ -35,6 +35,8 @@ final class LRUMemoizer
      * @template T
      * @param callable(): T $factory
      * @return T
+     * @phpstan-return T
+     * @phpstan-param callable(): T $factory
      */
     public function get(string $key, callable $factory): mixed
     {

@@ -45,8 +45,6 @@ final class SwowSocketHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param LogRecord $record
-     * @return void
      * @phpstan-param LogRecord $record
      */
     protected function write(LogRecord $record): void
@@ -57,8 +55,6 @@ final class SwowSocketHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string $level
-     * @return Color
      * @phpstan-return Color
      */
     protected function getColorFromLevel(string $level = LogLevel::DEBUG): Color
@@ -74,8 +70,6 @@ final class SwowSocketHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param LogRecord $record
-     * @return string
      * @phpstan-param LogRecord $record
      * @phpstan-return string
      */

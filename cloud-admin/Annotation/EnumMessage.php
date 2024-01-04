@@ -18,7 +18,6 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 final class EnumMessage extends AbstractAnnotation
 {
     /**
-     * @param string $message
      * @phpstan-param string $message
      */
     public function __construct(public readonly string $message = '') {}

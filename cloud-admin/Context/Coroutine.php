@@ -25,12 +25,11 @@ use Throwable;
 final class Coroutine
 {
     /**
-     * @var LoggerInterface|StdoutLoggerInterface|mixed $logger
+     * @var LoggerInterface|mixed|StdoutLoggerInterface
      */
     private readonly LoggerInterface $logger;
 
     /**
-     * @param ContainerInterface $container
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

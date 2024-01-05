@@ -30,6 +30,10 @@ class FormRequest extends HyperfRequest
         return [];
     }
 
+    /**
+     * @return array
+     * @phpstan-return array<array-key, mixed>
+     */
     public function getRules(): array
     {
         $scene = $this->getScene();

@@ -103,9 +103,11 @@ final class Route
     }
 
     /**
-     * @phpstan-param string $server
-     * @phpstan-param RouteCollector $router
+     * @phpstan-param array<array-key, mixed> &$data
+     * @phpstan-param string $serverName
+     * @phpstan-param string $method
      * @phpstan-param string|null $path
+     * @phpstan-param Handler $handler
      * @phpstan-return array<array-key, mixed>
      */
     private function analyzeHandler(

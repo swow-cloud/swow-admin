@@ -50,6 +50,7 @@
     "swow/swow": "^1.4"
   },
   "require-dev": {
+    "bmitch/churn-php": "dev-master",
     "ergebnis/composer-normalize": "^2.37",
     "friendsofphp/php-cs-fixer": "^3.0",
     "hyperf/devtool": "~3.1.0",

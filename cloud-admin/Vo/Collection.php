@@ -16,11 +16,6 @@ use Hyperf\Collection\Collection as HyperfCollection;
 final class Collection extends HyperfCollection
 {
     /**
-     * @param array $data
-     * @param string $idKey
-     * @param string $parentKey
-     * @param string $nestKey
-     * @return array
      * @phpstan-return array<array-key, mixed>
      */
     public static function tree(array $data, string $idKey, string $parentKey, string $nestKey = 'children'): array

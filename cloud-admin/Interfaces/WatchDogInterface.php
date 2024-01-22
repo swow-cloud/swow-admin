@@ -18,6 +18,8 @@ interface WatchDogInterface
     /**
      * watchdog sentinel automatic renewal mechanism
      * Return true if the task completed successfully.
+     * @phpstan-param RedisLockInterface $lock
+     * @phpstan-param int $time
      * @phpstan-return bool
      * @throws Throwable
      */

@@ -25,8 +25,15 @@ final class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterfac
 {
     public const REQUEST_ID = 'log.request.id';
 
+    /**
+     * @phpstan-var  bool Whether to format memory usage
+     */
     public bool $useFormatting = true;
 
+    /**
+     * @phpstan-param  LogRecord $record
+     * @phpstan-return  array|LogRecord
+     */
     public function __invoke(LogRecord $record): array|LogRecord
     {
         $record['extra']['request_id'] = Context::getOrSet(
@@ -45,6 +52,10 @@ final class AppendRequestIdWithMemoryUsageProcessor implements ProcessorInterfac
         return $record;
     }
 
+    /**
+     * @phpstan-param  int $bytes
+     * @phpstan-return  int|string
+     */
     private function formatBytes(int $bytes): int|string
     {
         if (! $this->useFormatting) {

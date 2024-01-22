@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Log;
 
+use JetBrains\PhpStorm\ArrayShape;
+
 use function explode;
 use function intval;
 use function preg_match;
@@ -20,8 +22,18 @@ final class CatDebugLog
     public const LOG_LINE_PATTERN = '/^\[\s*(.*?)\s*]\s*(.*?)\((.*?)\): <(.*?)> (.*?) in (.*?):(\d+)$/';
 
     /**
+     * @phpstan-param string $logLine
      * @phpstan-return  array<string, mixed>|null
      */
+    #[ArrayShape([
+        'module' => 'string',
+        'level' => 'string',
+        'version' => 'string',
+        'tag' => 'string',
+        'details' => 'string',
+        'file_path' => 'string',
+        'line_number' => 'int',
+    ])]
     public function parseSingleLogLine(string $logLine): ?array
     {
         if (preg_match(self::LOG_LINE_PATTERN, $logLine, $matches)) {
@@ -43,6 +55,15 @@ final class CatDebugLog
      *
      * @phpstan-return array<int, array<string, mixed>>
      */
+    #[ArrayShape([
+        'module' => 'string',
+        'level' => 'string',
+        'version' => 'string',
+        'tag' => 'string',
+        'details' => 'string',
+        'file_path' => 'string',
+        'line_number' => 'int',
+    ])]
     public function parseDebugLog(string $logContent): array
     {
         $logLines = explode("\n", $logContent);

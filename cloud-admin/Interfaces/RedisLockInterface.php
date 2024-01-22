@@ -18,7 +18,8 @@ interface RedisLockInterface
     /**
      * get lock，This method will return fasle directly after the lock is failed.
      *
-     * @param string $key lock unique identifier
+     * @phpstan-param int $ttl lock lifetime
+     * @phpstan-param string $key lock unique identifier
      * @phpstan-return bool
      * @throws Throwable
      */
@@ -26,10 +27,9 @@ interface RedisLockInterface
 
     /**
      * get lock，This method will return fasle directly after the lock is failed.
-     *
-     * @param string $key lock unique identifier
-     *
-     * @param int $retries number of retries
+     * @phpstan-param int $ttl lock lifetime
+     * @phpstan-param  string $key lock unique identifier
+     * @phpstan-param  int $retries number of retries
      * @phpstan-return bool
      * @throws Throwable
      */

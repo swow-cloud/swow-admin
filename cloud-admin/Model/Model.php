@@ -31,6 +31,12 @@ class Model extends BaseModel
 
     protected ?string $dateFormat = 'Y-m-d H:i:s';
 
+    /**
+     * @phpstan-param  array $condition
+     * @phpstan-param  array $field
+     * @phpstan-param  bool $forUpdate
+     * @phpstan-return  Builder|HyperfModel|null
+     */
     public static function findOne(array $condition, array $field = ['*'], bool $forUpdate = false): null|Builder|HyperfModel
     {
         $query = self::buildByCondition($condition);
@@ -40,11 +46,20 @@ class Model extends BaseModel
         return $query->first($field);
     }
 
+    /**
+     * @phpstan-param  int $id
+     * @phpstan-param  array $field
+     * @phpstan-return  Builder|HyperfModel|null
+     */
     public static function one(int $id, array $field = ['*']): null|Builder|HyperfModel
     {
         return self::findOne(['id' => $id], $field);
     }
 
+    /**
+     * @phpstan-param  array $condition
+     * @phpstan-return  Builder
+     */
     public static function buildByCondition(array $condition): Builder
     {
         $query = self::query();
@@ -62,18 +77,33 @@ class Model extends BaseModel
         return $query;
     }
 
+    /**
+     * @phpstan-param  array $condition
+     * @phpstan-param  array $data
+     * @phpstan-return  int
+     */
     public static function updateCondition(array $condition, array $data): int
     {
         $query = self::buildByCondition($condition);
         return $query->update($data);
     }
 
+    /**
+     * @phpstan-param  array $condition
+     * @phpstan-return  int
+     */
     public static function countCondition(array $condition): int
     {
         $query = self::buildByCondition($condition);
         return $query->count();
     }
 
+    /**
+     * @phpstan-param  Builder $model
+     * @phpstan-param  string $field
+     * @phpstan-param  array $createTime
+     * @phpstan-return  void
+     */
     public static function betweenTime(Builder $model, string $field, array $createTime): void
     {
         $model->where(function (Builder $builder) use ($field, $createTime) {

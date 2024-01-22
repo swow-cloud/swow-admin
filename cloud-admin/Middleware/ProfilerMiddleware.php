@@ -37,8 +37,17 @@ use function xhprof_enable;
 
 final class ProfilerMiddleware implements MiddlewareInterface
 {
+    /**
+     * @phpstan-param ContainerInterface $container
+     * @phpstan-param ConfigInterface $config
+     */
     public function __construct(protected readonly ContainerInterface $container, protected readonly ConfigInterface $config) {}
 
+    /**
+     * @phpstan-param  ServerRequestInterface $request
+     * @phpstan-param  RequestHandlerInterface $handler
+     * @phpstan-return  ResponseInterface
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $time = microtime();
@@ -60,6 +69,10 @@ final class ProfilerMiddleware implements MiddlewareInterface
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @phpstan-param  string $startTime
+     * @phpstan-param  ServerRequestInterface|null $request
+     * @phpstan-param  ResponseInterface|null $response
+     * @phpstan-return  bool
      */
     private function logAndSave(string $startTime, ?ServerRequestInterface $request, ?ResponseInterface $response): bool
     {

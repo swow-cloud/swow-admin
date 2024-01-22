@@ -27,12 +27,26 @@ use function sprintf;
 
 final class SwowSocketHandler extends AbstractProcessingHandler
 {
+    /**
+     * @phpstan-var  Socket Socket
+     */
     protected Socket $output;
 
+    /**
+     * @phpstan-var  Buffer Buffer
+     */
     protected Buffer $buffer;
 
+    /**
+     * @phpstan-var Style $style
+     */
     protected Style $style;
 
+    /**
+     * @phpstan-param int|Level|string $level
+     * @phpstan-param bool $bubble
+     * @phpstan-param bool $useLocking
+     */
     public function __construct(
         int|Level|string $level = Level::Debug,
         bool $bubble = true,
@@ -55,6 +69,7 @@ final class SwowSocketHandler extends AbstractProcessingHandler
     }
 
     /**
+     * @phpstan-param LogRecord $record
      * @phpstan-return Color
      */
     protected function getColorFromLevel(string $level = LogLevel::DEBUG): Color

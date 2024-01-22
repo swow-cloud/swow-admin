@@ -20,6 +20,7 @@ use Psr\Log\LoggerInterface;
 final class LoggerFactory
 {
     /**
+     * @phpstan-param ContainerInterface $container
      * @phpstan-return LoggerInterface|void
      * @return LoggerInterface|void
      * @throws ContainerExceptionInterface

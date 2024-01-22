@@ -31,6 +31,10 @@ final class TokenBucket
 
     private readonly Channel $channel;
 
+    /**
+     * @phpstan-param  int $capacity
+     * @phpstan-param  int $tokenRate
+     */
     public function __construct(private readonly int $capacity, private int $tokenRate)
     {
         $this->tokens = $capacity;
@@ -56,6 +60,9 @@ final class TokenBucket
         }
     }
 
+    /**
+     * @phpstan-return  void
+     */
     private function runTicker(): void
     {
         if (! $this->tickerRunning) {
@@ -72,11 +79,18 @@ final class TokenBucket
         }
     }
 
+    /**
+     * @phpstan-param  int $tokenRate
+     * @phpstan-return  void
+     */
     private function setTokenRate(int $tokenRate): void
     {
         $this->tokenRate = $tokenRate;
     }
 
+    /**
+     * @phpstan-return  void
+     */
     private function addTokens(): void
     {
         $now = microtime(true);

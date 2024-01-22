@@ -18,6 +18,12 @@ use function is_array;
 
 trait PaginateTrait
 {
+    /**
+     * @phpstan-param  array|string $select
+     * @phpstan-param  array $params
+     * @phpstan-param  array $order
+     * @phpstan-return  array
+     */
     public function getList(array|string $select, array $params, array $order = []): array
     {
         $query = $this->buildByCondition($params);
@@ -32,6 +38,10 @@ trait PaginateTrait
     }
 
     /**
+     * @phpstan-param  array|string $select
+     * @phpstan-param  array $params
+     * @phpstan-param  array $order
+     * @phpstan-param  array $page
      * @return array{items: array, pageInfo: array}
      */
     public function getPageList(array|string $select, array $params, array $order = [], array $page = []): array
@@ -53,6 +63,8 @@ trait PaginateTrait
     }
 
     /**
+     * @phpstan-param  LengthAwarePaginatorInterface $paginator
+     * @phpstan-param  array $params
      * @return array{list: array, total: int, currentPage: int, totalPage: int}
      */
     public function setPaginate(LengthAwarePaginatorInterface $paginator, array $params = []): array
@@ -65,6 +77,11 @@ trait PaginateTrait
         ];
     }
 
+    /**
+     * @phpstan-param  Builder $builder
+     * @phpstan-param  array $params
+     * @return Builder
+     */
     public function order(Builder $builder, array $params = []): Builder
     {
         if ($params) {

@@ -30,7 +30,7 @@ final class Redis
         }
 
         try {
-            return $this->getRedisCon()->set(
+            return $this->getCon()->set(
                 $key,
                 $value,
                 ['nx', 'ex' => $expireSeconds],
@@ -46,7 +46,7 @@ final class Redis
     public function eval(string $src, int $keyCount, array $keysAndArgs): mixed
     {
         try {
-            return $this->getRedisCon()->eval($src, $keysAndArgs, $keyCount);
+            return $this->getCon()->eval($src, $keysAndArgs, $keyCount);
         } catch (
             ContainerExceptionInterface|NotFoundExceptionInterface|RedisException
         ) {
@@ -59,7 +59,7 @@ final class Redis
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function getRedisCon(): RedisProxy
+    private function getCon(): RedisProxy
     {
         $container = ApplicationContext::getContainer();
         return $container->get(RedisFactory::class)->get($this->pool);

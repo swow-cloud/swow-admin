@@ -9,11 +9,15 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace CloudAdmin\SDB\Command;
+namespace CloudAdmin\SDB;
 
-use CloudAdmin\SDB\Parser;
+use BackedEnum;
+use CloudAdmin\SDB\Command\HandlerInterface;
 
-interface HandlerInterface
+interface CommandEnumInterface extends BackedEnum
 {
-    public function run(Parser $parser): null|string;
+    /**
+     * @phpstan-return  class-string<HandlerInterface>
+     */
+    public function handler(): string;
 }

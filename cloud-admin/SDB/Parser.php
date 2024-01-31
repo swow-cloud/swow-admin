@@ -1,16 +1,25 @@
 <?php
+
 declare(strict_types=1);
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @link     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
 
 namespace CloudAdmin\SDB;
 
-class Parser implements \ArrayAccess
+use ArrayAccess;
+use LogicException;
+
+final class Parser implements ArrayAccess
 {
     public function __construct(
-        public readonly array  $arguments = [],
-        public readonly array  $options = [],
-    )
-    {
-    }
+        public readonly array $arguments = [],
+        public readonly array $options = [],
+    ) {}
 
     public function offsetExists(mixed $offset): bool
     {
@@ -24,12 +33,12 @@ class Parser implements \ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new \LogicException('Unsupported operation: setting ' . $offset);
+        throw new LogicException('Unsupported operation: setting ' . $offset);
     }
 
     public function offsetUnset(mixed $offset): void
     {
-        throw new \LogicException('Unsupported operation');
+        throw new LogicException('Unsupported operation');
     }
 
     /**

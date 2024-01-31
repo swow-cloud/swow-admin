@@ -80,7 +80,6 @@ trait PaginateTrait
     /**
      * @phpstan-param  Builder $builder
      * @phpstan-param  array $params
-     * @return Builder
      */
     public function order(Builder $builder, array $params = []): Builder
     {

@@ -13,7 +13,12 @@ namespace CloudAdmin\SDB\Command;
 
 use CloudAdmin\SDB\Parser;
 
-interface HandlerInterface
+use function var_dump;
+
+final class PsHandler implements HandlerInterface
 {
-    public function run(Parser $parser): null|string;
+    public function run(Parser $parser): null|string
+    {
+        var_dump($parser->toArray());
+    }
 }

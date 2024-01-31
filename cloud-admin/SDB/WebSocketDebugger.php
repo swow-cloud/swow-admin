@@ -186,6 +186,7 @@ final class WebSocketDebugger extends Debugger
 
                                                     $this->setLastCommand($in);
 
+                                                    // 思考如何处理goto的问题
                                                     _next:
 
                                                     try {

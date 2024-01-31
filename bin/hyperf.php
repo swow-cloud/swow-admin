@@ -7,8 +7,8 @@
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use CloudAdmin\SDB\Debugger\ServerConfig;
-use CloudAdmin\SDB\Debugger\SslConfig;
+use CloudAdmin\SDB\Config\ServerConfig;
+use CloudAdmin\SDB\Config\SslConfig;
 use CloudAdmin\SDB\WebSocketDebugger;
 use Swow\Coroutine;
 use Swow\Debug\Debugger\Debugger;

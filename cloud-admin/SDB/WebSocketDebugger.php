@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace CloudAdmin\SDB;
 
 use CloudAdmin\SDB\Business\Route;
-use CloudAdmin\SDB\Debugger\ServerConfig;
-use CloudAdmin\SDB\Debugger\SslConfig;
+use CloudAdmin\SDB\Config\ServerConfig;
+use CloudAdmin\SDB\Config\SslConfig;
 use Error;
 use Exception;
 use Hyperf\Codec\Json;

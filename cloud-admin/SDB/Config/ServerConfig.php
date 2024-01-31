@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 
-namespace CloudAdmin\SDB\Debugger;
+namespace CloudAdmin\SDB\Config;
 
 use Swow\Socket;
 

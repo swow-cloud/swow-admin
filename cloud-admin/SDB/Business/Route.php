@@ -127,7 +127,7 @@ final class Route
         } else {
             // method,uri,name,action,middleware
             $registeredMiddlewares = MiddlewareManager::get('http', $uri, $method);
-            $middlewares = $this->config->get('middlewares.' . 'http', []);
+            $middlewares = $this->config->get('middlewares.http', []);
 
             $middlewares = array_merge($middlewares, $registeredMiddlewares);
             $middlewares = MiddlewareManager::sortMiddlewares($middlewares);

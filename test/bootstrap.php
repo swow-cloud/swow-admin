@@ -11,7 +11,7 @@ declare(strict_types=1);
 use Hyperf\Contract\ApplicationInterface;
 use Hyperf\Di\ClassLoader;
 
-/**
+/*
  * This file is part of Cloud-Admin project.
  *
  * @see     https://www.cloud-admin.jayjay.cn

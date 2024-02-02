@@ -18,6 +18,7 @@ use Error;
 use Exception;
 use Hyperf\Codec\Json;
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\Crontab\CrontabManager;
 use Hyperf\Redis\Pool\PoolFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -49,6 +50,7 @@ use function CloudAdmin\Utils\di;
 use function CloudAdmin\Utils\logger;
 use function count;
 use function ctype_print;
+use function dump;
 use function explode;
 use function Hyperf\Support\env;
 use function Hyperf\Support\make;
@@ -180,6 +182,7 @@ final class WebSocketDebugger extends Debugger
                                                 case Opcode::TEXT:
                                                     $in = $frame->getPayloadData()->getContents();
 
+                                                    dump(di()->get(CrontabManager::class)->getCrontabs());
                                                     if ($in === "\n") {
                                                         $in = $this->getLastCommand();
                                                     }

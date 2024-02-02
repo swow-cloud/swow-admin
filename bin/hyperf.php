@@ -1,5 +1,7 @@
 #!/usr/bin/env php
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of Cloud-Admin project.
  *
@@ -10,8 +12,13 @@
 use CloudAdmin\SDB\Config\ServerConfig;
 use CloudAdmin\SDB\Config\SslConfig;
 use CloudAdmin\SDB\WebSocketDebugger;
+use Hyperf\Contract\ApplicationInterface;
+use Hyperf\Di\ClassLoader;
+use Hyperf\Di\ScanHandler\ProcScanHandler;
+use Psr\Container\ContainerInterface;
 use Swow\Coroutine;
 use Swow\Debug\Debugger\Debugger;
+use Symfony\Component\Console\Application;
 
 function initialize(): void
 {
@@ -30,13 +37,13 @@ function initialize(): void
 \initialize();
 
 (static function (): void {
-    Hyperf\Di\ClassLoader::init(handler: new Hyperf\Di\ScanHandler\ProcScanHandler());
+    ClassLoader::init(handler: new ProcScanHandler());
 
-    /** @var Psr\Container\ContainerInterface $container */
+    /** @var ContainerInterface $container */
     $container = require BASE_PATH . '/config/container.php';
 
-    /** @var Symfony\Component\Console\Application $application */
-    $application = $container->get(Hyperf\Contract\ApplicationInterface::class);
+    /** @var Application $application */
+    $application = $container->get(ApplicationInterface::class);
 
     $debuggerOptions = \Hyperf\Support\env('APP_DEBUG') ? \Hyperf\Config\config('debugger') : null;
 

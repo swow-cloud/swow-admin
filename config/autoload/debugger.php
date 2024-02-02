@@ -8,13 +8,14 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+use CloudAdmin\SDB\WebSocketDebugger;
 use Swow\Debug\Debugger\Debugger;
 
 use function Hyperf\Support\env;
 
 return [
     //    'handler' => Debugger::class,
-    'handler' => \CloudAdmin\SDB\WebSocketDebugger::class,
+    'handler' => WebSocketDebugger::class,
     'options' => [
         'server' => [
             'host' => '127.0.0.1',

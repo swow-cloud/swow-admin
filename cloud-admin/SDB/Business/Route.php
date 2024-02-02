@@ -23,7 +23,6 @@ use Symfony\Component\Console\Helper\TableSeparator;
 
 use function array_merge;
 use function array_slice;
-use function array_unique;
 use function count;
 use function implode;
 use function is_array;
@@ -51,7 +50,7 @@ final class Route
     {
         $factory = $this->container->get(DispatcherFactory::class);
         $router = $factory->getRouter('http');
-        $data = $this->analyzeRouter('http', $router, null);
+        $data = $this->analyzeRouter($router);
         $rows = [];
 
         foreach ($data as $route) {
@@ -70,16 +69,14 @@ final class Route
      * @phpstan-return array<array-key, mixed>
      */
     private function analyzeRouter(
-        string $server,
         RouteCollector $router,
-        ?string $path,
     ): array {
         $data = [];
         [$staticRouters, $variableRouters] = $router->getData();
 
         foreach ($staticRouters as $method => $items) {
             foreach ($items as $handler) {
-                $this->analyzeHandler($data, $server, $method, $path, $handler);
+                $this->analyzeHandler($data, $method, $handler);
             }
         }
 
@@ -89,9 +86,7 @@ final class Route
                     foreach ($item['routeMap'] as $routeMap) {
                         $this->analyzeHandler(
                             $data,
-                            $server,
                             $method,
-                            $path,
                             $routeMap[0],
                         );
                     }
@@ -112,17 +107,13 @@ final class Route
      */
     private function analyzeHandler(
         array &$data,
-        string $serverName,
         string $method,
-        ?string $path,
         Handler $handler,
     ): void {
         $uri = $handler->route;
-
-        if (! is_null($path) && ! Str::contains($uri, $path)) {
+        if (! is_null(null) && ! Str::contains($uri, null)) {
             return;
         }
-
         if (is_array($handler->callback)) {
             $action = $handler->callback[0] . '::' . $handler->callback[1];
         } elseif (is_string($handler->callback)) {
@@ -130,25 +121,23 @@ final class Route
         } else {
             $action = 'Closure';
         }
-
-        $unique = "{$serverName}|{$uri}|{$action}";
-
+        $unique = "http|{$uri}|{$action}";
         if (isset($data[$unique])) {
             $data[$unique]['method'][] = $method;
         } else {
             // method,uri,name,action,middleware
-            $registeredMiddlewares = MiddlewareManager::get($serverName, $uri, $method);
-            $middlewares = $this->config->get(
-                'middlewares.' . $serverName,
-                [],
-            );
+            $registeredMiddlewares = MiddlewareManager::get('http', $uri, $method);
+            $middlewares = $this->config->get('middlewares.' . 'http', []);
+
             $middlewares = array_merge($middlewares, $registeredMiddlewares);
+            $middlewares = MiddlewareManager::sortMiddlewares($middlewares);
+
             $data[$unique] = [
-                'server' => $serverName,
+                'server' => 'http',
                 'method' => [$method],
                 'uri' => $uri,
                 'action' => $action,
-                'middleware' => implode(PHP_EOL, array_unique($middlewares)),
+                'middleware' => implode(PHP_EOL, $middlewares),
             ];
         }
     }

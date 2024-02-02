@@ -8,6 +8,16 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
+use Hyperf\Contract\ApplicationInterface;
+use Hyperf\Di\ClassLoader;
+
+/**
+ * This file is part of Cloud-Admin project.
+ *
+ * @see     https://www.cloud-admin.jayjay.cn
+ * @document https://wiki.cloud-admin.jayjay.cn
+ * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
+ */
 \error_reporting(E_ALL);
 \date_default_timezone_set('Asia/Shanghai');
 
@@ -16,8 +26,8 @@ declare(strict_types=1);
 
 require BASE_PATH . '/vendor/autoload.php';
 
-Hyperf\Di\ClassLoader::init();
+ClassLoader::init();
 
 $container = require BASE_PATH . '/config/container.php';
 
-$container->get(Hyperf\Contract\ApplicationInterface::class);
+$container->get(ApplicationInterface::class);

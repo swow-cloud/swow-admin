@@ -14,6 +14,7 @@ namespace CloudAdmin\SDB;
 use CloudAdmin\SDB\Business\Route;
 use CloudAdmin\SDB\Config\ServerConfig;
 use CloudAdmin\SDB\Config\SslConfig;
+use Cron\CronExpression;
 use Error;
 use Exception;
 use Hyperf\Codec\Json;
@@ -50,7 +51,6 @@ use function CloudAdmin\Utils\di;
 use function CloudAdmin\Utils\logger;
 use function count;
 use function ctype_print;
-use function dump;
 use function explode;
 use function Hyperf\Support\env;
 use function Hyperf\Support\make;
@@ -182,7 +182,6 @@ final class WebSocketDebugger extends Debugger
                                                 case Opcode::TEXT:
                                                     $in = $frame->getPayloadData()->getContents();
 
-                                                    dump(di()->get(CrontabManager::class)->getCrontabs());
                                                     if ($in === "\n") {
                                                         $in = $this->getLastCommand();
                                                     }
@@ -579,7 +578,7 @@ final class WebSocketDebugger extends Debugger
                                                                         'currentConnections' => $pools->getCurrentConnections(),
                                                                         'connectionsInChannel' => $pools->getConnectionsInChannel(),
                                                                     ];
-                                                                    $this->table($info);
+                                                                    $this->out(Json::encode($info));
                                                                     break;
                                                                 case 'config':
                                                                     // todo 但是不建议获取敏感信息
@@ -593,6 +592,26 @@ final class WebSocketDebugger extends Debugger
                                                                 case 'route':
                                                                     $route = make(Route::class);
                                                                     $this->out(Json::encode($route->getRoute()));
+                                                                    break;
+                                                                case 'crontab':
+                                                                    $crontabs = di()->get(CrontabManager::class)->getCrontabs();
+
+                                                                    $data = [];
+                                                                    foreach ($crontabs as $crontab) {
+                                                                        $cronExpression = new CronExpression($crontab->getRule());
+                                                                        $data[] = [
+                                                                            'name' => $crontab->getName(),
+                                                                            'rule' => $crontab->getRule(),
+                                                                            'nextRunTime' => $cronExpression->getNextRunDate()->format('Y-m-d H:i:s'),
+                                                                            'callback' => $crontab->getCallback(),
+                                                                            'enable' => $crontab->isEnable(),
+                                                                            'memo' => $crontab->getMemo(),
+                                                                            'options' => $crontab->getOptions(),
+                                                                            'environments' => $crontab->getEnvironments(),
+                                                                            'timezone' => $crontab->getTimezone(),
+                                                                        ];
+                                                                    }
+                                                                    $this->out(Json::encode($data));
                                                                     break;
                                                                 case 'ping':
                                                                     $this->out('pong');

@@ -10,7 +10,10 @@ declare(strict_types=1);
  */
 use CloudAdmin\Log\LoggerFactory;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Crontab\Strategy\CoroutineStrategy;
+use Hyperf\Crontab\Strategy\StrategyInterface;
 
 return [
     StdoutLoggerInterface::class => LoggerFactory::class,
+    StrategyInterface::class => CoroutineStrategy::class,
 ];

@@ -17,6 +17,7 @@
     "bebat/console-color": "^1.0",
     "casbin/casbin": "^3.21",
     "casbin/psr3-bridge": "^1.3",
+    "dragonmantank/cron-expression": "^3.3",
     "hyperf/cache": "^3.1",
     "hyperf/command": "~3.1.0",
     "hyperf/config": "~3.1.0",

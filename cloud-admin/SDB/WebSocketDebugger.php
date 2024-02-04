@@ -557,9 +557,10 @@ final class WebSocketDebugger extends Debugger
             return parent::out($string);
         }
 
-        $this
-            ->socket
-            ->broadcastWebSocketFrame(Psr7::createWebSocketTextFrame(payloadData: $string));
+        $this->socket->broadcastWebSocketFrame(Psr7::createWebSocketTextFrame(payloadData: $string));
+        //todo:map暂时恢复为空数组，减少bug
+        $this->map = [];
+
         return $this;
     }
 

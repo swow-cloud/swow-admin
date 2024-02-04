@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
 
 declare(strict_types=1);
 /**
@@ -80,6 +80,8 @@ final class WebSocketDebugger extends Debugger
 
     protected static ?SslConfig $sslConfig = null;
 
+    protected array $map = [];
+
     final public function __construct()
     {
         parent::__construct();
@@ -147,15 +149,9 @@ final class WebSocketDebugger extends Debugger
 
                                 switch ($request->getUri()->getPath()) {
                                     case '/':
-                                        $upgradeType = Psr7::detectUpgradeType(
-                                            $request,
-                                        );
+                                        $upgradeType = Psr7::detectUpgradeType($request);
 
-                                        if (
-                                            (
-                                                $upgradeType & UpgradeType::UPGRADE_TYPE_WEBSOCKET
-                                            ) === 0
-                                        ) {
+                                        if (($upgradeType & UpgradeType::UPGRADE_TYPE_WEBSOCKET) === 0) {
                                             throw new ProtocolException(
                                                 Status::BAD_REQUEST,
                                                 'Unsupported Upgrade Type',
@@ -192,38 +188,23 @@ final class WebSocketDebugger extends Debugger
                                                     _next:
 
                                                     try {
-                                                        $lines = array_filter(
-                                                            explode("\n", $in),
-                                                        );
+                                                        $lines = array_filter(explode("\n", $in));
 
                                                         foreach ($lines as $line) {
-                                                            $arguments = explode(
-                                                                ' ',
-                                                                $line,
-                                                            );
+                                                            $arguments = explode(' ', $line);
 
-                                                            foreach (
-                                                                $arguments as &$argument
-                                                            ) {
+                                                            foreach ($arguments as &$argument) {
                                                                 $argument = trim($argument);
                                                             }
 
                                                             unset($argument);
-                                                            $arguments = array_filter(
-                                                                $arguments,
-                                                                static fn (
-                                                                    string $value,
-                                                                ) => $value !== '',
-                                                            );
-                                                            $command = array_shift(
-                                                                $arguments,
-                                                            );
+                                                            $arguments = array_filter($arguments, static fn (string $value) => $value !== '');
+                                                            $command = array_shift($arguments);
 
                                                             switch ($command) {
                                                                 case 'ps':
-                                                                    $this->showCoroutines(
-                                                                        Coroutine::getAll(),
-                                                                    );
+                                                                    $this->showCoroutines(Coroutine::getAll());
+                                                                    $this->out(Json::encode($this->map));
                                                                     break;
                                                                 case 'attach':
                                                                 case 'co':
@@ -231,111 +212,64 @@ final class WebSocketDebugger extends Debugger
                                                                     $id = $arguments[0] ?? 'unknown';
 
                                                                     if (! is_numeric($id)) {
-                                                                        throw new DebuggerException(
-                                                                            'Argument[1]: Coroutine id must be numeric',
-                                                                        );
+                                                                        throw new DebuggerException('Argument[1]: Coroutine id must be numeric');
                                                                     }
 
-                                                                    $coroutine = Coroutine::get(
-                                                                        (int) $id,
-                                                                    );
+                                                                    $coroutine = Coroutine::get((int) $id);
 
                                                                     if (! $coroutine) {
-                                                                        throw new DebuggerException(
-                                                                            "Coroutine#{$id} Not found",
-                                                                        );
+                                                                        throw new DebuggerException("Coroutine#{$id} Not found");
                                                                     }
 
-                                                                    if (
-                                                                        $command === 'attach'
-                                                                    ) {
+                                                                    if ($command === 'attach') {
                                                                         $this->checkBreakPointHandler();
 
-                                                                        if (
-                                                                            $coroutine === Coroutine::getCurrent()
-                                                                        ) {
-                                                                            throw new DebuggerException(
-                                                                                'Attach debugger is not allowed',
-                                                                            );
+                                                                        if ($coroutine === Coroutine::getCurrent()) {
+                                                                            throw new DebuggerException('Attach debugger is not allowed');
                                                                         }
 
-                                                                        static::getDebugContextOfCoroutine(
-                                                                            $coroutine,
-                                                                        )->stop = true;
+                                                                        self::getDebugContextOfCoroutine($coroutine)->stop = true;
                                                                     }
 
-                                                                    $this->setCurrentCoroutine(
-                                                                        $coroutine,
-                                                                    );
+                                                                    $this->setCurrentCoroutine($coroutine);
                                                                     $in = 'bt';
                                                                     goto _next;
 
                                                                 case 'bt':
                                                                 case 'backtrace':
-                                                                    $this->showCoroutine(
-                                                                        $this->getCurrentCoroutine(),
-                                                                        false,
-                                                                    )->showSourceFileContentByTrace(
-                                                                        $this->getCurrentCoroutineTrace(),
-                                                                        0,
-                                                                        true,
-                                                                    );
+                                                                    $this->showCoroutine($this->getCurrentCoroutine(), false)->showSourceFileContentByTrace($this->getCurrentCoroutineTrace(), 0, true);
                                                                     break;
                                                                 case 'f':
                                                                 case 'frame':
                                                                     $frameIndex = $arguments[0] ?? null;
 
                                                                     if (! is_numeric($frameIndex)) {
-                                                                        throw new DebuggerException(
-                                                                            'Frame index must be numeric',
-                                                                        );
+                                                                        throw new DebuggerException('Frame index must be numeric');
                                                                     }
 
                                                                     $frameIndex = (int) $frameIndex;
 
-                                                                    if (
-                                                                        $this->getCurrentFrameIndex() !== $frameIndex
-                                                                    ) {
-                                                                        $this->out(
-                                                                            "Switch to frame {$frameIndex}",
-                                                                        );
+                                                                    if ($this->getCurrentFrameIndex() !== $frameIndex) {
+                                                                        $this->out("Switch to frame {$frameIndex}");
                                                                     }
 
-                                                                    $this->setCurrentFrameIndex(
-                                                                        $frameIndex,
-                                                                    );
+                                                                    $this->setCurrentFrameIndex($frameIndex);
                                                                     $trace = $this->getCurrentCoroutineTrace();
                                                                     $frameIndex = $this->getCurrentFrameIndex();
-                                                                    $this->showTrace(
-                                                                        $trace,
-                                                                        $frameIndex,
-                                                                        false,
-                                                                    )->showSourceFileContentByTrace(
-                                                                        $trace,
-                                                                        $frameIndex,
-                                                                        true,
-                                                                    );
+                                                                    $this->showTrace($trace, $frameIndex, false)->showSourceFileContentByTrace($trace, $frameIndex, true);
                                                                     break;
                                                                 case 'b':
                                                                 case 'breakpoint':
                                                                     $breakPoint = $arguments[0] ?? '';
 
                                                                     if ($breakPoint === '') {
-                                                                        throw new DebuggerException(
-                                                                            'Invalid break point',
-                                                                        );
+                                                                        throw new DebuggerException('Invalid break point');
                                                                     }
 
                                                                     $coroutine = $this->getCurrentCoroutine();
 
-                                                                    if (
-                                                                        $coroutine === Coroutine::getCurrent()
-                                                                    ) {
-                                                                        $this->out(
-                                                                            "Added global break-point <{$breakPoint}>",
-                                                                        )->addBreakPoint(
-                                                                            $breakPoint,
-                                                                        );
+                                                                    if ($coroutine === Coroutine::getCurrent()) {
+                                                                        $this->out("Added global break-point <{$breakPoint}>")->addBreakPoint($breakPoint);
                                                                     }
 
                                                                     break;
@@ -347,9 +281,7 @@ final class WebSocketDebugger extends Debugger
                                                                 case 'c':
                                                                 case 'continue':
                                                                     $coroutine = $this->getCurrentCoroutine();
-                                                                    $context = static::getDebugContextOfCoroutine(
-                                                                        $coroutine,
-                                                                    );
+                                                                    $context = self::getDebugContextOfCoroutine($coroutine);
 
                                                                     if (! $context->stopped) {
                                                                         if ($context->stop) {
@@ -357,9 +289,7 @@ final class WebSocketDebugger extends Debugger
                                                                                 $coroutine,
                                                                             );
                                                                         } else {
-                                                                            throw new DebuggerException(
-                                                                                'Not in debugging',
-                                                                            );
+                                                                            throw new DebuggerException('Not in debugging');
                                                                         }
                                                                     }
 
@@ -372,28 +302,19 @@ final class WebSocketDebugger extends Debugger
                                                                                 $command === 'n'
                                                                                 || $command === 'next'
                                                                             ) {
-                                                                                $this->lastTraceDepth = $coroutine->getTraceDepth() - static::getCoroutineTraceDiffLevel(
-                                                                                    $coroutine,
-                                                                                    'nextCommand',
-                                                                                );
+                                                                                $this->lastTraceDepth = $coroutine->getTraceDepth() - self::getCoroutineTraceDiffLevel($coroutine, 'nextCommand');
                                                                             }
 
                                                                             $coroutine->resume();
-                                                                            $this->waitStoppedCoroutine(
-                                                                                $coroutine,
-                                                                            );
+                                                                            $this->waitStoppedCoroutine($coroutine);
                                                                             $this->lastTraceDepth = PHP_INT_MAX;
                                                                             $in = 'f 0';
                                                                             goto _next;
 
                                                                         case 'c':
                                                                         case 'continue':
-                                                                            static::getDebugContextOfCoroutine(
-                                                                                $coroutine,
-                                                                            )->stop = false;
-                                                                            $this->out(
-                                                                                "Coroutine#{$coroutine->getId()} continue to run...",
-                                                                            );
+                                                                            self::getDebugContextOfCoroutine($coroutine)->stop = false;
+                                                                            $this->out("Coroutine#{$coroutine->getId()} continue to run...");
                                                                             $coroutine->resume();
                                                                             break;
                                                                         default:
@@ -408,13 +329,9 @@ final class WebSocketDebugger extends Debugger
                                                                     if ($lineCount === null) {
                                                                         $this->showFollowingSourceFileContent();
                                                                     } elseif (is_numeric($lineCount)) {
-                                                                        $this->showFollowingSourceFileContent(
-                                                                            (int) $lineCount,
-                                                                        );
+                                                                        $this->showFollowingSourceFileContent((int) $lineCount);
                                                                     } else {
-                                                                        throw new DebuggerException(
-                                                                            'Argument[1]: line no must be numeric',
-                                                                        );
+                                                                        throw new DebuggerException('Argument[1]: line no must be numeric');
                                                                     }
 
                                                                     break;
@@ -424,38 +341,24 @@ final class WebSocketDebugger extends Debugger
                                                                     $expression = implode(' ', $arguments);
 
                                                                     if (! $expression) {
-                                                                        throw new DebuggerException(
-                                                                            'No expression',
-                                                                        );
+                                                                        throw new DebuggerException('No expression');
                                                                     }
 
                                                                     if ($command === 'exec') {
                                                                         $transfer = new Channel();
                                                                         Coroutine::run(
-                                                                            static function () use (
-                                                                                $expression,
-                                                                                $transfer,
-                                                                            ): void {
-                                                                                $transfer->push(
-                                                                                    Coroutine::getCurrent()->eval(
-                                                                                        $expression,
-                                                                                    ),
-                                                                                );
+                                                                            static function () use ($expression, $transfer): void {
+                                                                                $transfer->push(Coroutine::getCurrent()->eval($expression));
                                                                             }
                                                                         );
 
                                                                         // TODO: support ctrl + c (also support ctrl + c twice confirm on global scope?)
-                                                                        $result = var_dump_return(
-                                                                            $transfer->pop(),
-                                                                        );
+                                                                        $result = var_dump_return($transfer->pop());
                                                                     } else {
                                                                         $coroutine = $this->getCurrentCoroutine();
                                                                         $index = $this->getCurrentFrameIndexExtendedForExecution();
                                                                         $result = var_dump_return(
-                                                                            $coroutine->eval(
-                                                                                $expression,
-                                                                                $index,
-                                                                            ),
+                                                                            $coroutine->eval($expression, $index),
                                                                         );
                                                                     }
 
@@ -464,9 +367,7 @@ final class WebSocketDebugger extends Debugger
                                                                 case 'vars':
                                                                     $coroutine = $this->getCurrentCoroutine();
                                                                     $index = $this->getCurrentFrameIndexExtendedForExecution();
-                                                                    $result = var_dump_return(
-                                                                        $coroutine->getDefinedVars($index),
-                                                                    );
+                                                                    $result = var_dump_return($coroutine->getDefinedVars($index));
                                                                     $this->out($result, false);
                                                                     break;
                                                                 case 'z':
@@ -475,70 +376,47 @@ final class WebSocketDebugger extends Debugger
                                                                     $time = $arguments[0] ?? null;
 
                                                                     if (! is_numeric($time)) {
-                                                                        throw new DebuggerException(
-                                                                            'Argument[1]: Time must be numeric',
-                                                                        );
+                                                                        throw new DebuggerException('Argument[1]: Time must be numeric');
                                                                     }
 
-                                                                    $this->out(
-                                                                        "Scanning zombie coroutines ({$time}s)...",
-                                                                    );
+                                                                    $this->out("Scanning zombie coroutines ({$time}s)...");
+
                                                                     $switchesMap = new WeakMap();
 
-                                                                    foreach (
-                                                                        Coroutine::getAll() as $coroutine
-                                                                    ) {
+                                                                    foreach (Coroutine::getAll() as $coroutine) {
                                                                         $switchesMap[$coroutine] = $coroutine->getSwitches();
                                                                     }
 
                                                                     usleep((int) ($time * 1000 * 1000));
                                                                     $zombies = [];
 
-                                                                    foreach (
-                                                                        $switchesMap as $coroutine => $switches
-                                                                    ) {
-                                                                        if (
-                                                                            $coroutine->getSwitches() === $switches
-                                                                        ) {
+                                                                    foreach ($switchesMap as $coroutine => $switches) {
+                                                                        if ($coroutine->getSwitches() === $switches) {
                                                                             $zombies[] = $coroutine;
                                                                         }
                                                                     }
 
-                                                                    $this->out(
-                                                                        'Following coroutine maybe zombies:',
-                                                                    )->showCoroutines(
-                                                                        $zombies,
-                                                                    );
+                                                                    $this->out('Following coroutine maybe zombies:')->showCoroutines($zombies);
                                                                     break;
                                                                 case 'kill':
                                                                     if (count($arguments) === 0) {
-                                                                        throw new DebuggerException(
-                                                                            'Required coroutine id',
-                                                                        );
+                                                                        throw new DebuggerException('Required coroutine id');
                                                                     }
 
                                                                     foreach ($arguments as $index => $argument) {
                                                                         if (! is_numeric($argument)) {
-                                                                            $this->exception(
-                                                                                "Argument[{$index}] '{$argument}' is not numeric",
-                                                                            );
+                                                                            $this->exception("Argument[{$index}] '{$argument}' is not numeric");
                                                                         }
                                                                     }
 
                                                                     foreach ($arguments as $argument) {
-                                                                        $coroutine = Coroutine::get(
-                                                                            (int) $argument,
-                                                                        );
+                                                                        $coroutine = Coroutine::get((int) $argument);
 
                                                                         if ($coroutine) {
                                                                             $coroutine->kill();
-                                                                            $this->out(
-                                                                                "Coroutine#{$argument} killed",
-                                                                            );
+                                                                            $this->out("Coroutine#{$argument} killed");
                                                                         } else {
-                                                                            $this->exception(
-                                                                                "Coroutine#{$argument} not exists",
-                                                                            );
+                                                                            $this->exception("Coroutine#{$argument} not exists");
                                                                         }
                                                                     }
 
@@ -554,15 +432,10 @@ final class WebSocketDebugger extends Debugger
                                                                     $poolCmd = $arguments[0] ?? 'mysql';
 
                                                                     if (! is_string($poolCmd)) {
-                                                                        throw new DebuggerException(
-                                                                            'Argument[1]: Coroutine id must be string,like: pool redis:default,pool mysql:mysql1',
-                                                                        );
+                                                                        throw new DebuggerException('Argument[1]: Coroutine id must be string,like: pool redis:default,pool mysql:mysql1');
                                                                     }
 
-                                                                    [
-                                                                        $pool,
-                                                                        $name,
-                                                                    ] = explode(':', $poolCmd, 2) + [
+                                                                    [$pool, $name] = explode(':', $poolCmd, 2) + [
                                                                         'mysql',
                                                                         'default',
                                                                     ];
@@ -669,7 +542,7 @@ final class WebSocketDebugger extends Debugger
 
     public function run(string $keyword = ''): static
     {
-        if (static::isAlone()) {
+        if (self::isAlone()) {
             $this->daemon = false;
             $this->logo()->out('[Info]    Program is running...');
             $this->out('[Info]    Press Ctrl+C to stop the server...');
@@ -713,5 +586,34 @@ final class WebSocketDebugger extends Debugger
 
             sleep(20);
         }
+    }
+
+    public function showCoroutines(array $coroutines): static
+    {
+        $map = [];
+        foreach ($coroutines as $coroutine) {
+            if ($coroutine === Coroutine::getCurrent()) {
+                continue;
+            }
+            $info = self::getSimpleInfoOfCoroutine($coroutine, true);
+            $info['source_position'] = $this->callSourcePositionHandler($info['source_position']);
+            $map[] = $info;
+        }
+
+        $this->map = $map;
+
+        return $this;
+    }
+
+    protected function showCoroutine(Coroutine $coroutine, bool $newLine = true): static
+    {
+        $debugInfo = self::getSimpleInfoOfCoroutine($coroutine, false);
+        $trace = $this::getTraceOfCoroutine($coroutine);
+        $this->table([$debugInfo], ! $trace);
+        if ($trace) {
+            $this->cr()->showTrace($trace, null, $newLine);
+        }
+
+        return $this;
     }
 }

@@ -41,6 +41,7 @@
 ![](resource/swow-cloud.png)
 
 # SwowDebugger
+![logo.png](resource/logo.png)
 ![img.png](img.png)
 
 # Swow-Debugger 功能介绍

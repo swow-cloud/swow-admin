@@ -1,4 +1,6 @@
-<?php /** @noinspection DuplicatedCode */
+<?php
+
+/** @noinspection DuplicatedCode */
 
 declare(strict_types=1);
 /**
@@ -79,8 +81,6 @@ final class WebSocketDebugger extends Debugger
     protected static ServerConfig $serverConfig;
 
     protected static ?SslConfig $sslConfig = null;
-
-    protected array $map = [];
 
     final public function __construct()
     {
@@ -185,6 +185,7 @@ final class WebSocketDebugger extends Debugger
                                                     $this->setLastCommand($in);
 
                                                     // 思考如何处理goto的问题
+                                                    // 2024-02-06 可以考虑原样输出到前端
                                                     _next:
 
                                                     try {
@@ -204,7 +205,6 @@ final class WebSocketDebugger extends Debugger
                                                             switch ($command) {
                                                                 case 'ps':
                                                                     $this->showCoroutines(Coroutine::getAll());
-                                                                    $this->out(Json::encode($this->map));
                                                                     break;
                                                                 case 'attach':
                                                                 case 'co':
@@ -285,9 +285,7 @@ final class WebSocketDebugger extends Debugger
 
                                                                     if (! $context->stopped) {
                                                                         if ($context->stop) {
-                                                                            $this->waitStoppedCoroutine(
-                                                                                $coroutine,
-                                                                            );
+                                                                            $this->waitStoppedCoroutine($coroutine);
                                                                         } else {
                                                                             throw new DebuggerException('Not in debugging');
                                                                         }
@@ -298,10 +296,7 @@ final class WebSocketDebugger extends Debugger
                                                                         case 'next':
                                                                         case 's':
                                                                         case 'step_in':
-                                                                            if (
-                                                                                $command === 'n'
-                                                                                || $command === 'next'
-                                                                            ) {
+                                                                            if ($command === 'n' || $command === 'next') {
                                                                                 $this->lastTraceDepth = $coroutine->getTraceDepth() - self::getCoroutineTraceDiffLevel($coroutine, 'nextCommand');
                                                                             }
 
@@ -558,8 +553,6 @@ final class WebSocketDebugger extends Debugger
         }
 
         $this->socket->broadcastWebSocketFrame(Psr7::createWebSocketTextFrame(payloadData: $string));
-        //todo:map暂时恢复为空数组，减少bug
-        $this->map = [];
 
         return $this;
     }
@@ -587,34 +580,5 @@ final class WebSocketDebugger extends Debugger
 
             sleep(20);
         }
-    }
-
-    public function showCoroutines(array $coroutines): static
-    {
-        $map = [];
-        foreach ($coroutines as $coroutine) {
-            if ($coroutine === Coroutine::getCurrent()) {
-                continue;
-            }
-            $info = self::getSimpleInfoOfCoroutine($coroutine, true);
-            $info['source_position'] = $this->callSourcePositionHandler($info['source_position']);
-            $map[] = $info;
-        }
-
-        $this->map = $map;
-
-        return $this;
-    }
-
-    protected function showCoroutine(Coroutine $coroutine, bool $newLine = true): static
-    {
-        $debugInfo = self::getSimpleInfoOfCoroutine($coroutine, false);
-        $trace = $this::getTraceOfCoroutine($coroutine);
-        $this->table([$debugInfo], ! $trace);
-        if ($trace) {
-            $this->cr()->showTrace($trace, null, $newLine);
-        }
-
-        return $this;
     }
 }

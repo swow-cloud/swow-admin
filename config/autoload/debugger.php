@@ -8,9 +8,9 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use CloudAdmin\SDB\WebSocketDebugger;
 use Swow\Debug\Debugger\Debugger;
 
+use SwowCloud\SDB\WebSocketDebugger;
 use function Hyperf\Support\env;
 
 return [

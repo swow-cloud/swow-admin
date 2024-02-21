@@ -48,7 +48,7 @@
     "phper666/jwt-auth": "^4.0",
     "ramsey/uuid": "^4.7",
     "swow-cloud/debugger": "^0.1.0",
-    "swow-cloud/sdb": "^0.1.0",
+    "swow-cloud/sdb": "dev-master",
     "swow/dontdie": "^1.0",
     "swow/swow": "^1.4"
   },
@@ -96,12 +96,6 @@
     "sort-packages": true
   },
   "extra": [],
-  "repositories": {
-    "swow-cloud/sdb": {
-      "type": "path",
-      "url": "../SDB"
-    }
-  },
   "scripts": {
     "pre-install-cmd": [
       "CloudAdmin\\Composer\\Platform::preInstallCmd"

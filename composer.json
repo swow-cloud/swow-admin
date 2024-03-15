@@ -48,7 +48,7 @@
     "phper666/jwt-auth": "^4.0",
     "ramsey/uuid": "^4.7",
     "swow-cloud/debugger": "^0.1.0",
-    "swow-cloud/sdb": "dev-master",
+    "swow-cloud/sdb": "^0.1",
     "swow/dontdie": "^1.0",
     "swow/swow": "^1.4"
   },
@@ -113,5 +113,11 @@
     "start": "bash bin/hyperf",
     "test": "@php -e vendor/bin/phpunit -c phpunit.xml --colors=always",
     "dontdie": "@php vendor/bin/dontdie bash bin/hyperf"
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../sdb"
+    }
+  ]
 }

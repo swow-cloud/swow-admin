@@ -14,8 +14,8 @@ use SwowCloud\SDB\WebSocketDebugger;
 use function Hyperf\Support\env;
 
 return [
-    //    'handler' => Debugger::class,
-    'handler' => WebSocketDebugger::class,
+        'handler' => Debugger::class,
+//    'handler' => WebSocketDebugger::class,
     'options' => [
         'server' => [
             'host' => '127.0.0.1',

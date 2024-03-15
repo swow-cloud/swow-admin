@@ -119,7 +119,6 @@ class Server extends Psr7Server implements ServerInterface
         while (ProcessManager::isRunning()) {
             try {
                 $connection = $this->acceptConnection();
-
                 if ($options !== null) {
                     $connection->enableCrypto($options);
                 }

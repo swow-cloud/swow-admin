@@ -196,10 +196,6 @@ final class Http2Parser
         $this->dataBuffer .= $data;
         if (!$this->handsFlag) {
             if (strpos($this->dataBuffer, 'HTTP/1.')) {  // 初略判断http1 //h2c升级握手升级部分
-                if ($connection->getTypeName() === 'ssl') {
-                    $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");
-                    return;
-                }
                 $headerEndPos = strpos($this->dataBuffer, "\r\n\r\n");
                 if (!$headerEndPos) {
                     $this->http2Connection->connection->send("HTTP/1.1 400 Bad Request\r\nContent-Type: text/html;\r\ncharset=utf-8\r\nContent-Length: 19\r\n\r\nnot support http1.x");

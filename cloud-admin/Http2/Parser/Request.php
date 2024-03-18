@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace CloudAdmin\Http2\Parser;
 
+use JsonException;
 use function explode;
 use function file_put_contents;
 use function is_array;
@@ -80,7 +81,7 @@ class Request
         if (!isset($this->data['post'])) {
             try {
                 $this->parsePost();
-            } catch (\JsonException $e) {
+            } catch (JsonException) {
             }
         }
         if ($name === null) {
@@ -168,9 +169,9 @@ class Request
             return;
         }
         if (preg_match('/\bjson\b/i', $content_type)) {
-            $this->data['post'] = (array)json_decode($this->rawBody, true, 512, JSON_THROW_ON_ERROR);
+            $this->data['post'] = (array)json_decode((string) $this->rawBody, true, 512, JSON_THROW_ON_ERROR);
         } else {
-            parse_str($this->rawBody, $this->data['post']);
+            parse_str((string) $this->rawBody, $this->data['post']);
         }
     }
 

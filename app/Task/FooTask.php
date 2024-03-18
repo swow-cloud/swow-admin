@@ -23,7 +23,7 @@ use function var_dump;
 final class FooTask
 {
     #[Inject]
-    private StdoutLoggerInterface $logger;
+    private readonly StdoutLoggerInterface $logger;
 
     public function execute()
     {

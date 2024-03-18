@@ -31,7 +31,6 @@ class FormRequest extends HyperfRequest
     }
 
     /**
-     * @return array
      * @phpstan-return array<array-key, mixed>
      */
     public function getRules(): array

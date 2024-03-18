@@ -9,13 +9,13 @@ declare(strict_types=1);
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
 use Swow\Debug\Debugger\Debugger;
-
 use SwowCloud\SDB\WebSocketDebugger;
+
 use function Hyperf\Support\env;
 
 return [
-        'handler' => Debugger::class,
-//    'handler' => WebSocketDebugger::class,
+    'handler' => Debugger::class,
+    //    'handler' => WebSocketDebugger::class,
     'options' => [
         'server' => [
             'host' => '127.0.0.1',

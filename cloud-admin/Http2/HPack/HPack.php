@@ -496,7 +496,7 @@ final class HPack
 
                     if ($dynamic) {
                         array_unshift($this->headers, $header);
-                        $this->size += 32 + strlen($header[0]) + strlen($header[1]);
+                        $this->size += 32 + strlen((string) $header[0]) + strlen($header[1]);
                         if ($this->currentMaxSize < $this->size) {
                             $this->resizeTable();
                         }
@@ -522,7 +522,7 @@ final class HPack
                     continue;
                 }
 
-                $size += strlen($name) + strlen($value);
+                $size += strlen((string) $name) + strlen($value);
 
                 if ($size > $maxSize) {
                     return null;

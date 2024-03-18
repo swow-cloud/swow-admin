@@ -22,6 +22,6 @@ use function Hyperf\Support\env;
 return [
     'enable' => env('ENABLE_PROFILER', false),
     'options' => [
-        'flags' => XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY,
+        //        'flags' => XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY,
     ],
 ];

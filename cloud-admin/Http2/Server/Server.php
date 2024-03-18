@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Hyperf\Engine\Http;
 
+use function Hyperf\Config\config;
 use CloudAdmin\Http2\Config\Ssl;
 use CloudAdmin\Http2\Parser\Http2Connection;
 use CloudAdmin\Http2\Parser\Http2Parser;
@@ -72,7 +73,7 @@ class Server extends Psr7Server implements ServerInterface
         parent::__construct();
 
         /** @var array{certificate:string,certificate_key:string,verify_peer:bool,verify_peer_name:bool,allow_self_signed:bool} $config */
-        $config = \Hyperf\Config\config('ssl');
+        $config = config('ssl');
 
         if ($config['enable'] ?? false) {
             if (! Extension::isBuiltWith('ssl')) {
@@ -110,12 +111,11 @@ class Server extends Psr7Server implements ServerInterface
         if ($this->ssl) {
             $options = $this->sslConfig->toArray();
         }
-        $this->onRequest = function (Request $request, Http2Connection $connection) {
+        $this->onRequest = fn(Request $request, Http2Connection $connection) =>
             //http2太难了 ，等作者实现吧
-//            $handler = $this->handler;
-//            $handler($request, $connection->connection);
-            return new Response(200, ['A' => 'hello world'], "<h1>hello h2!<h1>");
-        };
+            //            $handler = $this->handler;
+            //            $handler($request, $connection->connection);
+            new Response(200, ['A' => 'hello world'], "<h1>hello h23333!<h1>");
         while (ProcessManager::isRunning()) {
             try {
                 $connection = $this->acceptConnection();

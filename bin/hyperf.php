@@ -9,15 +9,15 @@ declare(strict_types=1);
  * @document https://wiki.cloud-admin.jayjay.cn
  * @license  https://github.com/swow-cloud/swow-admin/blob/master/LICENSE
  */
-use SwowCloud\SDB\Config\ServerConfig;
-use SwowCloud\SDB\Config\SslConfig;
-use SwowCloud\SDB\WebSocketDebugger;
 use Hyperf\Contract\ApplicationInterface;
 use Hyperf\Di\ClassLoader;
 use Hyperf\Di\ScanHandler\ProcScanHandler;
 use Psr\Container\ContainerInterface;
 use Swow\Coroutine;
 use Swow\Debug\Debugger\Debugger;
+use SwowCloud\SDB\Config\ServerConfig;
+use SwowCloud\SDB\Config\SslConfig;
+use SwowCloud\SDB\WebSocketDebugger;
 use Symfony\Component\Console\Application;
 
 function initialize(): void
@@ -53,7 +53,7 @@ function initialize(): void
         } else {
             [$serverOptions, $sslOptions] = \array_values($debuggerOptions['options']);
 
-            $serverConfig = new \SwowCloud\SDB\Config\ServerConfig(
+            $serverConfig = new ServerConfig(
                 host: $serverOptions['host'],
                 port: $serverOptions['port']
             );

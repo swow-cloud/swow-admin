@@ -5,6 +5,6 @@
 5.使用Box打包本项目(待开发)
 7.xhgui+xhprof(已完成)
 8.page分页功能(已完成)
-9.调试swow-debug的能力需要在编译swow的时候开启debug模式
+9.调试swow-debug的能力需要在编译swow的时候开启debug模式(已完成)
 10.swow-trace日志
-11.封装SDB功能(ps,pool,route,crontab)已封装为table，需要分析哪些命令需要为json原样输出，哪些命令需要原样输出。
+11.封装SDB功能(ps,pool,route,crontab)已封装为table，需要分析哪些命令需要为json原样输出，哪些命令需要原样输出。(已完成)
